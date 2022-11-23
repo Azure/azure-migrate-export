@@ -2,9 +2,11 @@
 Author: Shradha Kalra
 ## What is Azure Migrate Export?
 Azure Migrate Export is a utility package that uses Azure Migrate discovery and assessment information from an already deployed Azure Migrate project to generate a cohesive presentation for executives.
+
 The utility offers users the ability to customize discovered data, assessment output as well as the visualization layer of the presentation by leveraging Microsoft’s own tools such as Excel, Power BI and PowerPoint/ PDF on Edge that would help accommodate desired customizations.
 Azure Migrate Export (AME) is a centralized and scalable solution that provides a uniform estimate of cost to drive customer’s commitment for migration to Azure. 
-How to get Azure Migrate Export Utility Package?
+
+## How to get Azure Migrate Export Utility Package?
 Users can download the Azure Migrate Export utility from https://aka.ms/azuremigrateexport.
 The link downloads a .zip file. Extract the contents of the package.
 The Package consists of three files:
@@ -14,9 +16,10 @@ The Package consists of three files:
 The Azure Migrate Export Utility is hosted on an open source github repository. Users can access all version of this utility package from https://aka.ms/azuremigrateexportutility. Users can use the script to build on top of current solutions.
 
 ## How does Azure Migrate Export Work?
-The discovery module of the utility package runs to pull discovered data from an already deployed Azure Migrate Project using Azure Migrate APIs.  Users can then customize the discovery output for assessment. [Learn More] about customization on discovery file.
-The assessment module of utility package uses Azure Migrate assessment APIs to run PaaS preferred assessments for in scope machines. Machines that cannot be migrated to PaaS target are assessed for IaaS targets. [Learn More] about AME assessment logic. The assessment module generates Assessment Core Report, Assessment Opportunity report and Clash Report. Users can customize the generated Assessment Core report by referring to the details in Clash report to get rid of duplicates. This helps the user to generate presentation and cost estimates of only the required target assessments. [Learn More] about how to customize Assessment report.
+The discovery module of the utility package runs to pull discovered data from an already deployed Azure Migrate Project using Azure Migrate APIs.  Users can then customize the discovery output for assessment. [Learn More](#how-to-customize-discovery-report) about customization on discovery file.
+The assessment module of utility package uses Azure Migrate assessment APIs to run PaaS preferred assessments for in scope machines. Machines that cannot be migrated to PaaS target are assessed for IaaS targets. [Learn More](#azure-migrate-export-assessment-report-generation-logic) about AME assessment logic. The assessment module generates Assessment Core Report, Assessment Opportunity report and Clash Report. Users can customize the generated Assessment Core report by referring to the details in Clash report to get rid of duplicates. This helps the user to generate presentation and cost estimates of only the required target assessments. [Learn More] about how to customize Assessment report.
 The PowerBI template uses the generated discovery and assessment reports to generate the required business presentation which can be downloaded as PPT.
+
 ## Prerequisites for running Azure Migrate Export
 ### User Permissions 
 The user logged into the machine should have the permissions and access to run EXE files. 
