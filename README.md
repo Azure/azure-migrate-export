@@ -10,7 +10,7 @@ Azure Migrate Export (AME) is a centralized and scalable solution that provides 
 Users can download the Azure Migrate Export utility from https://aka.ms/azuremigrateexport.
 The link downloads a .zip file. Extract the contents of the package.
 The Package consists of three files:
-    1.	Azure-Migrate-Export.exe is a light-weight console app that facilitates running of discovery and assessment and helps fetch data from Azure Migrate discovery and assessment  APIs.
+    1.	Azure-Migrate-Export.exe is a light-weight console app that facilitates running of discovery and assessment and helps fetch data from Azure Migrate discovery and assessment APIs.
     2.	PSScripts folder consists of underlying PowerShell modules.
     3.	PowerBI template helps build a cohesive presentation on top of discovery and assessment reports generated after running Azure-Migrate-Export.exe
 The Azure Migrate Export Utility is hosted on an open source github repository. Users can access all version of this utility package from https://aka.ms/azuremigrateexportutility. Users can use the script to build on top of current solutions.
@@ -99,11 +99,11 @@ Azure Site Recovery and backup cost is only computed for the following workloads
 ### Run Azure Migrate Export without customization
 Azure Migrate Export without customization quickly generates required output with certain assumptions such as all Machines discovered are in-scope and belong to Production environment. 
 Follow the below steps:
-1.	Download the Azure Migrate Export utility package and extract the contents on the package. [Learn More](#how-to-find-project-discovery-and-assessment-parameters) about how to get Azure Migrate Export Utility Package.
+1.	Download the Azure Migrate Export utility package and extract the contents on the package. [Learn More](#how-to-get-azure-migrate-export-utility-package) about how to get Azure Migrate Export Utility Package.
 2.	Run Azure Migrate Export application.
 3.	To generate the Discovery and assessment reports with customization, select Workflow Option = “Both”.
 4.	In Source Appliance, select the source of servers. By default, all three sources, namely VMware, HyperV and Physical are selected.
-5.	Input project identifier details such as Tenant ID, Subscription ID, Resource Group name, Discovery Site name and assessment project name. [Learn More]() on where to find the Project Identifier.
+5.	Input project identifier details such as Tenant ID, Subscription ID, Resource Group name, Discovery Site name and assessment project name. [Learn More](#how-to-find-project-discovery-and-assessment-parameters) on where to find the Project Identifier.
 6.	Select the Target location where you want to Modernize your resources, select the Assessment duration for which you want to run assessment and click submit.
 7.	Users will now be prompted to authenticate Azure access.
 8.	Once the user is authenticated in Azure, the discovery and assessment modules both run in sequence to generate discovery Report, Assessment Core Report, Assessment Opportunity Report and Assessment Clash Report. [Learn More](#discovery-and-assessment-report-analysis) about highlights of the report.
@@ -122,27 +122,28 @@ Follow the below steps:
 
 ### Run Azure Migrate Export with Customization.
 To run AME with customization, users need to first generate the discovery report, apply customization and then run assessment. Follow the below steps:
-1.	Download the Azure Migrate Export utility package and extract the contents on the package. [Learn More]() about how to get Azure Migrate Export Utility Package.
+1.	Download the Azure Migrate Export utility package and extract the contents on the package. [Learn More](#how-to-get-azure-migrate-export-utility-package) about how to get Azure Migrate Export Utility Package.
 2.	Run Azure Migrate Export application.
 3.	On the console, Select Workflow Option = “Discovery”.
 4.	In Source Appliance, select the source of servers. By default, all three sources, namely VMware, HyperV and Physical are selected.
-5.	Input project identifier details such as Tenant ID, Subscription ID, Resource Group name, Discovery Site name. [Learn More] on where to find the Project Identifier.
+5.	Input project identifier details such as Tenant ID, Subscription ID, Resource Group name, Discovery Site name. [Learn More](#how-to-find-project-discovery-and-assessment-parameters) on where to find the Project Identifier.
 6.	Select the Target location where  you want to move your resources and click submit.
 7.	Users will now be prompted to authenticate for Azure access.
 8.	Once the user is authenticated in Azure, the discovery runs to generate “Discovery_VMs” report which provides details of all servers discovered in your environment from the selected source type.
-9.	Apply the required customizations on the Discovery report and save the file. [Learn More] on how to customize discovery file.
+9.	Apply the required customizations on the Discovery report and save the file. [Learn More](#how-to-customize-discovery-report) on how to customize discovery file.
 10.	On the console, select Workflow option = “Assessment”
-11.	Input project identifiers such as Tenant ID, Subscription ID, Resource Group name, Assessment project name. [Learn More] on where to find the project identifiers.
+11.	Input project identifiers such as Tenant ID, Subscription ID, Resource Group name, Assessment project name. [Learn More](#how-to-find-project-discovery-and-assessment-parameters) on where to find the project identifiers.
 12.	Select the Assessment duration for which you want to run assessment and click submit.
 13.	Users will now be prompted to authenticate Azure access.
-14.	Once the user is authenticated in Azure, the assessment runs to generate Core Report, Opportunity Report and Clash Report. [Learn More] about highlights of the report.
-15.	[Note: Assessment typically runs in 1-2 hours but may take more time to run depending on the size of environment.]
-16.	Users can choose to customize assessment reports for removing required duplicates in assessment. [Learn More] about how to customize assessment reports.
-17.	Now, Run the “Azure_Migrate_Export.pbit” PowerBI template provided in the Utility package.
-18.	Provide the path of utility package where all the reports are generated and click Load. [Learn More] about base Path
-19.	Once the data is loaded, Users can now choose to change static data in PowerBI report to customize as per requirement. [Learn More] about how to customize PowerBI Report.
-20.	After finalizing the slides, publish the PowerBI report on your workspace.
-21.	You can download the Azure Migrate Export Executive Presentation as PPT from your workspace.
+14.	Once the user is authenticated in Azure, the assessment runs to generate Core Report, Opportunity Report and Clash Report. [Learn More](#discovery-and-assessment-report-analysis) about highlights of the report.
+> [!Note]
+> Assessment typically runs in 1-2 hours but may take more time to run depending on the size of environment.]
+15.	Users can choose to customize assessment reports for removing required duplicates in assessment. [Learn More](#how-to-customize-assessment-core-report) about how to customize assessment reports.
+16.	Now, Run the “Azure_Migrate_Export.pbit” PowerBI template provided in the Utility package.
+17.	Provide the path of utility package where all the reports are generated and click Load. [Learn More](#how-to--find-basepath) about base Path
+18.	Once the data is loaded, Users can now choose to change static data in PowerBI report to customize as per requirement. [Learn More](#how-to-customize-powerbi-report) about how to customize PowerBI Report.
+19.	After finalizing the slides, publish the PowerBI report on your workspace.
+20.	You can download the Azure Migrate Export Executive Presentation as PPT from your workspace.
  
 
 ## How to find Project, discovery, and assessment parameters
@@ -167,11 +168,11 @@ To find other parameters required for running discovery and assessment, follow t
 
   4.	Click on properties after clicking overview.
  
-  5.	Azure Migrate: Discovery and assessment | Properties open to show the required Project identifier and discovery and assessment project parameters such as Subscription ID, resource group name, discovery Site name and Assessment project name as below
+  5.	"Azure Migrate: Discovery and assessment | Properties" open to show the required Project identifier and discovery and assessment project parameters such as Subscription ID, resource group name, discovery Site name and Assessment project name as below
  
 
 ## How to Customize Discovery Report
-To Customize, Open “Discovered_VMs” excel report which is generated at \AzMigExport\All_Discovered-VMs-Report\Discovered_VMs.xlsx.
+To Customize, Open “Discovered_VMs” excel report which is generated at ```\AzMigExport\All_Discovered-VMs-Report\Discovered_VMs.xlsx```.
 There are three types of customizations that a user can apply in discovery file:
   1.	Moving Servers out of Scope: VMs and machines that a customer doesn’t wish to migrate to azure can be moved out of scope for assessment and migration estimates.
 The discovery file consists of details of discovered servers. Users can delete the required row in discovery file to move VM out of scope. Such VMs will not be considered for any type of assessment.
@@ -185,14 +186,14 @@ The discovery file consists of details of discovered servers. Users can delete t
 
 ## How to Customize Assessment Core Report
 Users can choose to customize Assessment Core Report for duplicates in assessment, removing servers out of scope and more. Cost Estimates in PowerBI are generated for only those machine rows that are part of Assessment Core Report and Assessment Opportunity report. 
-Duplicates can be identified with the help of Clash report. [Learn More] about interpreting Clash reports. By deleting the lines of a machine in respective assessment, users can choose to opt-out from getting recommendation and cost estimations.
+Duplicates can be identified with the help of Clash report. [Learn More](#interpreting-clash-report) about interpreting Clash reports. By deleting the lines of a machine in respective assessment, users can choose to opt-out from getting recommendation and cost estimations.
 
 For example 1: A Server (Contoso) has 3 SQL instances (A,B,C) running, as follows:
 1. A is ready for Azure SQL MI (details available in “SQL_MI_PaaS” tab in Core report),
 2. B is ready for Instance Rehost to Azure VM (details available in “SQL_IaaS_Instance_Rehost_Perf” tab in Core report)
 3. C can neither be migrated to Azure SQL MI nor is ready for Instance rehost to Azure VM, AME recommends SQL Server rehost to Azure VM for such deployments. (details available in “SQL_IaaS_Server_Rehost_Perf” tab in Core report)
 
-In such scenario, A machine with 3 instances is considered in 3 assessment and would lead to duplicates. The Clash report highlights such scenarios and provides a count of recommended Target resources for each source machine in-scope. [Learn More] about interpreting Clash reports.
+In such scenario, A machine with 3 instances is considered in 3 assessment and would lead to duplicates. The Clash report highlights such scenarios and provides a count of recommended Target resources for each source machine in-scope. [Learn More](#interpreting-clash-report) about interpreting Clash reports.
 
 Now suppose, User understands that Contoso is a Dev Server and wants to only do a Server Rehost of such SQL Server and chooses not to migrate its instances to PaaS. User can in that case delete rows of respective SQL Server and SQL Server instances from “SQL_MI_PaaS” and “SQL_IaaS_Instance_Rehost_Perf” tab in Core report. The PowerBI will now only calculate the cost of Contoso Rehost to Azure VM.
 For Example 2: Suppose a Webapp Server is running 2 Webapp (A and B), one of which is ready for migration to Azure App Service, However another is not. In that case, user will find this Web App server in both “WebApp_PaaS” and “WebApp_IaaS_Server_Rehost_Perf”. User can choose to only Server Rehost this Web App and should delete the required Server and Webapp row in “WebApp_PaaS” tab in Core report.
@@ -218,9 +219,9 @@ Machine | Name of discovered machine
 MachineArmId |	Unique identifier of machine in Azure
 IPaddress	| IP address of Machine
 Softwareinventory |	Count of discovered software inventory on a machine
-sqlDiscoveryServerCount |	Count of SQL instances running on a machine. <br></br> AME recommends PaaS preferred Migration Strategy and hence, the machines that have SQL instances running on them are first considered for migration to SQL managed instance. <br></br> If you do not want your Machine to be recommended for PaaS target, you can change the value of this column to 0 before starting assessments. [Learn More] about how to customize discovery report.
-sqlServicePresent | The column value is 1 if SQL services such as SQL Server Integration Services, SQL Server Report Services and SQL Server Analysis Services are present on the Machine.<br></br> AME recommends migrating such servers to Azure VMs. If you do not want your Machine to have a VM recommendation for Servers containing SQL Services, you can set the respective column value to 0. [Learn More] about how to customize discovery report.
-WebappsCount |	Count of Webapps running on a machine. <br></br> AME recommends PaaS preferred Migration Strategy and hence, the machines that have Webapps running on them are first considered for migration to App Service. <br></br>If you do not want your Machine to be recommended for PaaS target, you can change the value of this column for respective machine to 0 before starting assessments. [Learn More] about how to customize discovery report. 
+sqlDiscoveryServerCount |	Count of SQL instances running on a machine. <br></br> AME recommends PaaS preferred Migration Strategy and hence, the machines that have SQL instances running on them are first considered for migration to SQL managed instance. <br></br> If you do not want your Machine to be recommended for PaaS target, you can change the value of this column to 0 before starting assessments. [Learn More](how-to-customize-discovery-report) about how to customize discovery report.
+sqlServicePresent | The column value is 1 if SQL services such as SQL Server Integration Services, SQL Server Report Services and SQL Server Analysis Services are present on the Machine.<br></br> AME recommends migrating such servers to Azure VMs. If you do not want your Machine to have a VM recommendation for Servers containing SQL Services, you can set the respective column value to 0. [Learn More](how-to-customize-discovery-report) about how to customize discovery report.
+WebappsCount |	Count of Webapps running on a machine. <br></br> AME recommends PaaS preferred Migration Strategy and hence, the machines that have Webapps running on them are first considered for migration to App Service. <br></br>If you do not want your Machine to be recommended for PaaS target, you can change the value of this column for respective machine to 0 before starting assessments. [Learn More](how-to-customize-discovery-report) about how to customize discovery report. 
 Cores 	Count of vCores in the machine
 Memory(MB) |	Memory Size of Machine
 TotalDisks |	Total disks in the Machine
@@ -231,7 +232,7 @@ MACaddress |	MAC address of the Machine
 Powerstatus	| Status of Machine at the time of discovery i.e. ON, Running or Powered Off
 Lastupdatedtime |	Date and time when last discovery data was received by Azure Migrate Appliance.
 Firstdiscoverytime |	Date and time when collection of discovery data began by Azure Migrate Appliance.
-EnvironmentType	| This column is for <User input> <br></br> Users can categorize the servers into dev and prod environments by entering information into this column, so that adequate pricing considerations are applied at the time of assessment. Servers where environment type cells are blank are considered as production servers by default. <br></br> Permitted User input values: “Dev” and “Prod”. [Learn More] about how to customize discovery report.
+EnvironmentType	| This column is for <User input> <br></br> Users can categorize the servers into dev and prod environments by entering information into this column, so that adequate pricing considerations are applied at the time of assessment. Servers where environment type cells are blank are considered as production servers by default. <br></br> Permitted User input values: “Dev” and “Prod”. [Learn More](how-to-customize-discovery-report) about how to customize discovery report.
 Target | Region	Target regions selected by user while running discovery on AME.
 
 ### Assessment Core Report: 
@@ -278,8 +279,7 @@ VM Opportunity_Perf |	The report contains details of in-scope VMs that cannot be
 File Path: ```\AzMigExport\Clash-Report\AzureMigrate_Assessment_Clash_Report.xlsx```.
 
 The clash report helps identify duplicates, within the core report. With the help of this report, users can customize the Assessment Core report by deleting unwanted servers in an assessment. This helps a user generate precise estimated cost of customer’s workloads in Azure.
-The Clash report highlights count, and details of assessments conducted for a machine.
-Sized for assessments
+The Clash report highlights count, and details of assessments conducted for a machine that are sized for assessments
 #### Interpreting Clash Report:
  
 In the example above, Machine “CRMSQLVM14 have two entries in SQL_IaaS_Instance_Rehost_Perf tab and one entry in SQL_MI_PaaS tab and one entry in SQL_IaaS_Server_Rehost_Perf tab. User can use this report as a tally to understand a summary of all their in-scope machines and as well customize Assessment Core report to get the required cost estimate output from PowerBI. [Learn More] on how to customize Assessment Core Report 
@@ -313,7 +313,7 @@ Azure Migrate Export only uses Azure Migrate APIs to request for data insights. 
 ### Are passwords stored in Azure Migrate Export?
 No
 ### As a Partner or Seller, I want to generate the presentation but want my customer to run the Module. Is that possible?
-Yes, You can ask your customers to download the Azure Migrate Export Utility Package and run the Azure Migrate Export. Once discovery and assessment is complete, Your customer can send you AzMigExport folder with all the 4 discovery and assessment reports and PowerBI template. You may then run the PowerBI template by providing the required basepath. [Learn More] on how to find basepath.
+Yes, You can ask your customers to download the Azure Migrate Export Utility Package and run the Azure Migrate Export. Once discovery and assessment is complete, Your customer can send you AzMigExport folder with all the 4 discovery and assessment reports and PowerBI template. You may then run the PowerBI template by providing the required basepath. [Learn More](how-to--find-basepath) on how to find basepath.
 ### If my Vm is Powered off, will I still get its assessment consideration?
 Yes, it will be assessed for VM assessment only since its performance data will be unavailable.
 
