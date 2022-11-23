@@ -1,5 +1,5 @@
 # Azure Migrate Export Utility
-Author: Shradha Kalra
+
 ## What is Azure Migrate Export?
 Azure Migrate Export is a utility package that uses Azure Migrate discovery and assessment information from an already deployed Azure Migrate project to generate a cohesive presentation for executives.
 
@@ -282,7 +282,7 @@ The clash report helps identify duplicates, within the core report. With the hel
 The Clash report highlights count, and details of assessments conducted for a machine that are sized for assessments
 #### Interpreting Clash Report:
  
-In the example above, Machine “CRMSQLVM14 have two entries in SQL_IaaS_Instance_Rehost_Perf tab and one entry in SQL_MI_PaaS tab and one entry in SQL_IaaS_Server_Rehost_Perf tab. User can use this report as a tally to understand a summary of all their in-scope machines and as well customize Assessment Core report to get the required cost estimate output from PowerBI. [Learn More] on how to customize Assessment Core Report 
+In the example above, Machine “CRMSQLVM14 have two entries in SQL_IaaS_Instance_Rehost_Perf tab and one entry in SQL_MI_PaaS tab and one entry in SQL_IaaS_Server_Rehost_Perf tab. User can use this report as a tally to understand a summary of all their in-scope machines and as well customize Assessment Core report to get the required cost estimate output from PowerBI. [Learn More](#how-to-customize-assessment-core-report) on how to customize Assessment Core Report 
 
 ## Understanding PowerBI Report
 The details of each Slide in data populated PowerBI report is as follows: 
@@ -339,8 +339,8 @@ If Connect-AzAccount works and only Get-AzAccessToken is giving the above error,
 
 ### General Troubleshooting 
 For any other PowerShell module related error, or if the above errors were not resolved by following the steps mentioned below them, please try this general Troubleshooting method: 
-  a.	Please ensure that the Version and Execution Policy prerequisites are met. 
-  b.	Install PowerShell v7 using the appropriate msi installer package following the link - Installing PowerShell on Windows - PowerShell | Microsoft Learn 
+  a.	Please ensure that the Version and Execution Policy prerequisites are met.
+  b.	Install PowerShell v7 using the appropriate msi installer package following the link - [Installing PowerShell on Windows - PowerShell | Microsoft Learn](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.3#installing-the-msi-package)
   c.	Once the installation is complete launch PowerShell 7 terminal with Administrator privileges. 
   d.	Once PowerShell 7 terminal is started, please run the commands to set Execution Policy and install Az PowerShell module mentioned above. 
   e.	Once the installation is completed, please run the commands to verify proper installation of PowerShell modules. 
