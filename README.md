@@ -10,9 +10,9 @@ Azure Migrate Export (AME) is a centralized and scalable solution that provides 
 Users can download the Azure Migrate Export utility from https://aka.ms/azuremigrateexport.
 The link downloads a .zip file. Extract the contents of the package.
 The Package consists of three files:
-* 1. Azure-Migrate-Export.exe is a light-weight console app that facilitates running of discovery and assessment and helps fetch data from Azure Migrate discovery and assessment APIs.
-* 2.	PSScripts folder consists of underlying PowerShell modules.
-* 3.	PowerBI template helps build a cohesive presentation on top of discovery and assessment reports generated after running Azure-Migrate-Export.exe
+1. Azure-Migrate-Export.exe is a light-weight console app that facilitates running of discovery and assessment and helps fetch data from Azure Migrate discovery and assessment APIs.
+2.	PSScripts folder consists of underlying PowerShell modules.
+3.	PowerBI template helps build a cohesive presentation on top of discovery and assessment reports generated after running Azure-Migrate-Export.exe
 The Azure Migrate Export Utility is hosted on an open source github repository. Users can access all version of this utility package from https://aka.ms/azuremigrateexportutility. Users can use the script to build on top of current solutions.
 
 ## How does Azure Migrate Export Work?
