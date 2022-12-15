@@ -69,14 +69,14 @@ The following modules are needed to run Azure Migrate Export.
 The assessment logic for each type of workload is as below:
 ### SQL Assessment:
 SQL assessment is a three-step process:
-  •	Step 1: All the in-scope SQL instances are first assessed for Azure SQL Managed Instances. Details of SQL Server Instances that are ready for Azure SQL MI can be found in “SQL_MI_PaaS” tab in Assessment Core Report.
-  •	Step 2: The remaining SQL Instances that cannot be migrated to Azure SQL MI due to migration blockers (details of which are available in opportunity report) are then assessed for migration to SQL server in Azure VM (sizing the instance for Azure VM, using the recommended migration approach). Details of such SQL Server instances can be found in “SQL_IaaS_Instance_Rehost_Perf” tab in Assessment Core Report.
-Only Premium disks are recommended for Azure VMs that run SQL Instances on them.
-  •	Step 3: The remaining servers whose SQL instances are not ready for the above two migration/ modernization approaches are then assessed for readiness for SQL Server on Azure VM – using a Lift and Shift approach ie migrating an entire server not just individual SQL Server Instances running in them. Details of such SQL Server can be found in “SQL_IaaS_Server_Rehost_Perf” tab in Assessment Core Report. [Learn more](https://learn.microsoft.com/en-us/azure/migrate/concepts-azure-sql-assessment-calculation) about the SQL Server assessment logic.
+  1. Step 1: All the in-scope SQL instances are first assessed for Azure SQL Managed Instances. Details of SQL Server Instances that are ready for Azure SQL MI can be found in “SQL_MI_PaaS” tab in Assessment Core Report.
+  2. Step 2: The remaining SQL Instances that cannot be migrated to Azure SQL MI due to migration blockers (details of which are available in opportunity report) are then assessed for migration to SQL server in Azure VM (sizing the instance for Azure VM, using the recommended migration approach). Details of such SQL Server instances can be found in “SQL_IaaS_Instance_Rehost_Perf” tab in Assessment Core Report.
+  Only Premium disks are recommended for Azure VMs that run SQL Instances on them.
+  3. Step 3: The remaining servers whose SQL instances are not ready for the above two migration/ modernization approaches are then assessed for readiness for SQL Server on Azure VM – using a Lift and Shift approach ie migrating an entire server not just individual SQL Server Instances running in them. Details of such SQL Server can be found in “SQL_IaaS_Server_Rehost_Perf” tab in Assessment Core Report. [Learn more](https://learn.microsoft.com/en-us/azure/migrate/concepts-azure-sql-assessment-calculation) about the SQL Server assessment logic.
 ### Webapp Assessment:
 Webapp assessment is a two-step process:
-  •	Step 1: All the in-scope discovered .NET Webapps running on IIS Web Servers on Windows Server are first assessed for migration to Azure App Service. Details of Webapp that are ready for Azure App service can be found in “WebApp_PaaS” tab in Assessment Core Report.
-  •	Step 2: The remaining servers whose webapp/webapps cannot be migrated to Azure App Service due to migration blockers (details of which are available in opportunity report) are then assessed for Azure VM. Details of such server can be found in “WebApp_IaaS_Server_Rehost_Perf” tab in Assessment Core Report. [Learn more](https://learn.microsoft.com/en-us/azure/migrate/concepts-azure-webapps-assessment-calculation) about the App Service assessment logic.
+  1. Step 1: All the in-scope discovered .NET Webapps running on IIS Web Servers on Windows Server are first assessed for migration to Azure App Service. Details of Webapp that are ready for Azure App service can be found in “WebApp_PaaS” tab in Assessment Core Report.
+  2. Step 2: The remaining servers whose webapp/webapps cannot be migrated to Azure App Service due to migration blockers (details of which are available in opportunity report) are then assessed for Azure VM. Details of such server can be found in “WebApp_IaaS_Server_Rehost_Perf” tab in Assessment Core Report. [Learn more](https://learn.microsoft.com/en-us/azure/migrate/concepts-azure-webapps-assessment-calculation) about the App Service assessment logic.
 ### Assessment of Servers containing SQL Services:
 All in-scope discovered machines  containing SQL Services such as SQL Server Integration services, SQL Server Reporting Services and SQL Server Analysis Services are assessed for migration to Azure VM – using a Lift and Shift approach. Details of such machines can be found in “VM_SS_IaaS_Server_Rehost_Perf” tab in Assessment Core Report.
 ### VM Assessment: 
@@ -85,16 +85,16 @@ The in-scope discovered Windows and Linux servers that do not have SQL Server, W
 The in-scope discovered machines that are running on VMware are assessed AVS assessment. AVS is an alternate approach to PaaS preferred migration where customer can choose to rehost their VMware environment on Azure VMware Services. Details of such machines can be found in “AVS_Summary” and “AVS_IaaS_Rehost_Perf” tab in Assessment Opportunity Core Report. [Learn more](https://learn.microsoft.com/en-us/azure/migrate/concepts-azure-vmware-solution-assessment-calculation) about the AVS assessment logic.
 ### Azure Site Recovery and Backup:
 Azure Site Recovery and backup cost is only computed for the following workloads:
-  •	Machines and Instances running in Prod environment. 
-  •	Machines and Instances recommended for Migration to Azure VM.
+  - Machines and Instances running in Prod environment. 
+  - Machines and Instances recommended for Migration to Azure VM.
 
 ## How to run Azure Migrate Export
 ### Before you begin: 
-  •	Review the pre-requisites for running Azure Migrate Export.
-  •	Before running Azure Migrate Export, users must have successfully set up an Azure Migrate Project, deployed an Azure Migrate appliance and should have successfully discovered using Azure Migrate discovery and assessment tool.
-  • There are two workflows in which users can run Azure Migrate Export Utility.
-        •	Run without Customization or Single Click Experience – aims to quickly generate required output with certain assumptions such as all Machines discovered are in-scope and belong to Production environment.
-        •	Run with Customization – Aims to allow for customization, such as classification of environment such as dev/prod to take advantage of Dev/Test pricing, moving machines out of scope for an assessment or moving machines out of scope of migration and even the visualization. [Learn More](#how-to-customize-discovery-report) on how to customize Discovery file.
+- Review the pre-requisites for running Azure Migrate Export.
+- Before running Azure Migrate Export, users must have successfully set up an Azure Migrate Project, deployed an Azure Migrate appliance and should have successfully discovered using Azure Migrate discovery and assessment tool.
+- There are two workflows in which users can run Azure Migrate Export Utility.
+   - Run without Customization or Single Click Experience – aims to quickly generate required output with certain assumptions such as all Machines discovered are in-scope and belong to Production environment.
+   - Run with Customization – Aims to allow for customization, such as classification of environment such as dev/prod to take advantage of Dev/Test pricing, moving machines out of scope for an assessment or moving machines out of scope of migration and even the visualization. [Learn More](#how-to-customize-discovery-report) on how to customize Discovery file.
 
 ### Run Azure Migrate Export without customization
 Azure Migrate Export without customization quickly generates required output with certain assumptions such as all Machines discovered are in-scope and belong to Production environment. 
@@ -109,13 +109,11 @@ Follow the below steps:
 8.	Once the user is authenticated in Azure, the discovery and assessment modules both run in sequence to generate discovery Report, Assessment Core Report, Assessment Opportunity Report and Assessment Clash Report. [Learn More](#discovery-and-assessment-report-analysis) about highlights of the report.
 > [!Note] 
 > Assessment typically runs in 1-2 hours but may take more time to run depending on the size of environment.
-
 9.	Users can choose to customize assessment report for removing required duplicates in assessment. [Learn More](#how-to-customize-assessment-core-report) about how to customize assessment reports.
 10.	Now, Run the “Azure_Migrate_Export.pbit” PowerBI template provided in the Utility package.
 11.	Provide the path of utility package where all the reports are generated and click Load. [Learn More](#how-to--find-basepath) about base Path.
 12.	Once the data is loaded, Users can now choose to change static data in PowerBI report to customize as per requirement. [Learn More](#how-to-customize-powerbi-report) about how to customize PowerBI Report.
 13.	After finalizing the slides, publish the PowerBI report on your workspace.
- 
 14.	You can download the Azure Migrate Export Executive Presentation as PPT from your workspace.
  
 
@@ -149,40 +147,37 @@ To run AME with customization, users need to first generate the discovery report
 ## How to find Project, discovery, and assessment parameters
 The below project identifier and discovery and assessment parameters need to input into Azure Migrate Export Console. You can find these values from the Azure portal as below:
 ### Tenant ID: 
-  •	Login to Azure
-  •	Click on your profile on the top right of the page and select Switch directory.
-  •	The Portal Settings| Directories + subscriptions open to show Directory ID of your tenant which is also your Tenant ID.
+  1. Login to Azure
+  2. Click on your profile on the top right of the page and select Switch directory.
+  3. The Portal Settings| Directories + subscriptions open to show Directory ID of your tenant which is also your Tenant ID.
   
 
 ### Subscription ID, Resource Group Name, Discovery Site Name and Assessment Project name:
 > [!Note]
-> Project Name is different from Assessment Project name
-> Assessment Project needs to be entered for running assessments
+> - Project Name is different from Assessment Project name
+> - Assessment Project needs to be entered for running assessments
 
 To find other parameters required for running discovery and assessment, follow the below steps:
   1.	Open Azure Migrate in Azure.
   2.	Click on Discovery, Assess and Migrate 
- 
   3.	Choose the required project and click on overview.
- 
-
   4.	Click on properties after clicking overview.
- 
   5.	"Azure Migrate: Discovery and assessment | Properties" open to show the required Project identifier and discovery and assessment project parameters such as Subscription ID, resource group name, discovery Site name and Assessment project name as below
  
 
 ## How to Customize Discovery Report
 To Customize, Open “Discovered_VMs” excel report which is generated at ```\AzMigExport\All_Discovered-VMs-Report\Discovered_VMs.xlsx```.
 There are three types of customizations that a user can apply in discovery file:
-  1.	Moving Servers out of Scope: VMs and machines that a customer doesn’t wish to migrate to azure can be moved out of scope for assessment and migration estimates.
+1.	Moving Servers out of Scope: VMs and machines that a customer doesn’t wish to migrate to azure can be moved out of scope for assessment and migration estimates.
 The discovery file consists of details of discovered servers. Users can delete the required row in discovery file to move VM out of scope. Such VMs will not be considered for any type of assessment.
-  2.	Limit Workload for respective assessment: If you want to avoid workloads like SQL Server or .NET WebApps to be considered for respective PaaS assessments i.e. Azure SQL MI and Azure App Service respectively, you can change the count in the respective column to 0; such workloads now will only be considered for migration to Azure VM via lift and shift.
- 
-  For Example: If a user does not want to assess “Fabsqlsrv” Machine for SQL Managed Instance but instead wants to rehost the server to Azure VM, then they should set the respective sqlDiscoveryServerCount to 0. 
+2.	Limit Workload for respective assessment: If you want to avoid workloads like SQL Server or .NET WebApps to be considered for respective PaaS assessments i.e. Azure SQL MI and Azure App Service respectively, you can change the count in the respective column to 0; such workloads now will only be considered for migration to Azure VM via lift and shift.
 
-  Similarly, if the user doesn’t wish to get a separate Azure VM recommended for a VM running Azure SQL Services, then they should set the respective sqlServicePresent to 0.
-  Similarly, if a user does not want to assess “Fabwebsrv1” machine for Azure App Service  but instead wants to rehost the server to Azure VM, then they should set the respective WebappsCount to 0.
-  3.	Mark servers as Dev: Azure offers special discount pricing for machines in Dev/Test environment. You can categorize the servers into dev and prod environments by entering “Dev” and “Prod” into the “Environment Type” column in discovered report, so that adequate pricing considerations are applied at the time of assessment. Servers where environment type cells are blank are considered as production servers by default. 
+For Example: If a user does not want to assess “Fabsqlsrv” Machine for SQL Managed Instance but instead wants to rehost the server to Azure VM, then they should set the respective sqlDiscoveryServerCount to 0. 
+
+Similarly, if the user doesn’t wish to get a separate Azure VM recommended for a VM running Azure SQL Services, then they should set the respective sqlServicePresent to 0.
+
+Similarly, if a user does not want to assess “Fabwebsrv1” machine for Azure App Service  but instead wants to rehost the server to Azure VM, then they should set the respective WebappsCount to 0.
+3.	Mark servers as Dev: Azure offers special discount pricing for machines in Dev/Test environment. You can categorize the servers into dev and prod environments by entering “Dev” and “Prod” into the “Environment Type” column in discovered report, so that adequate pricing considerations are applied at the time of assessment. Servers where environment type cells are blank are considered as production servers by default. 
 
 ## How to Customize Assessment Core Report
 Users can choose to customize Assessment Core Report for duplicates in assessment, removing servers out of scope and more. Cost Estimates in PowerBI are generated for only those machine rows that are part of Assessment Core Report and Assessment Opportunity report. 
@@ -339,24 +334,24 @@ If Connect-AzAccount works and only Get-AzAccessToken is giving the above error,
 
 ### General Troubleshooting 
 For any other PowerShell module related error, or if the above errors were not resolved by following the steps mentioned below them, please try this general Troubleshooting method: 
-  a.	Please ensure that the Version and Execution Policy prerequisites are met.
-  b.	Install PowerShell v7 using the appropriate msi installer package following the link - [Installing PowerShell on Windows - PowerShell | Microsoft Learn](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.3#installing-the-msi-package)
-  c.	Once the installation is complete launch PowerShell 7 terminal with Administrator privileges. 
-  d.	Once PowerShell 7 terminal is started, please run the commands to set Execution Policy and install Az PowerShell module mentioned above. 
-  e.	Once the installation is completed, please run the commands to verify proper installation of PowerShell modules. 
-  f.	Once it is verified that the commands are working as desired and the proper output is displayed on the PowerShell terminal, we need to add the path to the directory of these modules to PSModulePath environment variable. This can be achieved by following the steps below: 
-        I.	Run the command –> Get-Module -ListAvailable ‘Az.*’ on PowerShell 7 terminal. At the top of the output of the command, we see the directory to which these modules are referring to. 
-        II.	Copy the path of the directory as it is and close the PowerShell terminal. 
-        III.	Go the ‘Edit System Environment Variables’ from the start menu. 
-        IV.	Click on ‘Environment Variables’ 
-        V.	Search for the variable ‘PSModulePath’ in System Variables. 
-        VI.	Double-Click on ‘PSModulePath’ variable, a dialog will open which contains all the paths assigned to that variable. 
-        VII.	Click on New and paste the path to the directory copied above. 
-        VIII.	Select the newly added path and click on ‘Move Up’ to increase its Priority. 
-        IX.	Click on ‘Ok’ where the path was added for the changes to take effect. 
-        X.	Click on ‘Ok’ again on the dialog with all the System Variables. 
-        XI.	Click on ‘Ok’ again for closing the ‘Edit System Environment Variables’ dialog and for changes to take effect. 
-        XII.	Now, run the older PowerShell terminal and run the commands to verify proper installation. 
+1. Please ensure that the Version and Execution Policy prerequisites are met.
+2. Install PowerShell v7 using the appropriate msi installer package following the link - [Installing PowerShell on Windows - PowerShell | Microsoft Learn](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.3#installing-the-msi-package)
+3. Once the installation is complete launch PowerShell 7 terminal with Administrator privileges. 
+4. Once PowerShell 7 terminal is started, please run the commands to set Execution Policy and install Az PowerShell module mentioned above. 
+5. Once the installation is completed, please run the commands to verify proper installation of PowerShell modules. 
+6. Once it is verified that the commands are working as desired and the proper output is displayed on the PowerShell terminal, we need to add the path to the directory of these modules to PSModulePath environment variable. This can be achieved by following the steps below: 
+   1. Run the command –> Get-Module -ListAvailable ‘Az.*’ on PowerShell 7 terminal. At the top of the output of the command, we see the directory to which these modules are referring to. 
+   2. Copy the path of the directory as it is and close the PowerShell terminal. 
+   3. Go the ‘Edit System Environment Variables’ from the start menu. 
+   4. Click on ‘Environment Variables’ 
+   5. Search for the variable ‘PSModulePath’ in System Variables. 
+   6. Double-Click on ‘PSModulePath’ variable, a dialog will open which contains all the paths assigned to that variable. 
+   7. Click on New and paste the path to the directory copied above. 
+   8. Select the newly added path and click on ‘Move Up’ to increase its Priority. 
+   9. Click on ‘Ok’ where the path was added for the changes to take effect. 
+   10. Click on ‘Ok’ again on the dialog with all the System Variables. 
+   11. Click on ‘Ok’ again for closing the ‘Edit System Environment Variables’ dialog and for changes to take effect. 
+   12. Now, run the older PowerShell terminal and run the commands to verify proper installation. 
 
 ## Run following commands on PowerShell to test proper installation 
 Run the following commands in the order specified, these are the commands run by the scripts to connect to Azure Portal API and can help verify proper installation of Az PowerShell module. 
