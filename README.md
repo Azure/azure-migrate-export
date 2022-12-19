@@ -296,63 +296,6 @@ The details of each Slide in data populated PowerBI report is as follows:
 31-34	| Details benefit of Azure Hybid benefits offer
 37, 38	| Details benefit of Reserved Instances offer
 
-## Frequently Asked Questions
-### How to  find BasePath
-Open the location where you have installed the Azure Migrate Export Utility Package and copy the path of folder where all the discovery and assessment reports are present.
-Basepath for the example below is “E:\AzMigExport”
- 
-### I can’t find the publish button on the PowerBI desktop?
-The publish button is available on the top-right of the home tab in PowerBI export. Publish facility is not available for users having Free PowerBI license. Such users can do customizations and export PowerBI as PDF.
-### Is my data secured?
-Azure Migrate Export only uses Azure Migrate APIs to request for data insights. No data is stored.
-### Are passwords stored in Azure Migrate Export?
-No
-### As a Partner or Seller, I want to generate the presentation but want my customer to run the Module. Is that possible?
-Yes, You can ask your customers to download the Azure Migrate Export Utility Package and run the Azure Migrate Export. Once discovery and assessment is complete, Your customer can send you AzMigExport folder with all the 4 discovery and assessment reports and PowerBI template. You may then run the PowerBI template by providing the required basepath. [Learn More](how-to--find-basepath) on how to find basepath.
-### If my Vm is Powered off, will I still get its assessment consideration?
-Yes, it will be assessed for VM assessment only since its performance data will be unavailable.
-
-
-## Troubleshooting Error
-### Connect-AzAccount is not recognized: 
-Complete Error Message: Connect-AzAccount: The term ‘Connect-AzAccount’ is not recognized as a name of a cmdlet, function, script file, or executable program. 
-Check the Spelling of the name or if a path was included, verify that the path is correct and try again. 
-Steps to Mitigate: 
-This error is a symptom of the Az PowerShell module not being installed correctly. This can happened because of the following reasons: 
-1. AzureRM was installed and is creating conflicts with Az module, in this case please uninstall AzureRM. 
-2. PowerShell version is not up to 5.1. Please check the PowerShell version and update if needed. 
-3. Run the commands mentioned above for verifying proper installation of the modules. 
-
-### Get-AzAccessToken is not recognized: 
-Complete Error Message: Get-AzAccessToken: The term ‘Get-AzAccessToken’ is not recognized as a name of a cmdlet, function, script file, or executable program. 
-Check the Spelling of the name or if a path was included, verify that the path is correct and try again. 
-Steps to Mitigate: 
-If Connect-AzAccount works and only Get-AzAccessToken is giving the above error, this is a symptom of an older version of Az PowerShell module being installed. To address this issue: 
-  1. Update the PowerShellGet module to the latest version following the directions mentioned on the link provided with PowerShellGet module’s use above. 
-  2. Install the latest version of Az PowerShell module (9.1.1) following the directions mentioned on the link above with Az PowerShell module’s use above. 
-  3. Run the commands mentioned above for verifying the proper installation of the modules. 
-
-### General Troubleshooting 
-For any other PowerShell module related error, or if the above errors were not resolved by following the steps mentioned below them, please try this general Troubleshooting method: 
-1. Please ensure that the Version and Execution Policy prerequisites are met.
-2. Install PowerShell v7 using the appropriate msi installer package following the link - [Installing PowerShell on Windows - PowerShell | Microsoft Learn](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.3#installing-the-msi-package)
-3. Once the installation is complete launch PowerShell 7 terminal with Administrator privileges. 
-4. Once PowerShell 7 terminal is started, please run the commands to set Execution Policy and install Az PowerShell module mentioned above. 
-5. Once the installation is completed, please run the commands to verify proper installation of PowerShell modules. 
-6. Once it is verified that the commands are working as desired and the proper output is displayed on the PowerShell terminal, we need to add the path to the directory of these modules to PSModulePath environment variable. This can be achieved by following the steps below: 
-   1. Run the command –> Get-Module -ListAvailable ‘Az.*’ on PowerShell 7 terminal. At the top of the output of the command, we see the directory to which these modules are referring to. 
-   2. Copy the path of the directory as it is and close the PowerShell terminal. 
-   3. Go the ‘Edit System Environment Variables’ from the start menu. 
-   4. Click on ‘Environment Variables’ 
-   5. Search for the variable ‘PSModulePath’ in System Variables. 
-   6. Double-Click on ‘PSModulePath’ variable, a dialog will open which contains all the paths assigned to that variable. 
-   7. Click on New and paste the path to the directory copied above. 
-   8. Select the newly added path and click on ‘Move Up’ to increase its Priority. 
-   9. Click on ‘Ok’ where the path was added for the changes to take effect. 
-   10. Click on ‘Ok’ again on the dialog with all the System Variables. 
-   11. Click on ‘Ok’ again for closing the ‘Edit System Environment Variables’ dialog and for changes to take effect. 
-   12. Now, run the older PowerShell terminal and run the commands to verify proper installation. 
-
 ## Run following commands on PowerShell to test proper installation 
 Run the following commands in the order specified, these are the commands run by the scripts to connect to Azure Portal API and can help verify proper installation of Az PowerShell module. 
 1.	Command –> Get-Module -ListAvailable -Name ‘Az.*’ : This command should list all the PowerShell modules that should be installed as a part of Az PowerShell module and the directory they can be found in at the top. 
