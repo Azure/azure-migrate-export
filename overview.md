@@ -1,3 +1,12 @@
+---
+title: About Azure Migrate Export
+description: Get an overview of Azure Migrate Export.
+author: kalrashradha
+ms.author: v-ksreedevan
+ms.topic: conceptual
+ms.date: 12/20/2022
+---
+
 # Azure Migrate Export Utility
 
 ## What is Azure Migrate Export?
@@ -13,7 +22,7 @@ The Package consists of three files:
 1. Azure-Migrate-Export.exe is a light-weight console app that facilitates running of discovery and assessment and helps fetch data from Azure Migrate discovery and assessment APIs.
 2.	PSScripts folder consists of underlying PowerShell modules.
 3.	PowerBI template helps build a cohesive presentation on top of discovery and assessment reports generated after running Azure-Migrate-Export.exe
-The Azure Migrate Export Utility is hosted on an open source github repository. Users can access all version of this utility package from https://aka.ms/azuremigrateexportutility. Users can use the script to build on top of current solutions.
+The Azure Migrate Export Utility is hosted on an open source github repository. Users can access all versions of this utility package from https://aka.ms/azuremigrateexportutility. Users can use the script to build on top of current solutions.
 
 ## How does Azure Migrate Export Work?
 The discovery module of the utility package runs to pull discovered data from an already deployed Azure Migrate Project using Azure Migrate APIs.  Users can then customize the discovery output for assessment. [Learn More](#how-to-customize-discovery-report) about customization on discovery file.
@@ -88,69 +97,13 @@ Azure Site Recovery and backup cost is only computed for the following workloads
   - Machines and Instances running in Prod environment. 
   - Machines and Instances recommended for Migration to Azure VM.
 
-## How to run Azure Migrate Export
-### Before you begin: 
-- Review the pre-requisites for running Azure Migrate Export.
-- Before running Azure Migrate Export, users must have successfully set up an Azure Migrate Project, deployed an Azure Migrate appliance and should have successfully discovered using Azure Migrate discovery and assessment tool.
-- There are two workflows in which users can run Azure Migrate Export Utility.
-   - Run without Customization or Single Click Experience – aims to quickly generate required output with certain assumptions such as all Machines discovered are in-scope and belong to Production environment.
-   - Run with Customization – Aims to allow for customization, such as classification of environment such as dev/prod to take advantage of Dev/Test pricing, moving machines out of scope for an assessment or moving machines out of scope of migration and even the visualization. [Learn More](#how-to-customize-discovery-report) on how to customize Discovery file.
-
-### Run Azure Migrate Export without customization
-Azure Migrate Export without customization quickly generates required output with certain assumptions such as all Machines discovered are in-scope and belong to Production environment. 
-Follow the below steps:
-1.	Download the Azure Migrate Export utility package and extract the contents on the package. [Learn More](#how-to-get-azure-migrate-export-utility-package) about how to get Azure Migrate Export Utility Package.
-2.	Run Azure Migrate Export application.
-3.	To generate the Discovery and assessment reports with customization, select Workflow Option = “Both”.
-4.	In Source Appliance, select the source of servers. By default, all three sources, namely VMware, HyperV and Physical are selected.
-5.	Input project identifier details such as Tenant ID, Subscription ID, Resource Group name, Discovery Site name and assessment project name. [Learn More](#how-to-find-project-discovery-and-assessment-parameters) on where to find the Project Identifier.
-6.	Select the Target location where you want to Modernize your resources, select the Assessment duration for which you want to run assessment and click submit.
-7.	Users will now be prompted to authenticate Azure access.
-8.	Once the user is authenticated in Azure, the discovery and assessment modules both run in sequence to generate discovery Report, Assessment Core Report, Assessment Opportunity Report and Assessment Clash Report. [Learn More](#discovery-and-assessment-report-analysis) about highlights of the report.
-> [!Note] 
-> Assessment typically runs in 1-2 hours but may take more time to run depending on the size of environment.
-9.	Users can choose to customize assessment report for removing required duplicates in assessment. [Learn More](#how-to-customize-assessment-core-report) about how to customize assessment reports.
-10.	Now, Run the “Azure_Migrate_Export.pbit” PowerBI template provided in the Utility package.
-11.	Provide the path of utility package where all the reports are generated and click Load. [Learn More](#how-to--find-basepath) about base Path.
-12.	Once the data is loaded, Users can now choose to change static data in PowerBI report to customize as per requirement. [Learn More](#how-to-customize-powerbi-report) about how to customize PowerBI Report.
-13.	After finalizing the slides, publish the PowerBI report on your workspace.
-14.	You can download the Azure Migrate Export Executive Presentation as PPT from your workspace.
- 
-
-
-### Run Azure Migrate Export with Customization.
-To run AME with customization, users need to first generate the discovery report, apply customization and then run assessment. Follow the below steps:
-1.	Download the Azure Migrate Export utility package and extract the contents on the package. [Learn More](#how-to-get-azure-migrate-export-utility-package) about how to get Azure Migrate Export Utility Package.
-2.	Run Azure Migrate Export application.
-3.	On the console, Select Workflow Option = “Discovery”.
-4.	In Source Appliance, select the source of servers. By default, all three sources, namely VMware, HyperV and Physical are selected.
-5.	Input project identifier details such as Tenant ID, Subscription ID, Resource Group name, Discovery Site name. [Learn More](#how-to-find-project-discovery-and-assessment-parameters) on where to find the Project Identifier.
-6.	Select the Target location where  you want to move your resources and click submit.
-7.	Users will now be prompted to authenticate for Azure access.
-8.	Once the user is authenticated in Azure, the discovery runs to generate “Discovery_VMs” report which provides details of all servers discovered in your environment from the selected source type.
-9.	Apply the required customizations on the Discovery report and save the file. [Learn More](#how-to-customize-discovery-report) on how to customize discovery file.
-10.	On the console, select Workflow option = “Assessment”
-11.	Input project identifiers such as Tenant ID, Subscription ID, Resource Group name, Assessment project name. [Learn More](#how-to-find-project-discovery-and-assessment-parameters) on where to find the project identifiers.
-12.	Select the Assessment duration for which you want to run assessment and click submit.
-13.	Users will now be prompted to authenticate Azure access.
-14.	Once the user is authenticated in Azure, the assessment runs to generate Core Report, Opportunity Report and Clash Report. [Learn More](#discovery-and-assessment-report-analysis) about highlights of the report.
-> [!Note]
-> Assessment typically runs in 1-2 hours but may take more time to run depending on the size of environment.]
-15.	Users can choose to customize assessment reports for removing required duplicates in assessment. [Learn More](#how-to-customize-assessment-core-report) about how to customize assessment reports.
-16.	Now, Run the “Azure_Migrate_Export.pbit” PowerBI template provided in the Utility package.
-17.	Provide the path of utility package where all the reports are generated and click Load. [Learn More](#how-to--find-basepath) about base Path
-18.	Once the data is loaded, Users can now choose to change static data in PowerBI report to customize as per requirement. [Learn More](#how-to-customize-powerbi-report) about how to customize PowerBI Report.
-19.	After finalizing the slides, publish the PowerBI report on your workspace.
-20.	You can download the Azure Migrate Export Executive Presentation as PPT from your workspace.
- 
-
 ## How to find Project, discovery, and assessment parameters
 The below project identifier and discovery and assessment parameters need to input into Azure Migrate Export Console. You can find these values from the Azure portal as below:
+
 ### Tenant ID: 
   1. Login to Azure
   2. Click on your profile on the top right of the page and select Switch directory.
-  3. The Portal Settings| Directories + subscriptions open to show Directory ID of your tenant which is also your Tenant ID.
-  
+  3. The Portal Settings| Directories + subscriptions open to show Directory ID of your tenant which is also your Tenant ID.  
 
 ### Subscription ID, Resource Group Name, Discovery Site Name and Assessment Project name:
 > [!Note]
@@ -274,7 +227,8 @@ VM Opportunity_Perf |	The report contains details of in-scope VMs that cannot be
 File Path: ```\AzMigExport\Clash-Report\AzureMigrate_Assessment_Clash_Report.xlsx```.
 
 The clash report helps identify duplicates, within the core report. With the help of this report, users can customize the Assessment Core report by deleting unwanted servers in an assessment. This helps a user generate precise estimated cost of customer’s workloads in Azure.
-The Clash report highlights count, and details of assessments conducted for a machine that are sized for assessments
+The Clash report highlights count, and details of assessments conducted for a machine that are sized for assessments.
+
 #### Interpreting Clash Report:
  
 In the example above, Machine “CRMSQLVM14 have two entries in SQL_IaaS_Instance_Rehost_Perf tab and one entry in SQL_MI_PaaS tab and one entry in SQL_IaaS_Server_Rehost_Perf tab. User can use this report as a tally to understand a summary of all their in-scope machines and as well customize Assessment Core report to get the required cost estimate output from PowerBI. [Learn More](#how-to-customize-assessment-core-report) on how to customize Assessment Core Report 
