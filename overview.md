@@ -20,8 +20,8 @@ Users can download the Azure Migrate Export utility from https://aka.ms/azuremig
 The link downloads a .zip file. Extract the contents of the package.
 The Package consists of three files:
 1. Azure-Migrate-Export.exe is a light-weight console app that facilitates running of discovery and assessment and helps fetch data from Azure Migrate discovery and assessment APIs.
-2.	PSScripts folder consists of underlying PowerShell modules.
-3.	PowerBI template helps build a cohesive presentation on top of discovery and assessment reports generated after running Azure-Migrate-Export.exe
+2.	The PSScripts folder consists of underlying PowerShell modules.
+3.	The PowerBI template helps build a cohesive presentation on top of discovery and assessment reports generated after running Azure-Migrate-Export.exe
 The Azure Migrate Export Utility is hosted on an open source github repository. Users can access all versions of this utility package from https://aka.ms/azuremigrateexportutility. Users can use the script to build on top of current solutions.
 
 ## How does Azure Migrate Export Work?
@@ -112,20 +112,20 @@ The below project identifier and discovery and assessment parameters need to inp
 
 To find other parameters required for running discovery and assessment, follow the below steps:
   1.	Open Azure Migrate in Azure.
-  2.	Click on Discovery, Assess and Migrate 
-  3.	Choose the required project and click on overview.
-  4.	Click on properties after clicking overview.
-  5.	"Azure Migrate: Discovery and assessment | Properties" open to show the required Project identifier and discovery and assessment project parameters such as Subscription ID, resource group name, discovery Site name and Assessment project name as below
+  2.	Select **Discovery, Assess and Migrate**. 
+  3.	Choose the required project and select **Overview**.
+  4.	Select **Properties** after clicking **Overview**.
+  5.	The **Azure Migrate: Discovery and assessment | Properties** screen displayes the required Project identifier and discovery and assessment project parameters such as Subscription ID, resource group name, discovery Site name, and Assessment project name as below:
  
 
 ## How to Customize Discovery Report
-To Customize, Open “Discovered_VMs” excel report which is generated at ```\AzMigExport\All_Discovered-VMs-Report\Discovered_VMs.xlsx```.
+To Customize, open the **Discovered_VMs** excel report which is generated at ```\AzMigExport\All_Discovered-VMs-Report\Discovered_VMs.xlsx```.
 There are three types of customizations that a user can apply in discovery file:
 1.	Moving Servers out of Scope: VMs and machines that a customer doesn’t wish to migrate to azure can be moved out of scope for assessment and migration estimates.
 The discovery file consists of details of discovered servers. Users can delete the required row in discovery file to move VM out of scope. Such VMs will not be considered for any type of assessment.
-2.	Limit Workload for respective assessment: If you want to avoid workloads like SQL Server or .NET WebApps to be considered for respective PaaS assessments i.e. Azure SQL MI and Azure App Service respectively, you can change the count in the respective column to 0; such workloads now will only be considered for migration to Azure VM via lift and shift.
+2.	Limit Workload for respective assessment: If you want to avoid workloads like SQL Server or .NET WebApps to be considered for respective PaaS assessments, that is, Azure SQL MI and Azure App Service respectively, you can change the count in the respective column to 0; such workloads now will only be considered for migration to Azure VM via lift and shift.
 
-For Example: If a user does not want to assess “Fabsqlsrv” Machine for SQL Managed Instance but instead wants to rehost the server to Azure VM, then they should set the respective sqlDiscoveryServerCount to 0. 
+For example: If a user does not want to assess “Fabsqlsrv” Machine for SQL Managed Instance but instead wants to rehost the server to Azure VM, then they should set the respective sqlDiscoveryServerCount to 0. 
 
 Similarly, if the user doesn’t wish to get a separate Azure VM recommended for a VM running Azure SQL Services, then they should set the respective sqlServicePresent to 0.
 
