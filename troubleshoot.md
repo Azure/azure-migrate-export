@@ -4,7 +4,7 @@ description: Get resolutions for errors/issues faced when using Azure Migrate Ex
 author: kalrashradha
 ms.author: v-ksreedevan
 ms.topic: conceptual
-ms.date: 12/15/2022
+ms.date: 12/27/2022
 ---
 
 # Troubleshooting errors
@@ -29,9 +29,9 @@ This error is a symptom of the Az.PowerShell module not being installed correctl
 Check the spelling of the name or verify if the path, if included, is correct and try again. 
 
 If Connect-AzAccount works and only Get-AzAccessToken returns the above error, this is because the latest version of Az.PowerShell module is not installed. To address this issue, follow these steps: 
-  1. Update the PowerShellGet module to the latest version. 
-  2. Install the latest version of Az PowerShell module (9.1.1). 
-  3. Run the [commands](README.md#run-following-commands-on-powershell-to-test-proper-installation) to verify proper installation of the modules.  
+1. Update the PowerShellGet module to the latest version. 
+2. Install the latest version of Az PowerShell module (9.1.1). 
+3. Run the [commands](README.md#run-following-commands-on-powershell-to-test-proper-installation) to verify proper installation of the modules.  
 
 ## General Troubleshooting 
 
@@ -43,9 +43,11 @@ For any other PowerShell module related error, or if the above errors were not r
 5. Run the [commands](README.md#run-following-commands-on-powershell-to-test-proper-installation) to verify proper installation of the modules.  
 6. Once it is verified that the commands are working as desired and the proper output is displayed on the PowerShell terminal, we need to add the path to the directory of these modules to PSModulePath environment variable. This can be achieved by following the steps below: 
    1. Run the following command on PowerShell 7 terminal. 
-      '''powershell
+
+      ```powershell
       Get-Module -ListAvailable ‘Az.*’
-      '''
+      ```
+
       The directory to which these modules are referring to is displayed at the top of the output screen. 
    2. Copy the path of the directory as it is and close the PowerShell terminal. 
    3. Go to **Edit System Environment Variables** from the Start menu. 
@@ -59,9 +61,10 @@ For any other PowerShell module related error, or if the above errors were not r
    11. Select **Ok** again to close the **Edit System Environment Variables** dialog and for changes to take effect. 
    12. Run the older PowerShell terminal and run the commands to verify proper installation. 
 
-## Run following commands on PowerShell to test proper installation 
-Run the following commands in the order specified, these are the commands run by the scripts to connect to Azure Portal API and can help verify proper installation of Az PowerShell module. 
-1.	Command –> Get-Module -ListAvailable -Name ‘Az.*’ : This command lists all the PowerShell modules that should be installed as a part of Az PowerShell module and the directory they can be found in at the top. 
-2.	Command –> Connect-AzAccount -Tenant <your_tenant_id> : This command prompts the user to sign in with their Microsoft account. 
-3.	Command –> Set-AzContext -Subscription <your_subscription_id> : When run successfully, it displays the SubscriptionName, Account, and TenantId 
-4.	Command –> Get-AzAccessToken -ResourceUrl ‘https://management.azure.com/’ : When run successfully, it displays the Token, ExpiresOn, Type, TenantId, and UserId 
+## Test proper installation 
+
+Run the following commands in the order specified. These are the commands run by the scripts to connect to the Azure Portal API and can help verify proper installation of the Az PowerShell module. 
+1.	Get-Module -ListAvailable -Name ‘Az.*’ : This command lists all the PowerShell modules that should be installed as a part of Az PowerShell module and the directory they can be found in at the top. 
+2.	Connect-AzAccount -Tenant <your_tenant_id> : This command prompts the user to sign in with their Microsoft account. 
+3.	Set-AzContext -Subscription <your_subscription_id> : When run successfully, it displays the SubscriptionName, Account, and TenantID.
+4.	Get-AzAccessToken -ResourceUrl ‘https://management.azure.com/’ : When run successfully, it displays the Token, ExpiresOn, Type, TenantID, and UserID. 
