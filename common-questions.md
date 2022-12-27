@@ -17,7 +17,7 @@ This article answers common questions about Azure Migrate Export.
 Open the location where you have installed the Azure Migrate Export Utility Package and copy the path of folder where all the discovery and assessment reports are present.
 Basepath for the example below is E:\AzMigExport.
 
-:::image type="content" source=".media/file-path.png" alt-text="Screenshot of sample base path.":::
+:::image type="content" source="/.media/file-path.png" alt-text="Screenshot of sample base path.":::
  
 ### I can’t find the publish button on the PowerBI desktop application?
 The publish button is available on the top-right of the home tab in PowerBI export. Publish facility is not available for users having Free PowerBI license. Such users can do customizations and export PowerBI as PDF.
