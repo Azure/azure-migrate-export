@@ -20,8 +20,8 @@ Users can download the Azure Migrate Export utility from https://aka.ms/azuremig
 The link downloads a .zip file. Extract the contents of the package.
 The Package consists of three files:
 1. Azure-Migrate-Export.exe is a light-weight console app that facilitates running of discovery and assessment and helps fetch data from Azure Migrate discovery and assessment APIs.
-2.	PSScripts folder consists of underlying PowerShell modules.
-3.	PowerBI template helps build a cohesive presentation on top of discovery and assessment reports generated after running Azure-Migrate-Export.exe
+2.	The PSScripts folder consists of underlying PowerShell modules.
+3.	The PowerBI template helps build a cohesive presentation on top of discovery and assessment reports generated after running Azure-Migrate-Export.exe
 The Azure Migrate Export Utility is hosted on an open source github repository. Users can access all versions of this utility package from https://aka.ms/azuremigrateexportutility. Users can use the script to build on top of current solutions.
 
 ## How does Azure Migrate Export Work?
@@ -58,9 +58,11 @@ The machine running AME should have to have PowerShell version 5.1 or higher ins
 The execution policy in PowerShell should be set to RemoteSigned, for the CurrentUser and LocalMachine. This can be achieved by following the steps below: 
   1.	Open PowerShell as an administrator. 
   2.	Run the following commands: 
-  3.	Set-ExecutionPolicy -Scope CurrentUser RemoteSigned 
-  4.	Set-ExecutionPolicy -Scope LocalMachine RemoteSigned 
-  5.	To view the Execution Policies set, run the command:  Get-ExecutionPolicy -List 
+      Set-ExecutionPolicy -Scope CurrentUser RemoteSigned 
+    	Set-ExecutionPolicy -Scope LocalMachine RemoteSigned 
+  5.	To view the Execution Policies, run the Get-ExecutionPolicy -List command.
+
+      :::image type="content" source=".media/execution-policy.png" alt-text="Screenshot of PowerShell screen for execution policy.":::
   
 ### PowerShell Modules 
 > [!Note] 
@@ -104,6 +106,7 @@ The below project identifier and discovery and assessment parameters need to inp
   1. Login to Azure
   2. Click on your profile on the top right of the page and select Switch directory.
   3. The Portal Settings| Directories + subscriptions open to show Directory ID of your tenant which is also your Tenant ID.  
+     :::image type="content" source=".media/portal-settings.png" alt-text="Screenshot of portal settings.":::
 
 ### Subscription ID, Resource Group Name, Discovery Site Name and Assessment Project name:
 > [!Note]
@@ -112,20 +115,24 @@ The below project identifier and discovery and assessment parameters need to inp
 
 To find other parameters required for running discovery and assessment, follow the below steps:
   1.	Open Azure Migrate in Azure.
-  2.	Click on Discovery, Assess and Migrate 
-  3.	Choose the required project and click on overview.
-  4.	Click on properties after clicking overview.
-  5.	"Azure Migrate: Discovery and assessment | Properties" open to show the required Project identifier and discovery and assessment project parameters such as Subscription ID, resource group name, discovery Site name and Assessment project name as below
- 
+  2.	Select **Discovery, assess and migrate**. 
+      :::image type="content" source=".media/migrate-overview.png" alt-text="Screenshot of Azure Migrate screen.":::
+  3.	Choose the required project and select **Overview**.
+      :::image type="content" source=".media/discovery-overview.png" alt-text="Screenshot of Azure Migrate: Discovery and assessment tool.":::
+  4.	Select **Properties** after clicking **Overview**.
+      :::image type="content" source=".media/discovery-properties.png" alt-text="Screenshot of properties option.":::
+  5.	The **Azure Migrate: Discovery and assessment | Properties** screen displayes the required Project identifier and discovery and assessment project parameters such as Subscription ID, resource group name, discovery Site name, and Assessment project name as below:
+       
+      :::image type="content" source=".media/properties-values.png" alt-text="Screenshot of properties screen.":::
 
 ## How to Customize Discovery Report
-To Customize, Open “Discovered_VMs” excel report which is generated at ```\AzMigExport\All_Discovered-VMs-Report\Discovered_VMs.xlsx```.
+To Customize, open the **Discovered_VMs** excel report which is generated at ```\AzMigExport\All_Discovered-VMs-Report\Discovered_VMs.xlsx```.
 There are three types of customizations that a user can apply in discovery file:
 1.	Moving Servers out of Scope: VMs and machines that a customer doesn’t wish to migrate to azure can be moved out of scope for assessment and migration estimates.
 The discovery file consists of details of discovered servers. Users can delete the required row in discovery file to move VM out of scope. Such VMs will not be considered for any type of assessment.
-2.	Limit Workload for respective assessment: If you want to avoid workloads like SQL Server or .NET WebApps to be considered for respective PaaS assessments i.e. Azure SQL MI and Azure App Service respectively, you can change the count in the respective column to 0; such workloads now will only be considered for migration to Azure VM via lift and shift.
-
-For Example: If a user does not want to assess “Fabsqlsrv” Machine for SQL Managed Instance but instead wants to rehost the server to Azure VM, then they should set the respective sqlDiscoveryServerCount to 0. 
+2.	Limit Workload for respective assessment: If you want to avoid workloads like SQL Server or .NET WebApps to be considered for respective PaaS assessments, that is, Azure SQL MI and Azure App Service respectively, you can change the count in the respective column to 0; such workloads now will only be considered for migration to Azure VM via lift and shift.
+    :::image type="content" source=".media/discovery-report.png" alt-text="Screenshot of Discovery report.":::
+For example: If a user does not want to assess “Fabsqlsrv” Machine for SQL Managed Instance but instead wants to rehost the server to Azure VM, then they should set the respective sqlDiscoveryServerCount to 0. 
 
 Similarly, if the user doesn’t wish to get a separate Azure VM recommended for a VM running Azure SQL Services, then they should set the respective sqlServicePresent to 0.
 
@@ -145,18 +152,21 @@ In such scenario, A machine with 3 instances is considered in 3 assessment and w
 
 Now suppose, User understands that Contoso is a Dev Server and wants to only do a Server Rehost of such SQL Server and chooses not to migrate its instances to PaaS. User can in that case delete rows of respective SQL Server and SQL Server instances from “SQL_MI_PaaS” and “SQL_IaaS_Instance_Rehost_Perf” tab in Core report. The PowerBI will now only calculate the cost of Contoso Rehost to Azure VM.
 For Example 2: Suppose a Webapp Server is running 2 Webapp (A and B), one of which is ready for migration to Azure App Service, However another is not. In that case, user will find this Web App server in both “WebApp_PaaS” and “WebApp_IaaS_Server_Rehost_Perf”. User can choose to only Server Rehost this Web App and should delete the required Server and Webapp row in “WebApp_PaaS” tab in Core report.
-For Example 3: A Server is running both Webapp and SQL Server Instance, SQL Server Instance is ready for Azure MI but Webapp is not ready for Azure App Service, In such case this Server will be recommended in “SQL_MI_PaaS” and  “WebApp_IaaS_Server_Rehost_Perf”. Now User, decides Rehost the server and not take SQL Instance to Azure SQL MI, User should delete the respective row from “SQL_MI_PaaS” tab in Core report.
+For Example 3: A Server is running both Webapp and SQL Server Instance, SQL Server Instance is ready for Azure MI but Webapp is not ready for Azure App Service, In such a case, this server will be recommended in “SQL_MI_PaaS” and  “WebApp_IaaS_Server_Rehost_Perf”. Now if the User decides to rehost the server and not take the SQL Instance to Azure SQL MI, the User should delete the respective row from “SQL_MI_PaaS” tab in the Core report.
 
 
 ## How to Customize PowerBI Report
-The PowerBI report consists of situational verbatims that need to be customized as per the required scenario. User needs to click on the required text box and make the required changes as below:
+The PowerBI report consists of situational verbatims that need to be customized as per the required scenario. The User needs to click on the required text box and make the required changes as below:
  
 
 > [!Note]
-> You are requested not to change any number boxes as it ma make your report prone to errors.
+> You are requested not to change any number boxes as it may make your report prone to errors.
 
 ## Discovery and Assessment Report Analysis 
 Azure Migrate Export (AME) generates 4 excel reports to provide discovery and assessment details of customer’s environment as below:
+
+:::image type="content" source=".media/assessment-report.png" alt-text="Screenshot of PowerBI report.":::
+
 ### Discovered VMs: 
 File Path: ```\AzMigExport\All_Discovered-VMs-Report\Discovered_VMs.xlsx```
 Discovered VMs report contains details of all VMs and servers that are discovered in customer’s environment from the selected source type or appliance. The report also outlines the type of workload a VM is running.
@@ -193,8 +203,8 @@ The definition of reports that are part of Assessment core report are as follows
 --- | ---
 SQL_MI_PaaS |	All the in-scope discovered SQL instances are first assessed for Azure SQL Managed Instances. The report contains details of SQL Instances that are ready for Azure SQL Managed Instance, readiness warnings (if any), recommended MI Configuration, properties of SQL Instance, and various estimated cost considering offers such as Pay-as-you-go, reservations, and Azure Hybrid Benefit for both Dev and Prod environment.
 SQL_MI_Warnings	| The report contains details of readiness warnings for SQL instances that are ready for Azure SQL Managed Instance. 
-SQL_IaaS_Instance_Rehost_Perf	| The in-scope discovered SQL Instances that cannot be migrated to Azure SQL MI due to migration blockers (details of which are available in opportunity report) are then assessed for readiness of SQL Instances to Azure VM. The report contains details of perf-based assessment of remaining SQL instances that are ready for Azure VM, readiness warnings (if any), recommended Azure VM Configuration, performance properties of VM, and various estimated cost considering offers such as Pay-as-you-go, reservations, and Azure Hybrid Benefit for both Dev and Prod environment. Only Premium disks are recommended for Storage in such assessment. The report also contains estimated cost for Azure Site recovery and Azure Backup for SQL Instances in Prod environment. 
-SQL_IaaS_Server_Rehost_Perf	| The in-scope discovered SQL servers whose SQL Instance or instances can neither be migrated to Azure SQL MI nor can be migrated to Azure VM  are then assessed for readiness of SQL Server to Azure VM. The report contains details of perf-based assessment ofsuch SQL servers that are ready server rehost to Azure VM, readiness warnings (if any), recommended Azure VM Configuration, performance properties of VM, and various estimated cost considering offers such as Pay-as-you-go, reservations, and Azure Hybrid Benefit for both Dev and Prod environment. The report also contains estimated cost for Azure Site recovery and Azure Backup for servers in Prod environment.
+SQL_IaaS_Instance_Rehost_Perf	| The in-scope discovered SQL Instances that cannot be migrated to Azure SQL MI due to migration blockers (details of which are available in opportunity report) are then assessed for readiness of SQL Instances to Azure VM. The report contains details of perf-based assessment of remaining SQL instances that are ready for Azure VM, readiness warnings (if any), recommended Azure VM Configuration, performance properties of VM, and various estimated cost considering offers such as Pay-as-you-go, reservations, and Azure Hybrid Benefit for both Development and Product environments. Only Premium disks are recommended for Storage in such assessment. The report also contains estimated cost for Azure Site recovery and Azure Backup for SQL Instances in Prod environment. 
+SQL_IaaS_Server_Rehost_Perf	| The in-scope discovered SQL servers whose SQL Instance or instances can neither be migrated to Azure SQL MI nor can be migrated to Azure VM  are then assessed for readiness of SQL Server to Azure VM. The report contains details of perf-based assessment ofsuch SQL servers that are ready server rehost to Azure VM, readiness warnings (if any), recommended Azure VM Configuration, performance properties of VM, and various estimated cost considering offers such as Pay-as-you-go, reservations, and Azure Hybrid Benefit for both Development and Product environment. The report also contains estimated cost for Azure Site recovery and Azure Backup for servers in Prod environment.
 SQL_IaaS_Server_Rehost_As-is	| The in-scope discovered  SQL servers whose consisting SQL Instance or instances can neither be migrated to Azure SQL MI nor can be migrated to Azure VM  are then assessed for readiness of SQL Server to Azure VM. The report contains details of As-Onprem assessment of such SQL servers that are ready server rehost to Azure VM, readiness warnings (if any), recommended Azure VM Configuration, performance properties of VM, and estimated cost on Azure for both Dev and Prod environment.
 WebApp_PaaS	| All the in-scope discovered Webapp Servers are first assessed for Azure App Services. The report contains details of Webapps that are ready for Azure App Services, readiness warnings and issues (if any), recommended App Service Plan, properties of Web app server, and various estimated cost considering offers such as Pay-as-you-go, reservations, and Azure Hybrid Benefit for both Dev and Prod environment.
 WebApp_IaaS_Server_Rehost_Perf	| The in-scope discovered Webapp Server whose webapp/webapps cannot be migrated to Azure App Service due to migration blockers (details of which are available in opportunity report) are then assessed for Server Rehost to Azure VM. The report contains details of perf-based assessment of such Web app servers, its readiness warnings (if any), recommended Azure VM Configuration, performance properties of VM, and various estimated cost considering offers such as Pay-as-you-go, reservations, and Azure Hybrid Benefit for both Dev and Prod environment. The report also contains estimated cost for Azure Site recovery and Azure Backup for servers in Prod environment.
@@ -231,7 +241,9 @@ The Clash report highlights count, and details of assessments conducted for a ma
 
 #### Interpreting Clash Report:
  
-In the example above, Machine “CRMSQLVM14 have two entries in SQL_IaaS_Instance_Rehost_Perf tab and one entry in SQL_MI_PaaS tab and one entry in SQL_IaaS_Server_Rehost_Perf tab. User can use this report as a tally to understand a summary of all their in-scope machines and as well customize Assessment Core report to get the required cost estimate output from PowerBI. [Learn More](#how-to-customize-assessment-core-report) on how to customize Assessment Core Report 
+:::image type="content" source=".media/clash-report.png" alt-text="Screenshot of clash report.":::
+
+In the example above, Machine CRMSQLVM14 has two entries in SQL_IaaS_Instance_Rehost_Perf tab and one entry in SQL_MI_PaaS tab and one entry in SQL_IaaS_Server_Rehost_Perf tab. User can use this report as a tally to understand a summary of all their in-scope machines and as well customize Assessment Core report to get the required cost estimate output from PowerBI. [Learn More](#how-to-customize-assessment-core-report) on how to customize Assessment Core Report.
 
 ## Understanding PowerBI Report
 The details of each Slide in data populated PowerBI report is as follows: 

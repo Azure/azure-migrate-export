@@ -3,8 +3,8 @@
 - Review the pre-requisites for running Azure Migrate Export.
 - Before running Azure Migrate Export, users must have successfully set up an Azure Migrate Project, deployed an Azure Migrate appliance and should have successfully discovered using Azure Migrate discovery and assessment tool.
 - There are two workflows in which users can run Azure Migrate Export Utility.
-   - Run without Customization or Single Click Experience – aims to quickly generate required output with certain assumptions such as all Machines discovered are in-scope and belong to Production environment.
-   - Run with Customization – Aims to allow for customization, such as classification of environment such as dev/prod to take advantage of Dev/Test pricing, moving machines out of scope for an assessment or moving machines out of scope of migration and even the visualization. [Learn More](#how-to-customize-discovery-report) on how to customize Discovery file.
+   - Run without Customization or Single Click Experience aims to quickly generate required output with certain assumptions such as all Machines discovered are in-scope and belong to Production environment.
+   - Run with Customization aims to allow for customization, such as classification of environment such as dev/prod to take advantage of Dev/Test pricing, moving machines out of scope for an assessment or moving machines out of scope of migration and even the visualization. [Learn More](#how-to-customize-discovery-report) on how to customize Discovery file.
 
 ### Run Azure Migrate Export with Customization.
 To run AME with customization, users need to first generate the discovery report, apply customization and then run assessment. Follow the below steps:
@@ -29,4 +29,6 @@ To run AME with customization, users need to first generate the discovery report
 17.	Provide the path of utility package where all the reports are generated and click Load. [Learn More](#how-to--find-basepath) about base Path
 18.	Once the data is loaded, Users can now choose to change static data in PowerBI report to customize as per requirement. [Learn More](#how-to-customize-powerbi-report) about how to customize PowerBI Report.
 19.	After finalizing the slides, publish the PowerBI report on your workspace.
+      :::image type="content" source=".media/workspace-report.png" alt-text="Screenshot of PowerBI workspace.":::
 20.	You can download the Azure Migrate Export Executive Presentation as PPT from your workspace.
+      :::image type="content" source=".media/embed-image.png" alt-text="Screenshot of embed image option.":::
