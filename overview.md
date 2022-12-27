@@ -62,7 +62,7 @@ The execution policy in PowerShell should be set to RemoteSigned, for the Curren
     	Set-ExecutionPolicy -Scope LocalMachine RemoteSigned 
   5.	To view the Execution Policies, run the Get-ExecutionPolicy -List command.
 
-      :::image type="content" source="./.media/execution-policy.png" alt-text="Screenshot of PowerShell screen for execution policy.":::
+      :::image type="content" source="/.media/execution-policy.png" alt-text="Screenshot of PowerShell screen for execution policy.":::
   
 ### PowerShell Modules 
 > [!Note] 
