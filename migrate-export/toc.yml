@@ -1,0 +1,55 @@
+- name: Azure Migrate Export Documentation
+  href: index.yml
+- name: Overview
+  items:
+  - name: About Azure Migrate Export
+    href: overview.md
+  - name: Common questions
+    href: common-questions.md
+- name: Tutorials
+  items:
+    - name: Run reports with customization
+      href: tutorial-run-with-customization.md
+    - name: Run reports without customization
+      href: tutorial-run-without-customization.md
+    - name: Customize reports
+      href: tutorial-customize-reports.md
+- name: Concepts
+  items:
+    - name: Discovery and Assessment report analysis
+      href: concepts-reports.md
+- name: Troubleshoot
+  items:
+    - name: Troubleshoot Azure Migrate Export errors
+      href: troubleshoot.md
+- name: Reference
+  items:
+  - name: Azure CLI
+    href: /cli/azure/offazure
+  - name: Azure PowerShell
+    href: /powershell/module/az.migrate/
+  - name: Azure Policy built-ins
+    displayName: samples, policies, definitions
+    href: ./policy-reference.md
+- name: Resources
+  items:
+  - name: Migration in the Cloud Adoption Framework
+    href: /azure/cloud-adoption-framework/migrate/
+  - name: Contoso migration examples
+    href: /azure/cloud-adoption-framework/migrate/azure-best-practices/contoso-migration-overview
+  - name: REST API
+    href: /rest/api/migrate/
+  - name: Resource Manager template
+    href: /azure/templates/microsoft.migrate/allversions
+  - name: Pricing
+    href: https://azure.microsoft.com/pricing/details/azure-migrate/
+  - name: UserVoice
+    href: https://aka.ms/AzureMigrateUservoice
+  - name: Microsoft Q&A question page
+    href: /answers/topics/azure-migrate.html
+  - name: Blog
+    href: https://azure.microsoft.com/blog/tag/azure-migrate/
+  - name: Azure Migrate
+    href: https://azure.microsoft.com/migrate
+  - name: Azure Roadmap
+    href: https://azure.microsoft.com/roadmap/
