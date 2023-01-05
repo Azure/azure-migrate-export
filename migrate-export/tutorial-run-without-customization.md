@@ -1,9 +1,9 @@
 ---
-title: Customize reports
-description: Get an overview of customizing reports in Azure Migrate Export.
+title: Run Azure Migrate Export reports without customization
+description: Get an overview of running AME reports with customization.
 author: kalrashradha
 ms.author: v-ksreedevan
-ms.topic: conceptual
+ms.topic: tutorial
 ms.date: 12/27/2022
 ---
 
