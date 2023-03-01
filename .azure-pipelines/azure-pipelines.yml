@@ -39,6 +39,7 @@ stages:
             restoreSolution: '$(Solution)'
         
         - task: VSBuild@1
+          displayName: 'Build Solution'
           inputs:
             solution: '$(Solution)'
             msbuildArgs: '/p:TargetProfile=Cloud'
