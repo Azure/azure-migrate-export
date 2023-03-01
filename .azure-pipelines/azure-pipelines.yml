@@ -14,7 +14,8 @@ variables:
   BuildPlatform: 'Any CPU'
   BuildConfiguration: 'Release'
   CopySourceFolder: '$(RootDirectory)\src\bin\Release\'
-  CopyTargetFolder: '$(RootDirectory)\out\AzMigExport'
+  OutputRootDirectory: '$(Build.ArtifactStagingDirectory)'
+  CopyTargetFolder: '$(OutputRootDirectory)\AzMigExport'
 
 stages:
   - stage: Build_Stage
@@ -93,3 +94,9 @@ stages:
             TargetFolder: '$(CopyTargetFolder)'
             OverWrite: true
             Contents: '**\README.txt'
+        
+        - task: PublishBuildArtifacts@1
+          inputs:
+            pathToPublish: '$(CopyTargetFolder)'
+            artifactName: 'drop_build'
+
