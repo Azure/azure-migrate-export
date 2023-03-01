@@ -1,6 +1,6 @@
 # To generate a custom version with "1.0.yyyymmdd.<build_count_of_day>"
-$major = "11"
-$minor = "12"
+$major = "2"
+$minor = "0"
 $patch = Get-Date -UFormat "%Y%m%d"
 $revision = $env:CDP_DEFINITION_BUILD_COUNT_DAY
 
