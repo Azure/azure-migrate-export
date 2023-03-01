@@ -1,7 +1,7 @@
 $major = "2"
 $minor = "0"
 $patch = Get-Date -UFormat "%Y%m%d"
-$revision = ${Build.BuildNumber}
+$revision = $Env:BUILD_BUILDNUMBER
 
 $buildNumber = "$major.$minor.$patch.$revision"
 Write-Host = $buildNumber
