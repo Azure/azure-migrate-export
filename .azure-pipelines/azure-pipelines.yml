@@ -9,12 +9,13 @@ pool:
   vmImage: 'windows-2019'
 
 variables:
-  Solution: '$(Build.SourcesDirectory)\src\Azure-Migrate.Export.sln'
+  Solution: '$(Build.SourcesDirectory)\src\Azure-Migrate-Export.sln'
   BuildPlatform: 'Any CPU'
   BuildConfiguration: 'Release'
 
 steps:
 - task: NuGetToolInstaller@1
+  displayName: 'Installing NuGet Tool'
 
 - task: NuGetCommand@2
   inputs:
@@ -23,11 +24,6 @@ steps:
 - task: VSBuild@1
   inputs:
     solution: '$(Solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    msbuildArgs: '/p:TargetProfile=Cloud'
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
