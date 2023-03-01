@@ -5,14 +5,14 @@ pr:
     include:
       - '*'
 
-variables:
+pool: 
+  vmImage: 'windows-latest'
+
+  variables:
   ROOT: $(Build.SourcesDirectory)
   REPOROOT: $(Build.SourcesDirectory)
   OUTPUTROOT: $(REPOROOT)\out
   NUGET_XMLDOC_MODE: none
-
-pool: 
-  vmImage: 'ubuntu-latest'
 
 stages:
   - stage: Build_Stage
