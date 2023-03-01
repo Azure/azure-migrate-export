@@ -12,8 +12,8 @@ variables:
   NUGET_XMLDOC_MODE: none
   WindowsContainerImage: 'onebranch.azurecr.io/windows/ltsc2019/vse2019:latest'
 
-  major: 2
-  minor: 0
+pool:
+  vmImage: 'windows-latest'
 
 stages:
   - stage: Build_Stage
@@ -38,6 +38,9 @@ stages:
             inputs:
               script: '$(Build.SourcesDirectory)\.version\version.cmd'
               workingDirectory: '$(Build.SourcesDirectory)'
+          
+          - task: NuGetToolInstaller@1
+            displayName: 'Installing Nuget Tool'
           
           - task: NuGetCommand@2
             displayName: 'Restore Packages'
