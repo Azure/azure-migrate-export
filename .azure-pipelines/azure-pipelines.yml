@@ -96,7 +96,8 @@ stages:
             Contents: '**\README.txt'
         
         - task: PublishBuildArtifacts@1
+          displayName: 'Publish Build Artifacts'
           inputs:
-            pathToPublish: '$(CopyTargetFolder)'
+            pathToPublish: '$(OutputRootDirectory)'
             artifactName: 'drop_build'
 
