@@ -12,7 +12,7 @@ variables:
   NUGET_XMLDOC_MODE: none
 
 pool: 
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'
 
 stages:
   - stage: Build_Stage
