@@ -6,6 +6,7 @@ pr:
       - '*'
 
 pool: 
+  name: Azure Pipelines
   vmImage: 'windows-latest'
 
   variables:
