@@ -1,8 +1,7 @@
-# To generate a custom version with "1.0.yyyymmdd.<build_count_of_day>"
 $major = "2"
 $minor = "0"
-$patch = Get-Date -UFormat "%m%d"
-$revision = ${BUILD_COUNTER}
+$patch = Get-Date -UFormat "%Y%m%d"
+$revision = ${Build.BuildNumber}
 
 $buildNumber = "$major.$minor.$patch.$revision"
 Write-Host = $buildNumber
