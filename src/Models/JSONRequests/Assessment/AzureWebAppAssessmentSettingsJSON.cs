@@ -1,0 +1,31 @@
+using Newtonsoft.Json;
+
+namespace Azure.Migrate.Export.Models
+{
+    public class AzureWebAppAssessmentSettingsJSON
+    {
+        [JsonProperty("properties")]
+        public AzureWebAppAssessmentProperty Properties { get; set; } = new AzureWebAppAssessmentProperty();
+    }
+
+    public class AzureWebAppAssessmentProperty
+    {
+        [JsonProperty("azureLocation")]
+        public string AzureLocation { get; set; }
+
+        [JsonProperty("reservedInstance")]
+        public string ReservedInstance { get; set; }
+
+        [JsonProperty("currency")]
+        public string Currency { get; set; }
+
+        [JsonProperty("azureOfferCode")]
+        public string AzureOfferCode { get; set; }
+
+        [JsonProperty("scalingFactor")]
+        public int ScalingFactor { get; set; } = 1;
+
+        [JsonProperty("discountPercentage")]
+        public int DiscountPercentage { get; set; } = 0;
+    }
+}
