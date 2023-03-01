@@ -12,7 +12,7 @@ variables:
   NUGET_XMLDOC_MODE: none
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'onebranch.azurecr.io/windows/ltsc2019/vse2019:latest'
 
 stages:
   - stage: Build_Stage
