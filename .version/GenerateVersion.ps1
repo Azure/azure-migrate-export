@@ -1,6 +1,6 @@
 $major = "2"
 $minor = "0"
-$patch = Get-Date -UFormat "%Y%m%d"
+$patch = Get-Date -Format "yyMMdd"
 $revision = $Env:BUILD_BUILDNUMBER
 
 $buildNumber = "$major.$minor.$patch.$revision"
