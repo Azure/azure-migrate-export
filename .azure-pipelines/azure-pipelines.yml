@@ -13,6 +13,9 @@ variables:
 
   WindowsContainerImage: 'onebranch.azurecr.io/windows/ltsc2019/vse2019:latest'
 
+pool:
+  vmImage: 'windows-latest'
+
 stages:
   - stage: Build_Stage
     jobs:
