@@ -11,8 +11,7 @@ variables:
   OUTPUTROOT: $(REPOROOT)\out
   NUGET_XMLDOC_MODE: none
 
-pool:
-  vmImage: 'onebranch.azurecr.io/windows/ltsc2019/vse2019:latest'
+  WindowsContainerImage: 'onebranch.azurecr.io/windows/ltsc2019/vse2019:latest'
 
 stages:
   - stage: Build_Stage
