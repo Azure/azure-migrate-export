@@ -1,34 +1,104 @@
-# ASP.NET Core (.NET Framework)
-# Build and test ASP.NET Core projects targeting the full .NET Framework.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
 trigger:
-- main
+  - main
+pr:
+  branches:
+    include:
+      - '*'
 
-pool:
-  vmImage: 'windows-latest'
+pool: 
+  name: Azure Pipelines
+  vmImage: 'windows-2019'
 
-variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  variables:
+  ROOT: $(Build.SourcesDirectory)
+  REPOROOT: $(Build.SourcesDirectory)
+  OUTPUTROOT: $(REPOROOT)\out
+  NUGET_XMLDOC_MODE: none
 
-steps:
-- task: NuGetToolInstaller@1
+stages:
+  - stage: Build_Stage
+    jobs:
+      - job: Build_Job
+        pool:
+          type: windows
+        
+        variables:
+          ob_outputDirectory: '$(REPOROOT)\out'
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+        steps:
+          - task: UseDotNet@2
+            continueOnError: true
+            inputs:
+              packageType: 'sdk'
+              useGlobalJson: false
+              performMultiLevelLookup: true
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+          - task: CmdLine@2
+            displayName: 'Set BuildNumber'
+            inputs:
+              script: '$(Build.SourcesDirectory)\.version\version.cmd'
+              workingDirectory: '$(Build.SourcesDirectory)'
+          
+          - task: NuGetToolInstaller@1
+            displayName: 'Installing Nuget Tool'
+          
+          - task: NuGetCommand@2
+            displayName: 'Restore Packages'
+            inputs:
+              command: 'restore'
+              includeNugetOrg: true
+              restoreSolution: '$(Build.SourcesDirectory)\src\Azure-Migrate.Export.sln'
+          
+          - task: CmdLine@2
+            displayName: 'Build Release'
+            inputs:
+              script: '$(Build.SourcesDirectory)\.azure-pipelines\scripts\build.cmd'
+              workingDirectory: '$(Build.SourcesDirectory)'
+          
+          - task: CopyFiles@2
+            displayName: 'Copy_DLLs_To_AzMigExport'
+            inputs:
+              SourceFolder: '$(Build.SourcesDirectory)\src\bin\Release\'
+              Contents: '**\*.dll'
+              TargetFolder: '$(Build.SourcesDirectory)\out\AzMigExport'
+              OverWrite: true
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+          - task: CopyFiles@2
+            displayName: 'Copy_EXE_To_AzMigExport'
+            inputs:
+              SourceFolder: '$(Build.SourcesDirectory)\src\bin\Release\'
+              Contents: '**\Azure-Migrate-Export.exe'
+              TargetFolder: '$(Build.SourcesDirectory)\out\AzMigExport'
+              OverWrite: true
+
+          - task: CopyFiles@2
+            displayName: 'Copy_Config_To_AzMigExport'
+            inputs:
+              SourceFolder: '$(Build.SourcesDirectory)\src\bin\Release\'
+              Contents: '**\Azure-Migrate-Export.exe.config'
+              TargetFolder: '$(Build.SourcesDirectory)\out\AzMigExport'
+              OverWrite: true
+
+          - task: CopyFiles@2
+            displayName: 'Copy_Detailed-PBIT_To_AzMigExport'
+            inputs:
+              SourceFolder: '$(Build.SourcesDirectory)\src\bin\Release\'
+              Contents: '**\Azure_Migrate_Export_Detailed.pbit'
+              TargetFolder: '$(Build.SourcesDirectory)\out\AzMigExport'
+              OverWrite: true
+
+          - task: CopyFiles@2
+            displayName: 'Copy_HBC-Lite-PBIT_To_AzMigExport'
+            inputs:
+              SourceFolder: '$(Build.SourcesDirectory)\src\bin\Release\'
+              Contents: '**\Azure_Migrate_Export_HBC-Lite.pbit'
+              TargetFolder: '$(Build.SourcesDirectory)\out\AzMigExport'
+              OverWrite: true
+          
+          - task: CopyFiles@2
+            displayName: 'Copy_README_To_AzMigExport'
+            inputs:
+              SourceFolder: '$(Build.SourcesDirectory)\src\bin\Release\'
+              Contents: '**\README.txt'
+              TargetFolder: '$(Build.SourcesDirectory)\out\AzMigExport'
+              OverWrite: true
