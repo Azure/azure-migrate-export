@@ -11,7 +11,8 @@ variables:
   OUTPUTROOT: $(REPOROOT)\out
   NUGET_XMLDOC_MODE: none
 
-pool: pool-windows-2019
+pool: 
+  vmImage: 'windows-2019'
 
 stages:
   - stage: Build_Stage
