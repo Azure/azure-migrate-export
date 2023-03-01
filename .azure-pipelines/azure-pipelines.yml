@@ -13,17 +13,21 @@ variables:
   BuildPlatform: 'Any CPU'
   BuildConfiguration: 'Release'
 
-steps:
-- task: NuGetToolInstaller@1
-  displayName: 'Installing NuGet Tool'
-
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(Solution)'
-
-- task: VSBuild@1
-  inputs:
-    solution: '$(Solution)'
-    msbuildArgs: '/p:TargetProfile=Cloud'
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
+stages:
+  - stage: Build_Stage
+    jobs:
+      - job: Build_Job
+        steps:
+        - task: NuGetToolInstaller@1
+          displayName: 'Installing NuGet Tool'
+        
+        - task: NuGetCommand@2
+          inputs:
+            restoreSolution: '$(Solution)'
+        
+        - task: VSBuild@1
+          inputs:
+            solution: '$(Solution)'
+            msbuildArgs: '/p:TargetProfile=Cloud'
+            platform: '$(BuildPlatform)'
+            configuration: '$(BuildConfiguration)'
