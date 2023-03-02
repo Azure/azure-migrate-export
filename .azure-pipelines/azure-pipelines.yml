@@ -17,6 +17,11 @@ variables:
   OutputRootDirectory: '$(Build.ArtifactStagingDirectory)'
   CopyTargetFolder: '$(OutputRootDirectory)\AzMigExport'
 
+  major: 2
+  minor: 0
+
+name: $(major).$(minor)$(Rev:.r)
+
 stages:
   - stage: Build_Stage
     jobs:
