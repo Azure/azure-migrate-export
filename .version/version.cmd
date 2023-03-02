@@ -1,2 +1,2 @@
-powershell.exe -NoProfile -ExecutionPolicy Unrestricted -File "%~dp0GenerateVersion.ps1"
+powershell.exe -NoProfile -ExecutionPolicy Unrestricted -File "%~dp0SetAssemblyVersion.ps1"
 exit /B %ERRORLEVEL%

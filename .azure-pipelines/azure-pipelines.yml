@@ -29,7 +29,7 @@ stages:
         
         steps:
         - task: CmdLine@2
-          displayName: 'Set BuildNumber'
+          displayName: 'Set Assembly Version'
           inputs:
             script: '$(RootDirectory)\.version\version.cmd'
             workingDirectory: '$(RootDirectory)'
