@@ -1,10 +1,12 @@
 [CmdletBinding()]
 
-$buildNumber = $Env:Build_BuildNumber
+$buildNumber = $Env:BUILD_BUILDNUMBER
 
-$assemblyVersionPattern = '\[assembly: AssemblyVersion\("(.*)"\)\]'
-$assemblyFileVersionPattern = '\[assembly: AssemblyFileVersion\("(.*)"\)\]'
-$assemblyInformationalVersionPattern = '\[assembly: AssemblyInformationalVersion\("(.*)"\)\]'
+echo $buildNumber
+
+$assemblyVersionPattern = '\[assembly: AssemblyVersion\("(*)"\)\]'
+$assemblyFileVersionPattern = '\[assembly: AssemblyFileVersion\("(*)"\)\]'
+$assemblyInformationalVersionPattern = '\[assembly: AssemblyInformationalVersion\("(*)"\)\]'
 
 $AssemblyFiles = Get-ChildItem . PipelineAssemblyInfo.cs -rec
 
