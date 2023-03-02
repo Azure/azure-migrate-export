@@ -2,11 +2,11 @@
 
 $buildNumber = $Env:BUILD_BUILDNUMBER
 
-echo $buildNumber
+Write-Host $buildNumber
 
-$assemblyVersionPattern = '\[assembly: AssemblyVersion\("(*)"\)\]'
-$assemblyFileVersionPattern = '\[assembly: AssemblyFileVersion\("(*)"\)\]'
-$assemblyInformationalVersionPattern = '\[assembly: AssemblyInformationalVersion\("(*)"\)\]'
+$assemblyVersionPattern = '\[assembly: AssemblyVersion\("(.*)"\)\]'
+$assemblyFileVersionPattern = '\[assembly: AssemblyFileVersion\("(.*)"\)\]'
+$assemblyInformationalVersionPattern = '\[assembly: AssemblyInformationalVersion\("(.*)"\)\]'
 
 $AssemblyFiles = Get-ChildItem . PipelineAssemblyInfo.cs -rec
 
