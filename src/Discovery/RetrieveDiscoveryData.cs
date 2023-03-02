@@ -131,7 +131,8 @@ namespace Azure.Migrate.Export.Discovery
                 // parse IP Address and MAC Address
                 Dictionary<string, List<string>> macIpAddressMap = new Dictionary<string, List<string>>();
                 foreach (var networkAdapter in value.Properties.NetworkAdapters)
-                    macIpAddressMap.Add(networkAdapter.MacAddress, networkAdapter.IpAddressList);
+                    if (!macIpAddressMap.ContainsKey(networkAdapter.MacAddress))
+                        macIpAddressMap.Add(networkAdapter.MacAddress, networkAdapter.IpAddressList);
                 KeyValuePair<string, string> parsedMacIpAddressMap = ParseMacIpAddressMap(macIpAddressMap, userInputObj);
 
                 discoveryDataObj.IpAddress = parsedMacIpAddressMap.Value;
@@ -176,7 +177,8 @@ namespace Azure.Migrate.Export.Discovery
                 // parse IP Address and MAC Address
                 Dictionary<string, List<string>> macIpAddressMap = new Dictionary<string, List<string>>();
                 foreach (var networkAdapter in value.Properties.NetworkAdapters)
-                    macIpAddressMap.Add(networkAdapter.MacAddress, networkAdapter.IpAddressList);
+                    if (!macIpAddressMap.ContainsKey(networkAdapter.MacAddress))
+                        macIpAddressMap.Add(networkAdapter.MacAddress, networkAdapter.IpAddressList);
                 KeyValuePair<string, string> parsedMacIpAddressMap = ParseMacIpAddressMap(macIpAddressMap, userInputObj);
 
                 discoveryDataObj.IpAddress = parsedMacIpAddressMap.Value;
@@ -221,7 +223,8 @@ namespace Azure.Migrate.Export.Discovery
                 // parse IP Address and MAC Address
                 Dictionary<string, List<string>> macIpAddressMap = new Dictionary<string, List<string>>();
                 foreach (var networkAdapter in value.Properties.NetworkAdapters)
-                    macIpAddressMap.Add(networkAdapter.MacAddress, networkAdapter.IpAddressList);
+                    if (!macIpAddressMap.ContainsKey(networkAdapter.MacAddress))
+                        macIpAddressMap.Add(networkAdapter.MacAddress, networkAdapter.IpAddressList);
                 KeyValuePair<string, string> parsedMacIpAddressMap = ParseMacIpAddressMap(macIpAddressMap, userInputObj);
 
                 discoveryDataObj.IpAddress = parsedMacIpAddressMap.Value;
