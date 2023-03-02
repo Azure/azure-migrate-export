@@ -1,0 +1,107 @@
+trigger:
+- main
+pr:
+  branches:
+    include:
+      - '*'
+
+pool:
+  vmImage: 'windows-2019'
+
+variables:
+  RootDirectory: '$(Build.SourcesDirectory)'
+  Solution: '$(RootDirectory)\src\Azure-Migrate-Export.sln'
+  BuildPlatform: 'Any CPU'
+  BuildConfiguration: 'Release'
+  CopySourceFolder: '$(RootDirectory)\src\bin\Release\'
+  OutputRootDirectory: '$(Build.ArtifactStagingDirectory)'
+  CopyTargetFolder: '$(OutputRootDirectory)\AzMigExport'
+
+  major: 2
+  minor: 0
+
+name: $(major).$(minor).$(Year:yy)$(DayOfYear).$(Rev:r)
+
+stages:
+  - stage: Build_Stage
+    jobs:
+      - job: Build_Job
+        
+        steps:
+        - task: CmdLine@2
+          displayName: 'Set Assembly Version'
+          inputs:
+            script: '$(RootDirectory)\.version\version.cmd'
+            workingDirectory: '$(RootDirectory)'
+
+        - task: NuGetToolInstaller@1
+          displayName: 'Installing NuGet Tool'
+        
+        - task: NuGetCommand@2
+          displayName: 'Restore Packages'
+          inputs:
+            command: 'restore'
+            includeNuGetOrg: true
+            restoreSolution: '$(Solution)'
+        
+        - task: VSBuild@1
+          displayName: 'Build Solution'
+          inputs:
+            solution: '$(Solution)'
+            msbuildArgs: '/p:TargetProfile=Cloud'
+            platform: '$(BuildPlatform)'
+            configuration: '$(BuildConfiguration)'
+        
+        - task: CopyFiles@2
+          displayName: 'Copying DLLs to AzMigExport'
+          inputs:
+            SourceFolder: '$(CopySourceFolder)'
+            TargetFolder: '$(CopyTargetFolder)'
+            OverWrite: true
+            Contents: '**\*.dll'
+
+        - task: CopyFiles@2
+          displayName: 'Copying Executable to AzMigExport'
+          inputs:
+            SourceFolder: '$(CopySourceFolder)'
+            TargetFolder: '$(CopyTargetFolder)'
+            OverWrite: true
+            Contents: '**\Azure-Migrate-Export.exe'
+
+        - task: CopyFiles@2
+          displayName: 'Copying Config to AzMigExport'
+          inputs:
+            SourceFolder: '$(CopySourceFolder)'
+            TargetFolder: '$(CopyTargetFolder)'
+            OverWrite: true
+            Contents: '**\Azure-Migrate-Export.exe.config'
+        
+        - task: CopyFiles@2
+          displayName: 'Copying Detailed PBIT to AzMigExport'
+          inputs:
+            SourceFolder: '$(CopySourceFolder)'
+            TargetFolder: '$(CopyTargetFolder)'
+            OverWrite: true
+            Contents: '**\Azure_Migrate_Export_Detailed.pbit'
+
+        - task: CopyFiles@2
+          displayName: 'Copying HBC-Lite PBIT to AzMigExport'
+          inputs:
+            SourceFolder: '$(CopySourceFolder)'
+            TargetFolder: '$(CopyTargetFolder)'
+            OverWrite: true
+            Contents: '**\Azure_Migrate_Export_HBC-Lite.pbit'
+        
+        - task: CopyFiles@2
+          displayName: 'Copying README to AzMigExport'
+          inputs:
+            SourceFolder: '$(CopySourceFolder)'
+            TargetFolder: '$(CopyTargetFolder)'
+            OverWrite: true
+            Contents: '**\README.txt'
+        
+        - task: PublishBuildArtifacts@1
+          displayName: 'Publish Build Artifacts'
+          inputs:
+            pathToPublish: '$(OutputRootDirectory)'
+            artifactName: 'drop_build'
