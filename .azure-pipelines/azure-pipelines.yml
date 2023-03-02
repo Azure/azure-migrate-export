@@ -19,8 +19,9 @@ variables:
 
   major: 2
   minor: 0
+  patch: '$(Date:yyMMdd)'
 
-name: $(major).$(minor)$(Rev:.r)
+name: $(major).$(minor).$(patch)$(Rev:.r)
 
 stages:
   - stage: Build_Stage
