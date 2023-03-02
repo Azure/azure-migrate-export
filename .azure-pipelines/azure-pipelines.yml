@@ -20,7 +20,7 @@ variables:
   major: 2
   minor: 0
 
-name: $(major).$(minor).$(Date:yyMMdd).$(Rev:r)
+name: $(major).$(minor).$(Year:yy)$(DayOfYear).$(Rev:r)
 
 stages:
   - stage: Build_Stage
