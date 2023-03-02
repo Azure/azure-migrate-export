@@ -24,4 +24,8 @@ foreach ($file in $AssemblyFiles)
             $_
         }
     } | Set-Content $file.PSPath
+
+    $test = Get-Content $file.PSPath
+
+    Write-Host $test
 }
