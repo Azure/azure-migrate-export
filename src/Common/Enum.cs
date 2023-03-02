@@ -99,9 +99,11 @@ namespace Azure.Migrate.Export.Common
 
     public enum RecommendedDiskTypes
     {
+        Unknown,
         Standard,
         StandardSSD,
         Premium,
+        StandardOrPremium,
         Ultra
     }
 
@@ -135,6 +137,7 @@ namespace Azure.Migrate.Export.Common
 
     public enum IssueCategories
     {
+        Unknown,
         Info,
         Warning,
         Issue,
