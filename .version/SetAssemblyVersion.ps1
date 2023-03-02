@@ -13,9 +13,9 @@ foreach ($file in $AssemblyFiles)
     (Get-Content $file.PSPath) | ForEach-Object {
         if($_ -match $assemblyVersionPattern){
             '[assembly: AssemblyVersion("{0}")]' -f $buildNumber
-        } else if ($_ -match $assemblyFileVersionPattern) {
+        } elseif($_ -match $assemblyFileVersionPattern) {
             '[assembly: AssemblyFileVersion("{0}")]' -f $buildNumber
-        } else if ($_ -match $assemblyInformationalVersionPattern) {
+        } elseif($_ -match $assemblyInformationalVersionPattern) {
             '[assembly: AssemblyInformationalVersion("{0}")]' -f $buildNumber
         }
     } | Set-Content $file.PSPath
