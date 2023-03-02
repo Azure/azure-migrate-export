@@ -2,8 +2,6 @@
 
 $buildNumber = $Env:BUILD_BUILDNUMBER
 
-Write-Host $buildNumber
-
 $assemblyVersionPattern = '\[assembly: AssemblyVersion\("(.*)"\)\]'
 $assemblyFileVersionPattern = '\[assembly: AssemblyFileVersion\("(.*)"\)\]'
 $assemblyInformationalVersionPattern = '\[assembly: AssemblyInformationalVersion\("(.*)"\)\]'
@@ -24,8 +22,4 @@ foreach ($file in $AssemblyFiles)
             $_
         }
     } | Set-Content $file.PSPath
-
-    $test = Get-Content $file.PSPath
-
-    Write-Host $test
 }
