@@ -19,9 +19,8 @@ variables:
 
   major: 2
   minor: 0
-  patch: '$(Date:yyMMdd)'
 
-name: $(major).$(minor).$(patch)$(Rev:.r)
+name: $(major).$(minor).$(Date:yyMMdd).$(Rev:r)
 
 stages:
   - stage: Build_Stage
@@ -106,4 +105,3 @@ stages:
           inputs:
             pathToPublish: '$(OutputRootDirectory)'
             artifactName: 'drop_build'
-
