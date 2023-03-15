@@ -52,7 +52,7 @@ stages:
             platform: '$(BuildPlatform)'
             configuration: '$(BuildConfiguration)'
 
-        - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@3
+        - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@3 # Secure Development tools extension should be installed in ADO organization
           displayName: 'Run CredScan'
           condition: in(variables['system.pullRequest.targetBranch'], 'generation', 'main')
           inputs:
