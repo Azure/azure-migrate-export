@@ -120,14 +120,13 @@ stages:
           displayName: 'Run PoliCheck'
           inputs:
             targetArgument: '$(OutputRootDirectory)\AzMigExport'
-            result: '$(OutputRootDirectory)\PoliCheck\PoliCheck.xml'
         
         - task: AntiMalware@4
           displayName: 'Run AntiMalware'
           inputs:
             FileOrDirPath: '$(RootDirectory)'
 
-        - task: SdtReport@1
+        - task: SdtReport@2
           displayName: 'Generate Security Analysis Report'
           inputs:
             TsvFile: false
@@ -141,7 +140,7 @@ stages:
             TSLint: false
             ToolLogsNotFoundAction: 'Standard'
         
-        - task: PublishSecurityAnalysisLogs@2
+        - task: PublishSecurityAnalysisLogs@3
           displayName: 'Publish Security Analysis Report'
           inputs:
             ArtifcatName: 'CodeAnalysisLogs'
@@ -149,7 +148,7 @@ stages:
             AllTools: true
             ToolLogsNotFoundAction: 'Standard'
         
-        - task: PostAnalysis@1
+        - task: PostAnalysis@2
           displayName: 'Stop on Security Errors'
           inputs:
             AllTools: false
