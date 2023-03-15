@@ -52,6 +52,15 @@ stages:
             platform: '$(BuildPlatform)'
             configuration: '$(BuildConfiguration)'
 
+        - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@3
+          displayName: 'Run CredScan'
+          condition: in(variables['system.pullRequest.targetBranch'], 'generation', 'main')
+          inputs:
+            toolMajorVersion: V2
+            outputFormat: sarif
+            scanFolder: '$(RootDirectory)'
+            suppressionsFile: '$(RootDirectory)\.config\CredScanSuppressions.json'
+
         - task: CopyFiles@2
           displayName: 'Copying DLLs to AzMigExport'
           inputs:
@@ -101,6 +110,7 @@ stages:
             Contents: '**\README.txt'
 
         - task: PublishBuildArtifacts@1
+          condition: succeededOrFailed()
           displayName: 'Publish Build Artifacts'
           inputs:
             pathToPublish: '$(OutputRootDirectory)'
