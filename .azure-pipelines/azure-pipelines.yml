@@ -127,6 +127,38 @@ stages:
           inputs:
             FileOrDirPath: '$(RootDirectory)'
 
+        - task: SdtReport@1
+          displayName: 'Generate Security Analysis Report'
+          inputs:
+            TsvFile: false
+            AllTools: false
+            BinSkim: true
+            CredScan: true
+            MSRD: false
+            RoslynAnalyzers: false
+            PoliCheck: true
+            AntiMalware: true
+            TSLint: false
+            ToolLogsNotFoundAction: 'Standard'
+        
+        - task: PublishSecurityAnalysisLogs@2
+          displayName: 'Publish Security Analysis Report'
+          inputs:
+            ArtifcatName: 'CodeAnalysisLogs'
+            ArtifactType: 'Container'
+            AllTools: true
+            ToolLogsNotFoundAction: 'Standard'
+        
+        - task: PostAnalysis@1
+          displayName: 'Stop on Security Errors'
+          inputs:
+            AllTools: false
+            BinSkim: false
+            CredScan: true
+            PoliCheck: true
+            AntiMalware: true
+            ToolLogsNotFoundAction: 'Standard'
+
         - task: PublishBuildArtifacts@1
           condition: succeededOrFailed()
           displayName: 'Publish Build Artifacts'
