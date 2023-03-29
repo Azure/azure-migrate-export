@@ -8,7 +8,7 @@
 - License: Newtonsoft.Json is licensed under the [MIT][NewtonsoftJsonLicense] License.
 
 ### ClosedXML
-- Usage: ClosedXML is used to generate Excecl (.xlsx) files, in accordance with Open XML file formats.
+- Usage: ClosedXML is used to generate Excel (.xlsx) files, in accordance with Open XML file formats.
 - GitHub Repository: [ClosedXML GitHub Repository][ClosedXMLGitHub]
 - License: ClosedXML is licensed under the [MIT][ClosedXMLLicense] License.
 
