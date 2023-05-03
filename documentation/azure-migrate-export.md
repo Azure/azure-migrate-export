@@ -367,7 +367,7 @@ Azure Migrate Export only uses Azure Migrate APIs to request for data insights. 
 No, passwords are not stored in Azure Migrate Export.
 
 ### As a Partner or Seller, I want to generate the presentation but want my customer to run the Module. Is that possible?
-Yes. You can ask your customers to download the Azure Migrate Export Utility Package and run Azure Migrate Export. Once discovery and assessment is complete, your customer can send you the AzMigExport folder with all the 4 discovery and assessment reports and PowerBI template. You may then run the PowerBI template by providing the required basepath. [Learn More](how-to--find-basepath) on how to find basepath.
+Yes. You can ask your customers to download the Azure Migrate Export Utility Package and run Azure Migrate Export. Once discovery and assessment is complete, your customer can send you the AzMigExport folder with all the 4 discovery and assessment reports and PowerBI template. You may then run the PowerBI template by providing the required basepath. [Learn More](#how-do-we-find-the-basepath) on how to find basepath.
 
 ### If my VM is powered off, will I still get its assessment consideration?
 Yes, it will be assessed for VM assessment only since its performance data will be unavailable.
