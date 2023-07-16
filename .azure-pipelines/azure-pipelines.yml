@@ -25,7 +25,7 @@ name: $(major).$(minor).$(Year:yy)$(DayOfYear).$(Rev:r)
 stages:
   - stage: Build_Stage
     jobs:
-      - job: Build_Job
+      - job: Build_Job # this is a test comment
 
         steps:
         - task: CmdLine@2
