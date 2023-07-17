@@ -144,6 +144,24 @@ namespace Azure.Migrate.Export.Common
         Internal
     }
 
+    public enum ExchangeRateStates
+    {
+        [Description("Exchange rates remain unfetched")]
+        Unfetched,
+
+        [Description("Latest exchange rates have been fetched")]
+        Latest,
+
+        [Description("Using cached file exchange rates")]
+        Cached,
+
+        [Description("Using in-memory cached exchange rates")]
+        InMemory,
+
+        [Description("Using USD prices for some amounts")]
+        USD
+    }
+
     public class EnumDescriptionHelper
     {
         public string GetEnumDescription(Enum value)

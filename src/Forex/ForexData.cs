@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -8,20 +9,48 @@ using Azure.Migrate.Export.Models;
 
 namespace Azure.Migrate.Export.Forex
 {
-    public class ForexData
+    public static class ForexData
     {
-        public double GetExchangeRate(UserInput userInputObj)
+        private static Dictionary<string, double> ExchangeRatesUSD;
+        private static double ExchangeRate = 1.0;
+        private static ExchangeRateStates ExchangeRateState = ExchangeRateStates.Unfetched;
+
+        public static Dictionary<string, double> GetExchangeRatesUSD()
         {
-            userInputObj.LoggerObj.LogInformation($"Obtaining exchange rate for currency {userInputObj.Currency.Value}");
-
-            if (File.Exists(ForexConstants.ForexDataFileName))
-                return GetExchangeRateFromFile(userInputObj);
-
-            return GetExchangeRateFromAPI(userInputObj);
+            return ExchangeRatesUSD;
         }
 
-        private double GetExchangeRateFromFile(UserInput userInputObj)
+        public static ExchangeRateStates GetExchangeRateState()
         {
+            return ExchangeRateState;
+        }
+
+        public static double GetExchangeRate()
+        {
+            return ExchangeRate;
+        }
+
+        public static void UpdateExchangeRatesWithUSDFallback()
+        {
+            List<KeyValuePair<string, string>> currencies = InitializationData.GetSupportedCurrenciesInitializationData();
+            ExchangeRatesUSD = new Dictionary<string, double>();
+
+            foreach(var kvp in currencies)
+                if (!ExchangeRatesUSD.ContainsKey(kvp.Key))
+                    ExchangeRatesUSD.Add(kvp.Key, 1.0);
+
+            ExchangeRateState = ExchangeRateStates.USD;
+        }
+
+        private static void GetExchangeRatesFromFile(UserInput userInputObj)
+        {
+            if (!File.Exists(ForexConstants.ForexDataFileName))
+            {
+                userInputObj.LoggerObj.LogWarning($"Cached {ForexConstants.ForexDataFileName} not found");
+                UpdateExchangeRatesWithUSDFallback();
+                return;
+            }
+
             string forexDataFileText = File.ReadAllText(ForexConstants.ForexDataFileName);
             ForexJSON forexJSONObj = JsonConvert.DeserializeObject<ForexJSON>(forexDataFileText);
 
@@ -30,19 +59,25 @@ namespace Azure.Migrate.Export.Forex
             DateTime currentDate = DateTime.UtcNow;
             double difference = (currentDate - forexDataDate).TotalDays;
 
-            if (difference >= 1.0)
+            if (difference >= 30.0)
             {
-                userInputObj.LoggerObj.LogInformation($"Cached {ForexConstants.ForexDataFileName} is more than a day old");
-                return GetExchangeRateFromAPI(userInputObj, forexJSONObj.Rates[userInputObj.Currency.Key], difference);
+                userInputObj.LoggerObj.LogWarning("Cached exchange rates are more than 30 days old");
+                UpdateExchangeRatesWithUSDFallback();
+                return;
             }
 
-            userInputObj.LoggerObj.LogInformation($"Obtaining exchange rate from cached {ForexConstants.ForexDataFileName}");
-            return forexJSONObj.Rates[userInputObj.Currency.Key];
+            ExchangeRatesUSD = forexJSONObj.Rates;
+            ExchangeRateState = ExchangeRateStates.Cached;
         }
 
-        private double GetExchangeRateFromAPI(UserInput userInputObj, double fallbackExchangeRateFromFile = 1.0, double dayDifference = 30.0)
+        public static void GetExchangeRatesFromAPI(UserInput userInputObj)
         {
-            userInputObj.LoggerObj.LogInformation($"Trying {Routes.ForexApi} API for obtaining latest forex data");
+            if (ExchangeRateState == ExchangeRateStates.Latest || ExchangeRateState == ExchangeRateStates.InMemory)
+            {
+                ExchangeRateState = ExchangeRateStates.InMemory;
+                return;
+            }
+
             string jsonResponse = "";
             try
             {
@@ -64,23 +99,49 @@ namespace Azure.Migrate.Export.Forex
                         errorMessage = errorMessage + e.Message + " ";
                     }
                 }
-                string message = dayDifference >= 30.0 ? "Using USD for some prices" : "Using cached exchange rate";
-                userInputObj.LoggerObj.LogError($"{message} as an error occurred trying to obtain exchange rates' data: {errorMessage}");
-                return dayDifference >= 30.0 ? 1.0 : fallbackExchangeRateFromFile;
+                userInputObj.LoggerObj.LogWarning($"Fetching latest prices from API caused an exception: {errorMessage}");
+                GetExchangeRatesFromFile(userInputObj);
+                return;
             }
             catch (Exception exJsonResponse)
             {
-                string message = dayDifference >= 30.0 ? "Using USD for some prices" : "Using cached exchange rate";
-                userInputObj.LoggerObj.LogError($"{message} as an error occurred trying to obtain exchange rates' data: {exJsonResponse.Message}");
-                return dayDifference >= 30.0 ? 1.0 : fallbackExchangeRateFromFile; ;
+                userInputObj.LoggerObj.LogWarning($"Fetching latest prices from API caused an exception: {exJsonResponse.Message}");
+                GetExchangeRatesFromFile(userInputObj);
+                return;
             }
 
             ForexJSON forexJSONObj = JsonConvert.DeserializeObject<ForexJSON>(jsonResponse);
             string indentedJsonString = JsonConvert.SerializeObject(forexJSONObj, Formatting.Indented);
-            File.WriteAllText(ForexConstants.ForexDataFileName, indentedJsonString);
-            userInputObj.LoggerObj.LogInformation($"Updated cache {ForexConstants.ForexDataFileName} with latest forex data");
+            ExchangeRatesUSD = forexJSONObj.Rates;
+            ExchangeRateState = ExchangeRateStates.Latest;
 
-            return forexJSONObj.Rates[userInputObj.Currency.Key];
+            try
+            {
+                File.WriteAllText(ForexConstants.ForexDataFileName, indentedJsonString);
+            }
+            catch (Exception exUpdateJsonFile)
+            { 
+                userInputObj.LoggerObj.LogWarning($"Failed to update latest prices to {ForexConstants.ForexDataFileName}: {exUpdateJsonFile.Message}");
+            }
+        }
+
+        public static void UpdateExchangeRate(string currencySymbol)
+        {
+            if (ExchangeRatesUSD.Count <= 0)
+            {
+                ExchangeRate = 1.0;
+                ExchangeRateState = ExchangeRateStates.USD;
+                return;
+            }
+
+            if (!ExchangeRatesUSD.ContainsKey(currencySymbol))
+            {
+                ExchangeRate = 1.0;
+                ExchangeRateState = ExchangeRateStates.USD;
+                return;
+            }
+
+            ExchangeRate = ExchangeRatesUSD[currencySymbol];
         }
     }
 }

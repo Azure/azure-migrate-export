@@ -701,9 +701,9 @@ namespace Azure.Migrate.Export.HttpRequestHelper
                 isException = true;
                 if (NumberOfTries < HttpUtilities.MaxForexDataRetries && HttpUtilities.IsRetryNeeded(null, exForexHttpRequest))
                 {
-                    userInputObj.LoggerObj.LogWarning($"HTTP GET request to url: {url} error: {exForexHttpRequest.Message} Will try again after 1 minute");
-                    Thread.Sleep(60000);
-                    response = await GetHttpResponse(url, userInputObj);
+                    userInputObj.LoggerObj.LogWarning($"HTTP GET request to url: {url} error: {exForexHttpRequest.Message} Will try again after 10 seconds");
+                    Thread.Sleep(10000);
+                    response = await GetForexApiHttpResponse(url, userInputObj);
                 }
                 else
                     throw;
@@ -713,9 +713,9 @@ namespace Azure.Migrate.Export.HttpRequestHelper
             {
                 if ((response == null || !response.IsSuccessStatusCode) && HttpUtilities.IsRetryNeeded(response, null) && NumberOfTries < HttpUtilities.MaxForexDataRetries)
                 {
-                    userInputObj.LoggerObj.LogWarning($"HTTP GET request to url {url} failed: {response.StatusCode}: {response.Content} Will try again after 1 minute");
-                    Thread.Sleep(60000);
-                    response = await GetHttpResponse(url, userInputObj);
+                    userInputObj.LoggerObj.LogWarning($"HTTP GET request to url {url} failed: {response.StatusCode}: {response.Content} Will try again after 10 seconds");
+                    Thread.Sleep(10000);
+                    response = await GetForexApiHttpResponse(url, userInputObj);
                 }
             }
 

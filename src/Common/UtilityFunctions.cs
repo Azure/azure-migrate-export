@@ -2,6 +2,7 @@ using ClosedXML.Excel;
 using System;
 using System.Collections.Generic;
 
+using Azure.Migrate.Export.Forex;
 using Azure.Migrate.Export.Models;
 
 namespace Azure.Migrate.Export.Common
@@ -66,8 +67,9 @@ namespace Azure.Migrate.Export.Common
                     assessmentInfo.Value == AssessmentPollResponse.OutDated);
         }
 
-        public static double GetAzureBackupMonthlyCostEstimate(List<AssessedDisk> disks, double exchangeRate)
+        public static double GetAzureBackupMonthlyCostEstimate(List<AssessedDisk> disks)
         {
+            double exchangeRate = ForexData.GetExchangeRate();
             double totalDiskStorage = 0;
             foreach (var disk in disks)
                 totalDiskStorage += disk.GigabytesProvisioned;
@@ -85,8 +87,9 @@ namespace Azure.Migrate.Export.Common
             return backupCost + storageCost;
         }
 
-        public static double GetAzureSiteRecoveryMonthlyCostEstimate(double exchangeRate)
+        public static double GetAzureSiteRecoveryMonthlyCostEstimate()
         {
+            double exchangeRate = ForexData.GetExchangeRate();
             return 25.0 * exchangeRate;
         }
 

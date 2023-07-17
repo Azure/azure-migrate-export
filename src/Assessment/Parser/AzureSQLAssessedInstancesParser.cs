@@ -98,7 +98,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
                     foreach (var value in assessedInstancesObj.Values)
                     {
                         string key = value.Properties.SqlInstanceSDSArmId?.ToLower();
-                        UpdateAssessedInstancesDataset(AzureSQLInstancesData, key, value, kvp.Key, userInputObj.ExchangeRateUSD);
+                        UpdateAssessedInstancesDataset(AzureSQLInstancesData, key, value, kvp.Key);
 
                         double monthlySqlMIComputeCost = value.Properties.AzureSqlMISuitabilityDetails.MonthlyComputeCost;
                         double monthlySqlVMComputeCost = value.Properties.AzureSqlVMSuitabilityDetails.MonthlyComputeCost;
@@ -132,7 +132,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             }
         }
 
-        private void UpdateAssessedInstancesDataset(Dictionary<string, AzureSQLInstanceDataset> AzureSQLInstancesData, string key, AzureSQLAssessedInstanceValue value, AssessmentInformation assessmentInfo, double exchangeRate)
+        private void UpdateAssessedInstancesDataset(Dictionary<string, AzureSQLInstanceDataset> AzureSQLInstancesData, string key, AzureSQLAssessedInstanceValue value, AssessmentInformation assessmentInfo)
         {
             if (AzureSQLInstancesData.ContainsKey(key))
                 return;
@@ -202,8 +202,8 @@ namespace Azure.Migrate.Export.Assessment.Parser
                 return;
             }
 
-            AzureSQLInstancesData[key].MonthlyAzureSiteRecoveryCostEstimate = UtilityFunctions.GetAzureSiteRecoveryMonthlyCostEstimate(exchangeRate);
-            AzureSQLInstancesData[key].MonthlyAzureBackupCostEstimate = UtilityFunctions.GetAzureBackupMonthlyCostEstimate(AzureSQLInstancesData[key].LogicalDisks, exchangeRate);
+            AzureSQLInstancesData[key].MonthlyAzureSiteRecoveryCostEstimate = UtilityFunctions.GetAzureSiteRecoveryMonthlyCostEstimate();
+            AzureSQLInstancesData[key].MonthlyAzureBackupCostEstimate = UtilityFunctions.GetAzureBackupMonthlyCostEstimate(AzureSQLInstancesData[key].LogicalDisks);
         }
 
         #region Utilities

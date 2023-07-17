@@ -256,6 +256,9 @@
     <None Include="README.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Exchange_Rates.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\.version\PipelineAssemblyInfo.cs">

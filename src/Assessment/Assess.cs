@@ -120,7 +120,7 @@ namespace Azure.Migrate.Export.Assessment
             
             UserInputObj.LoggerObj.LogInformation(3, $"Retrieved data for {assessmentSiteMachines.Count} assessment site machine"); // IsExpressWorkflow ? 25 : 5 % complete
 
-            UpdateExchangeRate();
+            UpdateExchangeRates();
 
             Dictionary<string, string> AssessmentIdToDiscoveryIdLookup = new Dictionary<string, string>();
 
@@ -569,23 +569,29 @@ namespace Azure.Migrate.Export.Assessment
             return true;
         }
 
-        private void UpdateExchangeRate()
+        private void UpdateExchangeRates()
         {
-            double exchangeRate = 1.0;
+            UserInputObj.LoggerObj.LogInformation("Obtaining exchange rates' data");
             try
             {
-                exchangeRate = new ForexData().GetExchangeRate(UserInputObj);
+                ForexData.GetExchangeRatesFromAPI(UserInputObj);
             }
             catch (OperationCanceledException)
             {
                 throw;
             }
-            catch (Exception exForexRate)
+            catch (Exception exForexRates)
             {
-                UserInputObj.LoggerObj.LogWarning($"Certain prices will be in USD as an error occured trying to obtain exchange rate {exForexRate.Message}");
+                UserInputObj.LoggerObj.LogWarning($"Exception occured trying to obtain exchange rates: {exForexRates.Message}");
             }
-            UserInputObj.LoggerObj.LogInformation($"Exchange rate finalized as {exchangeRate.ToString()}");
-            UserInputObj.ExchangeRateUSD = exchangeRate;
+
+            if (ForexData.GetExchangeRatesUSD() == null || ForexData.GetExchangeRatesUSD().Count <= 0)
+                ForexData.UpdateExchangeRatesWithUSDFallback();
+
+            UserInputObj.LoggerObj.LogInformation(new EnumDescriptionHelper().GetEnumDescription(ForexData.GetExchangeRateState()));
+
+            ForexData.UpdateExchangeRate(UserInputObj.Currency.Key);
+            UserInputObj.LoggerObj.LogInformation($"Exchange rate for currency {UserInputObj.Currency.Value} finalized as {ForexData.GetExchangeRate()}");
         }
 
         private void ParseAzureSQLAssessedMachines(Dictionary<string, AzureSQLMachineDataset> AzureSQLMachinesData, Dictionary<AssessmentInformation, AssessmentPollResponse> AzureSQLAssessmentStatusMap)

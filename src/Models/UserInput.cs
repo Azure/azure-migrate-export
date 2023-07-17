@@ -28,7 +28,6 @@ namespace Azure.Migrate.Export.Models
 
             TargetRegion = targetRegion;
             Currency = currency;
-            ExchangeRateUSD = 1.0;
             AssessmentDuration = assessmentDuration;
             PreferredOptimizationObj = new PreferredOptimization(optimizationPreference, assessSqlServicesSeparately);
 
@@ -50,7 +49,6 @@ namespace Azure.Migrate.Export.Models
         // Assessment settings tab
         public KeyValuePair<string, string> TargetRegion { get; }
         public KeyValuePair<string, string> Currency { get; }
-        public double ExchangeRateUSD { get; set; }
         public KeyValuePair<string, string> AssessmentDuration { get; }
         public PreferredOptimization PreferredOptimizationObj { get; }
 

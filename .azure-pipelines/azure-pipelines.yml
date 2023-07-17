@@ -107,6 +107,14 @@ stages:
             TargetFolder: '$(CopyTargetFolder)'
             OverWrite: true
             Contents: '**\README.txt'
+
+        - task: CopyFiles@2
+          displayName: 'Copying Exchange rates JSON to AzMigExport'
+          inputs:
+            SourceFolder: '$(CopySourceFolder)'
+            TargetFolder: '$(CopyTargetFolder)'
+            OverWrite: true
+            Contents: '**\Exchange_Rates.json'
         
         - task: BinSkim@4
           displayName: 'Run BinSkim'
