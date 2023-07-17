@@ -12,6 +12,10 @@
 - GitHub Repository: [ClosedXML GitHub Repository][ClosedXMLGitHub]
 - License: ClosedXML is licensed under the [MIT][ClosedXMLLicense] License.
 
+### Exchangerate.host
+- Usage: Exchange rates API is a simple and lightweight free service for current and historical foreign exchange rates & crypto exchange rates.
+- GitHub Repository: [Exchangerate.host GitHub Repository][Exchangerate.HostGitHub]
+- License: No license is mentioned for Exchangerate.host as of now.
 <!-- References -->
 
 [NewtonsoftJsonGithub]: https://github.com/JamesNK/Newtonsoft.Json
@@ -19,3 +23,5 @@
 
 [ClosedXMLGitHub]: https://github.com/ClosedXML/ClosedXML
 [ClosedXMLLicense]: https://github.com/ClosedXML/ClosedXML/blob/develop/LICENSE
+
+[Exchangerate.HostGitHub]: https://github.com/Formicka/exchangerate.host
