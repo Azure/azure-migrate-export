@@ -103,6 +103,8 @@
     <Compile Include="Common\CoreReportConstants.cs" />
     <Compile Include="Common\OpportunityReportConstants.cs" />
     <Compile Include="Common\ClashReportConstants.cs" />
+    <Compile Include="Common\ForexConstants.cs" />
+    <Compile Include="Common\InitializationData.cs" />
     <Compile Include="Factory\AzureVMAssessmentSettingsFactory.cs" />
     <Compile Include="Factory\AzureVMWareSolutionAssessmentSettingsFactory.cs" />
     <Compile Include="Factory\AzureSQLAssessmentSettingsFactory.cs" />
@@ -159,6 +161,7 @@
     <Compile Include="Models\JSONResponses\Assessment\AzureSQLAssessedMachinesJSON.cs" />
     <Compile Include="Models\JSONResponses\Assessment\AVSAssessmentPropertiesJSON.cs" />
     <Compile Include="Models\JSONResponses\Assessment\AzureAppServiceWebAppPropertiesJSON.cs" />
+    <Compile Include="Models\JSONResponses\Forex\ForexJSON.cs" />
     <Compile Include="Models\JSONRequests\Assessment\CreateGroupBodyJSON.cs" />
     <Compile Include="Models\JSONRequests\Assessment\UpdateMachinesInGroupBodyJSON.cs" />
     <Compile Include="Models\JSONRequests\Assessment\AzureVMAssessmentSettingsJSON.cs" />
@@ -188,6 +191,7 @@
     <Compile Include="Excel\ExportClashReport.cs" />
     <Compile Include="Excel\ExportOpportunityReport.cs" />
     <Compile Include="Excel\ExportCoreReport.cs" />
+    <Compile Include="Forex\ForexData.cs" />
     <EmbeddedResource Include="Forms\AssessmentSettingsForm.resx">
       <DependentUpon>AssessmentSettingsForm.cs</DependentUpon>
     </EmbeddedResource>

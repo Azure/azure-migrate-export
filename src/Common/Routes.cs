@@ -44,5 +44,10 @@ namespace Azure.Migrate.Export.Common
         public const string BoolFalse = "false";
         public const string ForwardSlash = @"/";
         public const string Space = " ";
+
+        public const string ForexApi = "api.exchangerate.host";
+        public const string ForexApiLatestEndpoint = "latest";
+        public const string ForexApiBasePriceQueryParameter = "base";
+        public const string ForexApiCurrencySymbolsQueryParameter = "symbols";
     }
 }

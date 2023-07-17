@@ -66,31 +66,28 @@ namespace Azure.Migrate.Export.Common
                     assessmentInfo.Value == AssessmentPollResponse.OutDated);
         }
 
-        public static double GetAzureBackupMonthlyCostEstimate(List<AssessedDisk> disks)
+        public static double GetAzureBackupMonthlyCostEstimate(List<AssessedDisk> disks, double exchangeRate)
         {
             double totalDiskStorage = 0;
             foreach (var disk in disks)
                 totalDiskStorage += disk.GigabytesProvisioned;
-
-            double totalBackupCost = 0;
+            
+            double storageCost = totalDiskStorage * ((3.38 * 0.0224) * exchangeRate);
+            double backupCost = exchangeRate;
 
             if (totalDiskStorage <= 50)
-            {
-                int backupCost = 5;
-                totalBackupCost = backupCost + totalDiskStorage * 3.38 * 0.0224;
-            }
+                backupCost *= 5;
             else if (totalDiskStorage > 50 && totalDiskStorage <= 500)
-            {
-                int backupCost = 10;
-                totalBackupCost = backupCost + totalDiskStorage * 3.38 * 0.0224;
-            }
+                backupCost *= 10;
             else if (totalDiskStorage > 500)
-            {
-                double backupCost = Math.Ceiling(totalDiskStorage / 500) * 10;
-                totalBackupCost = backupCost + totalDiskStorage * 3.38 * 0.0224;
-            }
+                backupCost *= Math.Ceiling(totalDiskStorage / 500) * 10;
 
-            return totalBackupCost;
+            return backupCost + storageCost;
+        }
+
+        public static double GetAzureSiteRecoveryMonthlyCostEstimate(double exchangeRate)
+        {
+            return 25.0 * exchangeRate;
         }
 
         public static string GetConfidenceRatingInStars(double confidenceRatingInPercentage)

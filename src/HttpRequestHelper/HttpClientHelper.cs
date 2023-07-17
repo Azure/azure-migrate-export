@@ -648,5 +648,79 @@ namespace Azure.Migrate.Export.HttpRequestHelper
             return AssessmentPollResponse.NotCompleted;
         }
         #endregion
+
+        #region Forex API
+        public async Task<string> GetExchangeRateJsonStringResponse(UserInput userInputObj)
+        {
+            var currencies = InitializationData.GetSupportedCurrenciesInitializationData();
+            string commaSeparatedCurrencySymbols = "";
+            for (int i = 0; i < currencies.Count - 1; i++)
+                commaSeparatedCurrencySymbols = commaSeparatedCurrencySymbols + currencies[i].Key + ",";
+            commaSeparatedCurrencySymbols = commaSeparatedCurrencySymbols + currencies[currencies.Count - 1].Key;
+
+            string url = Routes.ProtocolScheme + Routes.ForexApi + Routes.ForwardSlash +
+                         Routes.ForexApiLatestEndpoint + Routes.QueryStringQuestionMark +
+                         Routes.ForexApiBasePriceQueryParameter + Routes.QueryStringEquals + "USD" + Routes.QueryStringAmpersand +
+                         Routes.ForexApiCurrencySymbolsQueryParameter + Routes.QueryStringEquals + commaSeparatedCurrencySymbols;
+
+            HttpResponseMessage response = await GetForexApiHttpResponse(url, userInputObj);
+
+            if (response == null)
+                throw new Exception($"Could not obtain a HTTP GET response for url {url}.");
+
+            else if (!response.IsSuccessStatusCode)
+            {
+                string responseContent = await response.Content.ReadAsStringAsync();
+                throw new Exception($"HTTP GET response for url {url} failure: {response.StatusCode}: {responseContent}");
+            }
+
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        private async Task<HttpResponseMessage> GetForexApiHttpResponse(string url, UserInput userInputObj)
+        {
+            if (userInputObj.CancellationContext.IsCancellationRequested)
+                UtilityFunctions.InitiateCancellation(userInputObj);
+
+            NumberOfTries++;
+            HttpResponseMessage response;
+            bool isException = false;
+
+            try
+            {
+                HttpClient httpClient = new HttpClient()
+                {
+                    Timeout = TimeSpan.FromSeconds(60),
+                };
+
+                Uri baseAddress = new Uri(url);
+                response = await httpClient.GetAsync(baseAddress);
+            }
+            catch (Exception exForexHttpRequest)
+            {
+                isException = true;
+                if (NumberOfTries < HttpUtilities.MaxForexDataRetries && HttpUtilities.IsRetryNeeded(null, exForexHttpRequest))
+                {
+                    userInputObj.LoggerObj.LogWarning($"HTTP GET request to url: {url} error: {exForexHttpRequest.Message} Will try again after 1 minute");
+                    Thread.Sleep(60000);
+                    response = await GetHttpResponse(url, userInputObj);
+                }
+                else
+                    throw;
+            }
+
+            if (!isException)
+            {
+                if ((response == null || !response.IsSuccessStatusCode) && HttpUtilities.IsRetryNeeded(response, null) && NumberOfTries < HttpUtilities.MaxForexDataRetries)
+                {
+                    userInputObj.LoggerObj.LogWarning($"HTTP GET request to url {url} failed: {response.StatusCode}: {response.Content} Will try again after 1 minute");
+                    Thread.Sleep(60000);
+                    response = await GetHttpResponse(url, userInputObj);
+                }
+            }
+
+            return response;
+        }
+        #endregion
     }
 }

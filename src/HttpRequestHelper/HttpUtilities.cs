@@ -14,6 +14,7 @@ namespace Azure.Migrate.Export.HttpRequestHelper
         
         public const int MaxProjectDetailsRetries = 3;
         public const int MaxInformationDataRetries = 10;
+        public const int MaxForexDataRetries = 3;
 
         public static bool IsRetryNeeded(HttpResponseMessage response, Exception exception)
         {

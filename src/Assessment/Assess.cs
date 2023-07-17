@@ -9,6 +9,7 @@ using Azure.Migrate.Export.Assessment.Processor;
 using Azure.Migrate.Export.Common;
 using Azure.Migrate.Export.Excel;
 using Azure.Migrate.Export.Factory;
+using Azure.Migrate.Export.Forex;
 using Azure.Migrate.Export.HttpRequestHelper;
 using Azure.Migrate.Export.Models;
 
@@ -118,6 +119,8 @@ namespace Azure.Migrate.Export.Assessment
             }
             
             UserInputObj.LoggerObj.LogInformation(3, $"Retrieved data for {assessmentSiteMachines.Count} assessment site machine"); // IsExpressWorkflow ? 25 : 5 % complete
+
+            UpdateExchangeRate();
 
             Dictionary<string, string> AssessmentIdToDiscoveryIdLookup = new Dictionary<string, string>();
 
@@ -564,6 +567,25 @@ namespace Azure.Migrate.Export.Assessment
             processorObj.InititateProcessing();
 
             return true;
+        }
+
+        private void UpdateExchangeRate()
+        {
+            double exchangeRate = 1.0;
+            try
+            {
+                exchangeRate = new ForexData().GetExchangeRate(UserInputObj);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (Exception exForexRate)
+            {
+                UserInputObj.LoggerObj.LogWarning($"Certain prices will be in USD as an error occured trying to obtain exchange rate {exForexRate.Message}");
+            }
+            UserInputObj.LoggerObj.LogInformation($"Exchange rate finalized as {exchangeRate.ToString()}");
+            UserInputObj.ExchangeRateUSD = exchangeRate;
         }
 
         private void ParseAzureSQLAssessedMachines(Dictionary<string, AzureSQLMachineDataset> AzureSQLMachinesData, Dictionary<AssessmentInformation, AssessmentPollResponse> AzureSQLAssessmentStatusMap)
