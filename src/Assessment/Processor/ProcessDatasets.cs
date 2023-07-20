@@ -339,7 +339,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             coreProperties.Currency = UserInputObj.Currency.Key;
             coreProperties.AzureMigrateProjectName = UserInputObj.AzureMigrateProjectName.Value;
             coreProperties.AssessmentSiteName = UserInputObj.AssessmentProjectName;
-            coreProperties.AssessmentDuration = UserInputObj.AssessmentDuration.Value;
+            coreProperties.AssessmentDuration = UserInputObj.AssessmentDuration;
             coreProperties.OptimizationPreference = UserInputObj.PreferredOptimizationObj.OptimizationPreference.Value;
             coreProperties.AssessSQLServices = UserInputObj.PreferredOptimizationObj.AssessSqlServicesSeparately ? "Yes" : "No";
         }

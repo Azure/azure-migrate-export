@@ -28,7 +28,7 @@ namespace Azure.Migrate.Export.Forms
         
         private void InitializeTargetRegionComboBox()
         {
-            List<KeyValuePair<string, string>> location = InitializationData.GetSupportedRegionsInitializationData();
+            List<KeyValuePair<string, string>> location = InitializationData.GetSupportedRegions();
 
             TargetRegionComboBox.DataSource = location;
             TargetRegionComboBox.ValueMember = "Key";
@@ -38,7 +38,7 @@ namespace Azure.Migrate.Export.Forms
 
         private void InitializeCurrencyComboBox()
         {
-            List<KeyValuePair<string, string>> currency = InitializationData.GetSupportedCurrenciesInitializationData();
+            List<KeyValuePair<string, string>> currency = InitializationData.GetSupportedCurrencies();
 
             CurrencyComboBox.DataSource = currency;
             CurrencyComboBox.ValueMember = "Key";
@@ -48,12 +48,10 @@ namespace Azure.Migrate.Export.Forms
 
         private void InitializeAssessmentDurationComboBox()
         {
-            List<KeyValuePair<string, string>> assessmentDurations = InitializationData.GetSupportedAssessmentDurationData();
+            List<string> assessmentDurations = InitializationData.GetSupportedAssessmentDurations();
 
             AssessmentDurationComboBox.DataSource = assessmentDurations;
-            AssessmentDurationComboBox.ValueMember = "Key";
-            AssessmentDurationComboBox.DisplayMember = "Value";
-            AssessmentDurationComboBox.SelectedItem = new KeyValuePair<string, string>("week", "Week");
+            AssessmentDurationComboBox.SelectedItem = "Week";
         }
 
         private void InitializeOptimizationPreference()
@@ -207,13 +205,13 @@ namespace Azure.Migrate.Export.Forms
             return (KeyValuePair<string, string>)CurrencyComboBox.SelectedItem;
         }
 
-        public KeyValuePair<string, string> GetAssessmentDuration()
+        public string GetAssessmentDuration()
         {
-            KeyValuePair<string, string> empty = new KeyValuePair<string, string>("", "");
+            string empty = "";
             if (AssessmentDurationComboBox.SelectedItem == null)
                 return empty;
 
-            return (KeyValuePair<string, string>)AssessmentDurationComboBox.SelectedItem;
+            return (string)AssessmentDurationComboBox.SelectedItem;
         }
 
         public KeyValuePair<string, string> GetSelectedOptimizationPreference()

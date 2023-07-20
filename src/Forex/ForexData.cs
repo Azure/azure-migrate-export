@@ -11,43 +11,19 @@ namespace Azure.Migrate.Export.Forex
 {
     public static class ForexData
     {
-        private static Dictionary<string, double> ExchangeRatesUSD;
+        private static Dictionary<string, double> ExchangeRatesUSD = null;
         private static double ExchangeRate = 1.0;
-        private static ExchangeRateStates ExchangeRateState = ExchangeRateStates.Unfetched;
-
-        public static Dictionary<string, double> GetExchangeRatesUSD()
-        {
-            return ExchangeRatesUSD;
-        }
-
-        public static ExchangeRateStates GetExchangeRateState()
-        {
-            return ExchangeRateState;
-        }
 
         public static double GetExchangeRate()
         {
             return ExchangeRate;
         }
 
-        public static void UpdateExchangeRatesWithUSDFallback()
-        {
-            List<KeyValuePair<string, string>> currencies = InitializationData.GetSupportedCurrenciesInitializationData();
-            ExchangeRatesUSD = new Dictionary<string, double>();
-
-            foreach(var kvp in currencies)
-                if (!ExchangeRatesUSD.ContainsKey(kvp.Key))
-                    ExchangeRatesUSD.Add(kvp.Key, 1.0);
-
-            ExchangeRateState = ExchangeRateStates.USD;
-        }
-
         private static void GetExchangeRatesFromFile(UserInput userInputObj)
         {
             if (!File.Exists(ForexConstants.ForexDataFileName))
             {
-                userInputObj.LoggerObj.LogWarning($"Cached {ForexConstants.ForexDataFileName} not found");
-                UpdateExchangeRatesWithUSDFallback();
+                userInputObj.LoggerObj.LogWarning($"Cached {ForexConstants.ForexDataFileName} file not found");
                 return;
             }
 
@@ -62,21 +38,16 @@ namespace Azure.Migrate.Export.Forex
             if (difference >= 30.0)
             {
                 userInputObj.LoggerObj.LogWarning("Cached exchange rates are more than 30 days old");
-                UpdateExchangeRatesWithUSDFallback();
                 return;
             }
 
             ExchangeRatesUSD = forexJSONObj.Rates;
-            ExchangeRateState = ExchangeRateStates.Cached;
         }
 
         public static void GetExchangeRatesFromAPI(UserInput userInputObj)
         {
-            if (ExchangeRateState == ExchangeRateStates.Latest || ExchangeRateState == ExchangeRateStates.InMemory)
-            {
-                ExchangeRateState = ExchangeRateStates.InMemory;
+            if (ExchangeRatesUSD != null)
                 return;
-            }
 
             string jsonResponse = "";
             try
@@ -113,7 +84,6 @@ namespace Azure.Migrate.Export.Forex
             ForexJSON forexJSONObj = JsonConvert.DeserializeObject<ForexJSON>(jsonResponse);
             string indentedJsonString = JsonConvert.SerializeObject(forexJSONObj, Formatting.Indented);
             ExchangeRatesUSD = forexJSONObj.Rates;
-            ExchangeRateState = ExchangeRateStates.Latest;
 
             try
             {
@@ -127,17 +97,11 @@ namespace Azure.Migrate.Export.Forex
 
         public static void UpdateExchangeRate(string currencySymbol)
         {
-            if (ExchangeRatesUSD.Count <= 0)
+            if (ExchangeRatesUSD == null ||
+                ExchangeRatesUSD.Count <= 0 ||
+                !ExchangeRatesUSD.ContainsKey(currencySymbol))
             {
                 ExchangeRate = 1.0;
-                ExchangeRateState = ExchangeRateStates.USD;
-                return;
-            }
-
-            if (!ExchangeRatesUSD.ContainsKey(currencySymbol))
-            {
-                ExchangeRate = 1.0;
-                ExchangeRateState = ExchangeRateStates.USD;
                 return;
             }
 

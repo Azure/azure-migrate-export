@@ -5,8 +5,6 @@ namespace Azure.Migrate.Export.Models
 {
     public class ForexJSON
     {
-        [JsonProperty("success")]
-        public bool Success { get; set; }
 
         [JsonProperty("base")]
         public string Base { get; set; }

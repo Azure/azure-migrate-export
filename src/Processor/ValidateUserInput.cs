@@ -212,14 +212,8 @@ namespace Azure.Migrate.Export.Processor
 
         private static bool IsAssessmentDurationValid(UserInput userInputObj)
         {
-            userInputObj.LoggerObj.LogInformation($"Validating assessment duration: {userInputObj.AssessmentDuration.Value}");
-
-            if (string.IsNullOrEmpty(userInputObj.AssessmentDuration.Key))
-            {
-                userInputObj.LoggerObj.LogError("Empty assessment duration key");
-                return false;
-            }
-            if (string.IsNullOrEmpty(userInputObj.AssessmentDuration.Value))
+            userInputObj.LoggerObj.LogInformation($"Validating assessment duration: {userInputObj.AssessmentDuration}");
+            if (string.IsNullOrEmpty(userInputObj.AssessmentDuration))
             {
                 userInputObj.LoggerObj.LogError("Empty assessment duration value");
                 return false;

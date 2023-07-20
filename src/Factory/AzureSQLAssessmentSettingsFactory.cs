@@ -47,7 +47,7 @@ namespace Azure.Migrate.Export.Factory
             obj1.Properties.ReservedInstance = "None";
             obj1.Properties.ReservedInstanceForVM = "None";
             obj1.Properties.Currency = userInputObj.Currency.Key;
-            obj1.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
+            obj1.Properties.TimeRange = userInputObj.AssessmentDuration;
             obj1.Properties.OSLicense = "No";
             obj1.Properties.SQLServerLicense = "No";
             result.Add(new AssessmentInformation(groupName, "SQL-Prod-AzMigExport-1", AssessmentType.SQLAssessment, AssessmentTag.PerformanceBased, JsonConvert.SerializeObject(obj1)));
@@ -59,7 +59,7 @@ namespace Azure.Migrate.Export.Factory
             obj2.Properties.ReservedInstance = "RI3Year";
             obj2.Properties.ReservedInstanceForVM = "RI3Year";
             obj2.Properties.Currency = userInputObj.Currency.Key;
-            obj2.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
+            obj2.Properties.TimeRange = userInputObj.AssessmentDuration;
             obj2.Properties.OSLicense = "No";
             obj2.Properties.SQLServerLicense = "No";
             result.Add(new AssessmentInformation(groupName, "SQL-Prod-AzMigExport-2", AssessmentType.SQLAssessment, AssessmentTag.PerformanceBased_RI3year, JsonConvert.SerializeObject(obj2)));
@@ -71,7 +71,7 @@ namespace Azure.Migrate.Export.Factory
             obj3.Properties.ReservedInstance = "None";
             obj3.Properties.ReservedInstanceForVM = "None";
             obj3.Properties.Currency = userInputObj.Currency.Key;
-            obj3.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
+            obj3.Properties.TimeRange = userInputObj.AssessmentDuration;
             obj3.Properties.OSLicense = "Yes";
             obj3.Properties.SQLServerLicense = "Yes";
             result.Add(new AssessmentInformation(groupName, "SQL-Prod-AzMigExport-3", AssessmentType.SQLAssessment, AssessmentTag.PerformanceBased_AHUB, JsonConvert.SerializeObject(obj3)));
@@ -83,7 +83,7 @@ namespace Azure.Migrate.Export.Factory
             obj4.Properties.ReservedInstance = "RI3Year";
             obj4.Properties.ReservedInstanceForVM = "RI3Year";
             obj4.Properties.Currency = userInputObj.Currency.Key;
-            obj4.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
+            obj4.Properties.TimeRange = userInputObj.AssessmentDuration;
             obj4.Properties.OSLicense = "Yes";
             obj4.Properties.SQLServerLicense = "Yes";
             result.Add(new AssessmentInformation(groupName, "SQL-Prod-AzMigExport-4", AssessmentType.SQLAssessment, AssessmentTag.PerformanceBased_AHUB_RI3year, JsonConvert.SerializeObject(obj4)));
@@ -96,7 +96,7 @@ namespace Azure.Migrate.Export.Factory
             obj5.Properties.ReservedInstanceForVM = "None";
             obj5.Properties.AzureOfferCodeForVM = "SavingsPlan3Year";
             obj5.Properties.Currency = userInputObj.Currency.Key;
-            obj5.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
+            obj5.Properties.TimeRange = userInputObj.AssessmentDuration;
             obj5.Properties.OSLicense = "No";
             obj5.Properties.SQLServerLicense = "No";
             result.Add(new AssessmentInformation(groupName, "SQL-Prod-AzMigExport-5", AssessmentType.SQLAssessment, AssessmentTag.PerformanceBased_ASP3year, JsonConvert.SerializeObject(obj5)));
@@ -115,7 +115,7 @@ namespace Azure.Migrate.Export.Factory
             obj1.Properties.ReservedInstance = "None";
             obj1.Properties.ReservedInstanceForVM = "None";
             obj1.Properties.Currency = userInputObj.Currency.Key;
-            obj1.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
+            obj1.Properties.TimeRange = userInputObj.AssessmentDuration;
             obj1.Properties.OSLicense = "No";
             obj1.Properties.SQLServerLicense = "No";
             result.Add(new AssessmentInformation(groupName, "SQL-Dev-AzMigExport-1", AssessmentType.SQLAssessment, AssessmentTag.PerformanceBased, JsonConvert.SerializeObject(obj1)));
@@ -127,7 +127,7 @@ namespace Azure.Migrate.Export.Factory
             obj2.Properties.ReservedInstance = "None";
             obj2.Properties.ReservedInstanceForVM = "None";
             obj2.Properties.Currency = userInputObj.Currency.Key;
-            obj2.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
+            obj2.Properties.TimeRange = userInputObj.AssessmentDuration;
             obj2.Properties.OSLicense = "Yes";
             obj2.Properties.SQLServerLicense = "Yes";
             result.Add(new AssessmentInformation(groupName, "SQL-Dev-AzMigExport-2", AssessmentType.SQLAssessment, AssessmentTag.PerformanceBased_AHUB, JsonConvert.SerializeObject(obj2)));

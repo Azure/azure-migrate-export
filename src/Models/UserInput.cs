@@ -12,7 +12,7 @@ namespace Azure.Migrate.Export.Models
                 string tenantId, KeyValuePair<string, string> subscription, KeyValuePair<string, string> resourceGroupName, KeyValuePair<string, string> azureMigrateProjectName,
                 string discoverySiteName, string assessmentProjectName,
                 List<string> azureMigrateSourceAppliances, bool isExpressWorkflow, string module,
-                KeyValuePair<string, string> targetRegion, KeyValuePair<string, string> currency, KeyValuePair<string, string> assessmentDuration,
+                KeyValuePair<string, string> targetRegion, KeyValuePair<string, string> currency, string assessmentDuration,
                 KeyValuePair<string, string> optimizationPreference, bool assessSqlServicesSeparately
             )
         {
@@ -49,7 +49,7 @@ namespace Azure.Migrate.Export.Models
         // Assessment settings tab
         public KeyValuePair<string, string> TargetRegion { get; }
         public KeyValuePair<string, string> Currency { get; }
-        public KeyValuePair<string, string> AssessmentDuration { get; }
+        public string AssessmentDuration { get; }
         public PreferredOptimization PreferredOptimizationObj { get; }
 
         // Logger

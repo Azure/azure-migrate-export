@@ -585,11 +585,6 @@ namespace Azure.Migrate.Export.Assessment
                 UserInputObj.LoggerObj.LogWarning($"Exception occured trying to obtain exchange rates: {exForexRates.Message}");
             }
 
-            if (ForexData.GetExchangeRatesUSD() == null || ForexData.GetExchangeRatesUSD().Count <= 0)
-                ForexData.UpdateExchangeRatesWithUSDFallback();
-
-            UserInputObj.LoggerObj.LogInformation(new EnumDescriptionHelper().GetEnumDescription(ForexData.GetExchangeRateState()));
-
             ForexData.UpdateExchangeRate(UserInputObj.Currency.Key);
             UserInputObj.LoggerObj.LogInformation($"Exchange rate for currency {UserInputObj.Currency.Value} finalized as {ForexData.GetExchangeRate()}");
         }

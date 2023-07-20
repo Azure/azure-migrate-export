@@ -93,7 +93,7 @@ namespace Azure.Migrate.Export.Forms
             // Retrieve assessment settings
             KeyValuePair<string, string> targetRegion = AssessmentSettingsFormObj.GetTargetRegion();
             KeyValuePair<string, string> currency = AssessmentSettingsFormObj.GetCurrency();
-            KeyValuePair<string, string> assessmentDuration = AssessmentSettingsFormObj.GetAssessmentDuration();
+            string assessmentDuration = AssessmentSettingsFormObj.GetAssessmentDuration();
             KeyValuePair<string, string> optimizationPreference = AssessmentSettingsFormObj.GetSelectedOptimizationPreference();
             bool assessSqlServicesSeparately = AssessmentSettingsFormObj.IsAssessSqlServicesSeparatelyChecked();
 

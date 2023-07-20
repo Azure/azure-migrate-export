@@ -652,7 +652,7 @@ namespace Azure.Migrate.Export.HttpRequestHelper
         #region Forex API
         public async Task<string> GetExchangeRateJsonStringResponse(UserInput userInputObj)
         {
-            var currencies = InitializationData.GetSupportedCurrenciesInitializationData();
+            var currencies = InitializationData.GetSupportedCurrencies();
             string commaSeparatedCurrencySymbols = "";
             for (int i = 0; i < currencies.Count - 1; i++)
                 commaSeparatedCurrencySymbols = commaSeparatedCurrencySymbols + currencies[i].Key + ",";

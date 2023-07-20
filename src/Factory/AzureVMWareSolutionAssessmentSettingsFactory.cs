@@ -40,7 +40,7 @@ namespace Azure.Migrate.Export.Factory
             // Performance based - Pay as you go
             AzureVMWareSolutionAssessmentSettingsJSON obj1 = new AzureVMWareSolutionAssessmentSettingsJSON();
             obj1.Properties.ReservedInstance = "None";
-            obj1.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
+            obj1.Properties.TimeRange = userInputObj.AssessmentDuration;
             obj1.Properties.Currency = userInputObj.Currency.Key;
             obj1.Properties.AzureLocation = userInputObj.TargetRegion.Key;
             result.Add(new AssessmentInformation(groupName, "AVS-Prod-AzMigExport-1", AssessmentType.AVSAssessment, AssessmentTag.PerformanceBased, JsonConvert.SerializeObject(obj1)));
@@ -48,7 +48,7 @@ namespace Azure.Migrate.Export.Factory
             // Performance based - Pay as you go + RI 1 year
             AzureVMWareSolutionAssessmentSettingsJSON obj2 = new AzureVMWareSolutionAssessmentSettingsJSON();
             obj2.Properties.ReservedInstance = "RI1Year";
-            obj2.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
+            obj2.Properties.TimeRange = userInputObj.AssessmentDuration;
             obj2.Properties.Currency = userInputObj.Currency.Key;
             obj2.Properties.AzureLocation = userInputObj.TargetRegion.Key;
             result.Add(new AssessmentInformation(groupName, "AVS-Prod-AzMigExport-2", AssessmentType.AVSAssessment, AssessmentTag.PerformanceBased_RI1year, JsonConvert.SerializeObject(obj2)));
@@ -56,7 +56,7 @@ namespace Azure.Migrate.Export.Factory
             // Performance based - Pay as you go + RI 3 year
             AzureVMWareSolutionAssessmentSettingsJSON obj3 = new AzureVMWareSolutionAssessmentSettingsJSON();
             obj3.Properties.ReservedInstance = "RI3Year";
-            obj3.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
+            obj3.Properties.TimeRange = userInputObj.AssessmentDuration;
             obj3.Properties.Currency = userInputObj.Currency.Key;
             obj3.Properties.AzureLocation = userInputObj.TargetRegion.Key;
             result.Add(new AssessmentInformation(groupName, "AVS-Prod-AzMigExport-3", AssessmentType.AVSAssessment, AssessmentTag.PerformanceBased_RI3year, JsonConvert.SerializeObject(obj3)));

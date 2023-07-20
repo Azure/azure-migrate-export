@@ -4,7 +4,7 @@ namespace Azure.Migrate.Export.Common
 {
     public static class InitializationData
     {
-        public static List<KeyValuePair<string, string>> GetSupportedCurrenciesInitializationData()
+        public static List<KeyValuePair<string, string>> GetSupportedCurrencies()
         {
             List<KeyValuePair<string, string>> currency = new List<KeyValuePair<string, string>>();
             currency.Add(new KeyValuePair<string, string>("USD", "United States – Dollar ($) USD"));
@@ -27,7 +27,7 @@ namespace Azure.Migrate.Export.Common
             return currency;
         }
 
-        public static List<KeyValuePair<string, string>> GetSupportedRegionsInitializationData()
+        public static List<KeyValuePair<string, string>> GetSupportedRegions()
         {
             List<KeyValuePair<string, string>> location = new List<KeyValuePair<string, string>>();
             location.Add(new KeyValuePair<string, string>("eastus", "East US"));
@@ -66,12 +66,12 @@ namespace Azure.Migrate.Export.Common
             return location;
         }
 
-        public static List<KeyValuePair<string, string>> GetSupportedAssessmentDurationData()
+        public static List<string> GetSupportedAssessmentDurations()
         {
-            List<KeyValuePair<string, string>> assessmentDurations = new List<KeyValuePair<string, string>>();
-            assessmentDurations.Add(new KeyValuePair<string, string>("day", "Day"));
-            assessmentDurations.Add(new KeyValuePair<string, string>("week", "Week"));
-            assessmentDurations.Add(new KeyValuePair<string, string>("month", "Month"));
+            List<string> assessmentDurations = new List<string>();
+            assessmentDurations.Add("Day");
+            assessmentDurations.Add("Week");
+            assessmentDurations.Add("Month");
 
             return assessmentDurations;
         }
