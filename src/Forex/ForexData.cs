@@ -9,18 +9,28 @@ using Azure.Migrate.Export.Models;
 
 namespace Azure.Migrate.Export.Forex
 {
-    public static class ForexData
+    public class ForexData
     {
         private static Dictionary<string, double> ExchangeRatesUSD = null;
-        private static double ExchangeRate = 1.0;
 
-        public static double GetExchangeRate()
+        public static double GetExchangeRate(UserInput userInputObj)
         {
-            return ExchangeRate;
+            GetExchangeRatesFromAPI(userInputObj);
+
+            if (ExchangeRatesUSD == null ||
+                ExchangeRatesUSD.Count <= 0 ||
+                !ExchangeRatesUSD.ContainsKey(userInputObj.Currency.Key))
+            {
+                return 1.0;
+            }
+
+            return ExchangeRatesUSD[userInputObj.Currency.Key];
         }
 
         private static void GetExchangeRatesFromFile(UserInput userInputObj)
         {
+            userInputObj.LoggerObj.LogInformation("Obtaining forex data from cached file");
+
             if (!File.Exists(ForexConstants.ForexDataFileName))
             {
                 userInputObj.LoggerObj.LogWarning($"Cached {ForexConstants.ForexDataFileName} file not found");
@@ -44,10 +54,12 @@ namespace Azure.Migrate.Export.Forex
             ExchangeRatesUSD = forexJSONObj.Rates;
         }
 
-        public static void GetExchangeRatesFromAPI(UserInput userInputObj)
+        private static void GetExchangeRatesFromAPI(UserInput userInputObj)
         {
             if (ExchangeRatesUSD != null)
                 return;
+
+            userInputObj.LoggerObj.LogInformation($"Obtaining forex data from API");
 
             string jsonResponse = "";
             try
@@ -93,19 +105,6 @@ namespace Azure.Migrate.Export.Forex
             { 
                 userInputObj.LoggerObj.LogWarning($"Failed to update latest prices to {ForexConstants.ForexDataFileName}: {exUpdateJsonFile.Message}");
             }
-        }
-
-        public static void UpdateExchangeRate(string currencySymbol)
-        {
-            if (ExchangeRatesUSD == null ||
-                ExchangeRatesUSD.Count <= 0 ||
-                !ExchangeRatesUSD.ContainsKey(currencySymbol))
-            {
-                ExchangeRate = 1.0;
-                return;
-            }
-
-            ExchangeRate = ExchangeRatesUSD[currencySymbol];
         }
     }
 }

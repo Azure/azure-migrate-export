@@ -572,9 +572,10 @@ namespace Azure.Migrate.Export.Assessment
         private void UpdateExchangeRates()
         {
             UserInputObj.LoggerObj.LogInformation("Obtaining exchange rates' data");
+            double exchangeRate = 1.0;
             try
             {
-                ForexData.GetExchangeRatesFromAPI(UserInputObj);
+                exchangeRate = ForexData.GetExchangeRate(UserInputObj);
             }
             catch (OperationCanceledException)
             {
@@ -585,8 +586,7 @@ namespace Azure.Migrate.Export.Assessment
                 UserInputObj.LoggerObj.LogWarning($"Exception occured trying to obtain exchange rates: {exForexRates.Message}");
             }
 
-            ForexData.UpdateExchangeRate(UserInputObj.Currency.Key);
-            UserInputObj.LoggerObj.LogInformation($"Exchange rate for currency {UserInputObj.Currency.Value} finalized as {ForexData.GetExchangeRate()}");
+            UserInputObj.LoggerObj.LogInformation($"Exchange rate for currency {UserInputObj.Currency.Value} finalized as {exchangeRate}");
         }
 
         private void ParseAzureSQLAssessedMachines(Dictionary<string, AzureSQLMachineDataset> AzureSQLMachinesData, Dictionary<AssessmentInformation, AssessmentPollResponse> AzureSQLAssessmentStatusMap)
