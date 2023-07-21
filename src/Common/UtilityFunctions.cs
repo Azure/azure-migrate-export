@@ -67,9 +67,9 @@ namespace Azure.Migrate.Export.Common
                     assessmentInfo.Value == AssessmentPollResponse.OutDated);
         }
 
-        public static double GetAzureBackupMonthlyCostEstimate(List<AssessedDisk> disks, UserInput userInputObj)
+        public static double GetAzureBackupMonthlyCostEstimate(List<AssessedDisk> disks)
         {
-            double exchangeRate = ForexData.GetExchangeRate(userInputObj);
+            double exchangeRate = ForexData.GetInstance().GetExchangeRate();
             double totalDiskStorage = 0;
             foreach (var disk in disks)
                 totalDiskStorage += disk.GigabytesProvisioned;
@@ -87,9 +87,9 @@ namespace Azure.Migrate.Export.Common
             return backupCost + storageCost;
         }
 
-        public static double GetAzureSiteRecoveryMonthlyCostEstimate(UserInput userInputObj)
+        public static double GetAzureSiteRecoveryMonthlyCostEstimate()
         {
-            double exchangeRate = ForexData.GetExchangeRate(userInputObj);
+            double exchangeRate = ForexData.GetInstance().GetExchangeRate();
             return 25.0 * exchangeRate;
         }
 

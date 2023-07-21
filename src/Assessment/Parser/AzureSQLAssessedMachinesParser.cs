@@ -95,7 +95,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
                     {
                         string key = value.Properties.DatacenterMachineArmId?.ToLower();
 
-                        UpdateAssessedSQLMachinesDataset(AzureSQLMachinesData, key, value, kvp.Key, userInputObj);
+                        UpdateAssessedSQLMachinesDataset(AzureSQLMachinesData, key, value, kvp.Key);
 
                         double monthlyComputeCost = value.Properties.MonthlyComputeCost;
                         if (kvp.Key.AssessmentTag == AssessmentTag.PerformanceBased)
@@ -113,7 +113,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             }
         }
 
-        private void UpdateAssessedSQLMachinesDataset(Dictionary<string, AzureSQLMachineDataset> AzureSQLMachinesData, string key, AzureSQLAssessedMachineValue value, AssessmentInformation assessmentInfo, UserInput userInputObj)
+        private void UpdateAssessedSQLMachinesDataset(Dictionary<string, AzureSQLMachineDataset> AzureSQLMachinesData, string key, AzureSQLAssessedMachineValue value, AssessmentInformation assessmentInfo)
         {
             if (AzureSQLMachinesData.ContainsKey(key))
                 return;
@@ -163,8 +163,8 @@ namespace Azure.Migrate.Export.Assessment.Parser
                 return;
             }
 
-            AzureSQLMachinesData[key].AzureSiteRecoveryMonthlyCostEstimate = UtilityFunctions.GetAzureSiteRecoveryMonthlyCostEstimate(userInputObj);
-            AzureSQLMachinesData[key].AzureBackupMonthlyCostEstimate = UtilityFunctions.GetAzureBackupMonthlyCostEstimate(AzureSQLMachinesData[key].Disks, userInputObj);
+            AzureSQLMachinesData[key].AzureSiteRecoveryMonthlyCostEstimate = UtilityFunctions.GetAzureSiteRecoveryMonthlyCostEstimate();
+            AzureSQLMachinesData[key].AzureBackupMonthlyCostEstimate = UtilityFunctions.GetAzureBackupMonthlyCostEstimate(AzureSQLMachinesData[key].Disks);
         }
 
         #region Utilities

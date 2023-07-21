@@ -575,7 +575,7 @@ namespace Azure.Migrate.Export.Assessment
             double exchangeRate = 1.0;
             try
             {
-                exchangeRate = ForexData.GetExchangeRate(UserInputObj);
+                exchangeRate = ForexData.GetInstance(UserInputObj).GetExchangeRate();
             }
             catch (OperationCanceledException)
             {

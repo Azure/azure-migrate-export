@@ -106,7 +106,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
                             continue;
                         }
                         
-                        UpdatePerformanceBasedDataset(AzureVMPerformanceBasedMachinesData, key, value, kvp.Key, userInputObj);
+                        UpdatePerformanceBasedDataset(AzureVMPerformanceBasedMachinesData, key, value, kvp.Key);
 
                         double monthlyCostEstimate = value.Properties.MonthlyComputeCostForRecommendedSize;
                         if (kvp.Key.AssessmentTag == AssessmentTag.PerformanceBased)
@@ -155,7 +155,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureVMAsOnPremMachinesData[key].GroupName = assessmentInfo.GroupName;
         }
 
-        private void UpdatePerformanceBasedDataset(Dictionary<string, AzureVMPerformanceBasedDataset> AzureVMPerformanceBasedMachinesData, string key, AzureVMAssessedMachineValue value, AssessmentInformation assessmentInfo, UserInput userInputObj)
+        private void UpdatePerformanceBasedDataset(Dictionary<string, AzureVMPerformanceBasedDataset> AzureVMPerformanceBasedMachinesData, string key, AzureVMAssessedMachineValue value, AssessmentInformation assessmentInfo)
         {
             if (AzureVMPerformanceBasedMachinesData.ContainsKey(key))
                 return;
@@ -193,8 +193,8 @@ namespace Azure.Migrate.Export.Assessment.Parser
                 return;
             }
 
-            AzureVMPerformanceBasedMachinesData[key].AzureSiteRecoveryMonthlyCostEstimate = UtilityFunctions.GetAzureSiteRecoveryMonthlyCostEstimate(userInputObj);
-            AzureVMPerformanceBasedMachinesData[key].AzureBackupMonthlyCostEstimate = UtilityFunctions.GetAzureBackupMonthlyCostEstimate(AzureVMPerformanceBasedMachinesData[key].Disks, userInputObj);
+            AzureVMPerformanceBasedMachinesData[key].AzureSiteRecoveryMonthlyCostEstimate = UtilityFunctions.GetAzureSiteRecoveryMonthlyCostEstimate();
+            AzureVMPerformanceBasedMachinesData[key].AzureBackupMonthlyCostEstimate = UtilityFunctions.GetAzureBackupMonthlyCostEstimate(AzureVMPerformanceBasedMachinesData[key].Disks);
 
         }
 

@@ -11,32 +11,71 @@ namespace Azure.Migrate.Export.Forex
 {
     public class ForexData
     {
-        private static Dictionary<string, double> ExchangeRatesUSD = null;
+        private static ForexData Instance = null;
+        private readonly UserInput UserInputObj = null;
+        private Dictionary<string, double> ExchangeRatesUSD;
 
-        public static double GetExchangeRate(UserInput userInputObj)
+        private ForexData(UserInput userInputObj, Dictionary<string, double> exchangeRatesUSD)
         {
-            GetExchangeRatesFromAPI(userInputObj);
+            UserInputObj = userInputObj;
+            ExchangeRatesUSD = exchangeRatesUSD;
+        }
 
-            if (ExchangeRatesUSD == null ||
-                ExchangeRatesUSD.Count <= 0 ||
-                !ExchangeRatesUSD.ContainsKey(userInputObj.Currency.Key))
+        private ForexData(UserInput userInputObj)
+        {
+            UserInputObj = userInputObj;
+            ExchangeRatesUSD = null;
+        }
+
+        private ForexData()
+        {
+            UserInputObj = new UserInput();
+            ExchangeRatesUSD = null;
+        }
+
+        public static ForexData GetInstance(UserInput userInputObj)
+        {
+            if (Instance == null) 
+                Instance = new ForexData(userInputObj);
+            
+            if (userInputObj != Instance.UserInputObj)
+                Instance = new ForexData(userInputObj, Instance.ExchangeRatesUSD);
+            
+            return Instance;
+        }
+
+        public static ForexData GetInstance()
+        {
+            if (Instance == null)
+                Instance = new ForexData();
+            
+            return Instance;
+        }
+
+        public double GetExchangeRate()
+        {
+            GetExchangeRatesFromAPI();
+
+            if (Instance.ExchangeRatesUSD == null ||
+                Instance.ExchangeRatesUSD.Count <= 0 ||
+                !Instance.ExchangeRatesUSD.ContainsKey(Instance.UserInputObj.Currency.Key))
             {
-                if (!userInputObj.Currency.Key.Equals("USD"))
-                    userInputObj.SetCurrency(new KeyValuePair<string, string>("USD", "United States – Dollar ($) USD"));
+                if (!Instance.UserInputObj.Currency.Key.Equals("USD"))
+                    Instance.UserInputObj.SetCurrency(new KeyValuePair<string, string>("USD", "United States – Dollar ($) USD"));
 
                 return 1.0;
             }
 
-            return ExchangeRatesUSD[userInputObj.Currency.Key];
+            return Instance.ExchangeRatesUSD[Instance.UserInputObj.Currency.Key];
         }
 
-        private static void GetExchangeRatesFromFile(UserInput userInputObj)
+        private void GetExchangeRatesFromFile()
         {
-            userInputObj.LoggerObj.LogInformation("Obtaining forex data from cached file");
+            Instance.UserInputObj.LoggerObj.LogInformation("Obtaining forex data from cached file");
 
             if (!File.Exists(ForexConstants.ForexDataFileName))
             {
-                userInputObj.LoggerObj.LogWarning($"Cached {ForexConstants.ForexDataFileName} file not found");
+                Instance.UserInputObj.LoggerObj.LogWarning($"Cached {ForexConstants.ForexDataFileName} file not found");
                 return;
             }
 
@@ -50,24 +89,24 @@ namespace Azure.Migrate.Export.Forex
 
             if (difference >= 30.0)
             {
-                userInputObj.LoggerObj.LogWarning("Cached exchange rates are more than 30 days old");
+                Instance.UserInputObj.LoggerObj.LogWarning("Cached exchange rates are more than 30 days old");
                 return;
             }
 
-            ExchangeRatesUSD = forexJSONObj.Rates;
+            Instance.ExchangeRatesUSD = forexJSONObj.Rates;
         }
 
-        private static void GetExchangeRatesFromAPI(UserInput userInputObj)
+        private void GetExchangeRatesFromAPI()
         {
-            if (ExchangeRatesUSD != null)
+            if (Instance.ExchangeRatesUSD != null)
                 return;
 
-            userInputObj.LoggerObj.LogInformation($"Obtaining forex data from API");
+            Instance.UserInputObj.LoggerObj.LogInformation($"Obtaining forex data from API");
 
             string jsonResponse = "";
             try
             {
-                jsonResponse = new HttpClientHelper().GetExchangeRateJsonStringResponse(userInputObj).Result;
+                jsonResponse = new HttpClientHelper().GetExchangeRateJsonStringResponse(Instance.UserInputObj).Result;
             }
             catch (OperationCanceledException)
             {
@@ -85,20 +124,20 @@ namespace Azure.Migrate.Export.Forex
                         errorMessage = errorMessage + e.Message + " ";
                     }
                 }
-                userInputObj.LoggerObj.LogWarning($"Fetching latest prices from API caused an exception: {errorMessage}");
-                GetExchangeRatesFromFile(userInputObj);
+                Instance.UserInputObj.LoggerObj.LogWarning($"Fetching latest prices from API caused an exception: {errorMessage}");
+                GetExchangeRatesFromFile();
                 return;
             }
             catch (Exception exJsonResponse)
             {
-                userInputObj.LoggerObj.LogWarning($"Fetching latest prices from API caused an exception: {exJsonResponse.Message}");
-                GetExchangeRatesFromFile(userInputObj);
+                Instance.UserInputObj.LoggerObj.LogWarning($"Fetching latest prices from API caused an exception: {exJsonResponse.Message}");
+                GetExchangeRatesFromFile();
                 return;
             }
 
             ForexJSON forexJSONObj = JsonConvert.DeserializeObject<ForexJSON>(jsonResponse);
             string indentedJsonString = JsonConvert.SerializeObject(forexJSONObj, Formatting.Indented);
-            ExchangeRatesUSD = forexJSONObj.Rates;
+            Instance.ExchangeRatesUSD = forexJSONObj.Rates;
 
             try
             {
@@ -106,7 +145,7 @@ namespace Azure.Migrate.Export.Forex
             }
             catch (Exception exUpdateJsonFile)
             { 
-                userInputObj.LoggerObj.LogWarning($"Failed to update latest prices to {ForexConstants.ForexDataFileName}: {exUpdateJsonFile.Message}");
+                Instance.UserInputObj.LoggerObj.LogWarning($"Failed to update latest prices to {ForexConstants.ForexDataFileName}: {exUpdateJsonFile.Message}");
             }
         }
     }

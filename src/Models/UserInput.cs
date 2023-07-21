@@ -34,6 +34,24 @@ namespace Azure.Migrate.Export.Models
             LoggerObj = new LogHandler();
         }
 
+        public UserInput()
+        {
+            TenantId = "";
+            Subscription = new KeyValuePair<string, string>("", "");
+            ResourceGroupName = new KeyValuePair<string, string>("", "");
+            AzureMigrateProjectName = new KeyValuePair<string, string>("", "");
+            DiscoverySiteName = "";
+            AssessmentProjectName = "";
+            AzureMigrateSourceAppliances = new List<string>();
+            WorkflowObj = new Workflow(true, "");
+            TargetRegion = new KeyValuePair<string, string>("", "");
+            Currency = new KeyValuePair<string, string>("", "");
+            AssessmentDuration = "";
+            PreferredOptimizationObj = new PreferredOptimization(new KeyValuePair<string, string>("", ""), false);
+
+            LoggerObj = new LogHandler();
+        }
+
         public void SetCurrency(KeyValuePair<string, string> newCurrency)
         {
             Currency = newCurrency;
