@@ -21,6 +21,7 @@ namespace Azure.Migrate.Export.Forex
                 ExchangeRatesUSD.Count <= 0 ||
                 !ExchangeRatesUSD.ContainsKey(userInputObj.Currency.Key))
             {
+                userInputObj.SetCurrency(new KeyValuePair<string, string>("USD", "United States – Dollar ($) USD"));
                 return 1.0;
             }
 

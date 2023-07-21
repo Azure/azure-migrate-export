@@ -34,6 +34,11 @@ namespace Azure.Migrate.Export.Models
             LoggerObj = new LogHandler();
         }
 
+        public void SetCurrency(KeyValuePair<string, string> newCurrency)
+        {
+            Currency = newCurrency;
+        }
+
         // Project details tab
         public string TenantId { get; }
         public KeyValuePair<string, string> Subscription { get; }
@@ -48,7 +53,7 @@ namespace Azure.Migrate.Export.Models
 
         // Assessment settings tab
         public KeyValuePair<string, string> TargetRegion { get; }
-        public KeyValuePair<string, string> Currency { get; }
+        public KeyValuePair<string, string> Currency { get; set; }
         public string AssessmentDuration { get; }
         public PreferredOptimization PreferredOptimizationObj { get; }
 
