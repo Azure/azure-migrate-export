@@ -117,7 +117,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             CreateCorePropertiesModel(corePropertiesObj);
             Process_All_VM_IaaS_Server_Rehost_Perf_Model(All_VM_IaaS_Server_Rehost_Perf_List);
             Process_SQL_All_Instances_Model(SQL_All_Instances_List); // should be the first SQL core report model to be processed.
-            Process_SQL_MI_PaaS_Model(SQL_MI_PaaS_List, AzureSQL_IaaS_Instance, AzureSQL_IaaS_Server);
+            Process_SQL_MI_PaaS_Model(SQL_MI_PaaS_List, AzureSQL_IaaS_Instance);
             Process_SQL_IaaS_Instance_Rehost_Perf_Model(SQL_IaaS_Instance_Rehost_Perf_List, AzureSQL_IaaS_Instance, AzureSQL_IaaS_Server);
             Process_SQL_IaaS_Server_Rehost_Perf_Model(SQL_IaaS_Server_Rehost_Perf_List, AzureSQL_IaaS_Server, AzureVM_Opportunity_Perf);
             Process_SQL_IaaS_Server_Rehost_AsOnPrem_Model(SQL_IaaS_Server_Rehost_AsOnPrem_List, AzureSQL_IaaS_Server, AzureVM_Opportunity_AsOnPrem);
@@ -629,7 +629,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             return true;
         }
 
-        private void Process_SQL_MI_PaaS_Model(List<SQL_MI_PaaS> SQL_MI_PaaS_List, HashSet<string> AzureSQL_IaaS_Instance, HashSet<string> AzureSQL_IaaS_Server)
+        private void Process_SQL_MI_PaaS_Model(List<SQL_MI_PaaS> SQL_MI_PaaS_List, HashSet<string> AzureSQL_IaaS_Instance)
         {
             if (AzureSQLInstancesData == null)
                 return;
@@ -638,12 +638,12 @@ namespace Azure.Migrate.Export.Assessment.Processor
             
             if (UserInputObj.PreferredOptimizationObj.OptimizationPreference.Value.Equals("Migrate to all IaaS"))
             {
-                if (AzureSQL_IaaS_Server == null)
-                    AzureSQL_IaaS_Server = new HashSet<string>();
+                if (AzureSQL_IaaS_Instance == null)
+                    AzureSQL_IaaS_Instance = new HashSet<string>();
 
-                foreach (var kvp in AzureSQLMachinesData)
-                    if (!AzureSQL_IaaS_Server.Contains(kvp.Key))
-                        AzureSQL_IaaS_Server.Add(kvp.Key);
+                foreach (var kvp in AzureSQLInstancesData)
+                    if (!AzureSQL_IaaS_Instance.Contains(kvp.Key))
+                        AzureSQL_IaaS_Instance.Add(kvp.Key);
                 
                 return;
             }
@@ -732,8 +732,6 @@ namespace Azure.Migrate.Export.Assessment.Processor
             if (AzureSQL_IaaS_Instance == null)
                 return;
             if (AzureSQL_IaaS_Instance.Count <= 0)
-                return;
-            if (UserInputObj.PreferredOptimizationObj.OptimizationPreference.Value.Equals("Migrate to all IaaS"))
                 return;
             
             bool isSuccessful = false;
