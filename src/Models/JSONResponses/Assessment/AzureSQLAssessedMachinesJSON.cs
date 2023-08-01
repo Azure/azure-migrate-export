@@ -17,7 +17,7 @@ namespace Azure.Migrate.Export.Models
     public class AzureSQLAssessedMachineValue
     {
         [JsonProperty("id")]
-        public string id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }

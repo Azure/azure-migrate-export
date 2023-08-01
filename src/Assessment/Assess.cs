@@ -540,16 +540,26 @@ namespace Azure.Migrate.Export.Assessment
 
             Dictionary<string, AzureSQLInstanceDataset> AzureSQLInstancesData = new Dictionary<string, AzureSQLInstanceDataset>();
             Dictionary<string, AzureSQLMachineDataset> AzureSQLMachinesData = new Dictionary<string, AzureSQLMachineDataset>();
+            Dictionary<string, string> SQLInstanceAssessmentArmIdToSdsArmIdLookup = new Dictionary<string, string>();
+            Dictionary<string, string> SQLMachineAssessementArmIdToDatacenterMachineArmIdLookup = new Dictionary<string, string>();
+            HashSet<string> AzureSqlMiRecommendations = new HashSet<string>();
+            HashSet<string> AzureSqlInstanceRehostRecommendations = new HashSet<string>();
+            HashSet<string> AzureSqlServerRehostRecommendations = new HashSet<string>();
             if (AzureSQLAssessmentStatusMap.Count > 0)
             {
-                ParseAzureSQLAssessedInstances(AzureSQLInstancesData, AzureSQLAssessmentStatusMap);
-                ParseAzureSQLAssessedMachines(AzureSQLMachinesData, AzureSQLAssessmentStatusMap);
+                ParseAzureSQLAssessedInstances(AzureSQLInstancesData, SQLInstanceAssessmentArmIdToSdsArmIdLookup, AzureSQLAssessmentStatusMap);
+                ParseAzureSQLAssessedMachines(AzureSQLMachinesData, SQLMachineAssessementArmIdToDatacenterMachineArmIdLookup, AzureSQLAssessmentStatusMap);
+                ParseAzureSQLAssessedRecommendedEntities(AzureSqlMiRecommendations, AzureSqlInstanceRehostRecommendations, AzureSqlServerRehostRecommendations,
+                                                         SQLMachineAssessementArmIdToDatacenterMachineArmIdLookup, SQLInstanceAssessmentArmIdToSdsArmIdLookup, AzureSQLAssessmentStatusMap);
             }
 
             ProcessDatasets processorObj = new ProcessDatasets
                 (
                     AssessmentIdToDiscoveryIdLookup,
                     AzureWebApp_IaaS,
+                    AzureSqlMiRecommendations,
+                    AzureSqlInstanceRehostRecommendations,
+                    AzureSqlServerRehostRecommendations,
                     SqlServicesVM,
                     GeneralVM,
                     AzureVMPerformanceBasedMachinesData,
@@ -566,13 +576,49 @@ namespace Azure.Migrate.Export.Assessment
             return true;
         }
 
-        private void ParseAzureSQLAssessedMachines(Dictionary<string, AzureSQLMachineDataset> AzureSQLMachinesData, Dictionary<AssessmentInformation, AssessmentPollResponse> AzureSQLAssessmentStatusMap)
+        private void ParseAzureSQLAssessedRecommendedEntities(HashSet<string> AzureSqlMiRecommendations, HashSet<string> AzureSqlInstanceRehostRecommendations, HashSet<string> AzureSqlServerRehostRecommendations,
+            Dictionary<string, string> SQLMachineAssessementArmIdToDatacenterMachineArmIdLookup, Dictionary<string, string> SQLInstanceAssessmentArmIdToSdsArmIdLookup, Dictionary<AssessmentInformation, AssessmentPollResponse> AzureSQLAssessmentStatusMap)
+        {
+            UserInputObj.LoggerObj.LogInformation("Initiating parsing for Azure SQL recommended assessed entities");
+
+            try
+            {
+                new AzureSQLRecommendedAssessedEntitiesParser(AzureSQLAssessmentStatusMap, SQLMachineAssessementArmIdToDatacenterMachineArmIdLookup, SQLInstanceAssessmentArmIdToSdsArmIdLookup).
+                    ParseAssessedSQLRecommendedEntities(AzureSqlMiRecommendations, AzureSqlInstanceRehostRecommendations, AzureSqlServerRehostRecommendations, UserInputObj);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (AggregateException aeSqlRecommendationsParse)
+            {
+                string errorMessage = "";
+                foreach (var e in aeSqlRecommendationsParse.Flatten().InnerExceptions)
+                {
+                    if (e is OperationCanceledException)
+                        throw e;
+                    else
+                    {
+                        errorMessage = errorMessage + e.Message + " ";
+                    }
+                }
+                UserInputObj.LoggerObj.LogError($"Azure SQL assessed machines parsing error : {errorMessage}");
+            }
+            catch (Exception exSqlRecommendationsParse)
+            {
+                UserInputObj.LoggerObj.LogError($"Azure SQL assessed machines parsing error {exSqlRecommendationsParse.Message}");
+            }
+
+            UserInputObj.LoggerObj.LogInformation("Azure SQL recommendations parsing job completed");
+        }
+
+        private void ParseAzureSQLAssessedMachines(Dictionary<string, AzureSQLMachineDataset> AzureSQLMachinesData, Dictionary<string, string> SQLMachineAssessementArmIdToDatacenterMachineArmIdLookup, Dictionary<AssessmentInformation, AssessmentPollResponse> AzureSQLAssessmentStatusMap)
         {
             UserInputObj.LoggerObj.LogInformation("Initiating parsing for Azure SQL assessed machines");
 
             try
             {
-                new AzureSQLAssessedMachinesParser(AzureSQLAssessmentStatusMap).ParseAssessedSQLMachines(AzureSQLMachinesData, UserInputObj);
+                new AzureSQLAssessedMachinesParser(AzureSQLAssessmentStatusMap).ParseAssessedSQLMachines(AzureSQLMachinesData, SQLMachineAssessementArmIdToDatacenterMachineArmIdLookup, UserInputObj);
             }
             catch (OperationCanceledException)
             {
@@ -600,12 +646,12 @@ namespace Azure.Migrate.Export.Assessment
             UserInputObj.LoggerObj.LogInformation(85 - UserInputObj.LoggerObj.GetCurrentProgress(), "Azure SQL assessed machines parsing job completed"); // 85 % complete
         }
 
-        private void ParseAzureSQLAssessedInstances(Dictionary<string, AzureSQLInstanceDataset> AzureSQLInstancesData, Dictionary<AssessmentInformation, AssessmentPollResponse> AzureSQLAssessmentStatusMap)
+        private void ParseAzureSQLAssessedInstances(Dictionary<string, AzureSQLInstanceDataset> AzureSQLInstancesData, Dictionary<string, string> SQLInstanceAssessmentArmIdToSdsArmIdLookup, Dictionary<AssessmentInformation, AssessmentPollResponse> AzureSQLAssessmentStatusMap)
         {
             UserInputObj.LoggerObj.LogInformation("Initiating parsing for Azure SQL assessed instances");
             try
             {
-                new AzureSQLAssessedInstancesParser(AzureSQLAssessmentStatusMap).ParseAssessedSQLInstances(AzureSQLInstancesData, UserInputObj);
+                new AzureSQLAssessedInstancesParser(AzureSQLAssessmentStatusMap).ParseAssessedSQLInstances(AzureSQLInstancesData, SQLInstanceAssessmentArmIdToSdsArmIdLookup, UserInputObj);
             }
             catch (OperationCanceledException)
             {

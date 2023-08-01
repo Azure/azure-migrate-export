@@ -10,13 +10,12 @@ namespace Azure.Migrate.Export.Assessment.Processor
     public class ProcessDatasets
     {
         private readonly Dictionary<string, string> AssessmentIdToDiscoveryIdLookup;
-        // TODO: trim if not required
+
         // Independent
-        //private readonly Dictionary<string, List<AssessmentSiteMachine>> AzureVM;
-        //private readonly Dictionary<string, List<AssessmentSiteMachine>> AzureSql;
-        //private readonly Dictionary<string, List<AssessmentSiteMachine>> AzureWebApp;
         private HashSet<string> AzureWebApp_IaaS;
-        //List<AssessmentSiteMachine> AzureVMWareSolution;
+        private HashSet<string> AzureSQL_PaaS_ManagedInstance;
+        private HashSet<string> AzureSQL_IaaS_InstanceRehost;
+        private HashSet<string> AzureSQL_IaaS_ServerRehost;
 
         // Dependent
         private readonly HashSet<string> SqlServicesVM;
@@ -38,6 +37,9 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 Dictionary<string, string> assessmentIdToDiscoveryIdLookup,
 
                 HashSet<string> azureWebApp_IaaS,
+                HashSet<string> azureSQL_PaaS_ManagedInstance,
+                HashSet<string> azureSQL_IaaS_InstanceRehost,
+                HashSet<string> azureSQL_IaaS_ServerRehost,
                 HashSet<string> sqlServicesVM,
                 HashSet<string> generalVM,
 
@@ -55,6 +57,9 @@ namespace Azure.Migrate.Export.Assessment.Processor
             AssessmentIdToDiscoveryIdLookup = assessmentIdToDiscoveryIdLookup;
 
             AzureWebApp_IaaS = azureWebApp_IaaS;
+            AzureSQL_PaaS_ManagedInstance = azureSQL_PaaS_ManagedInstance;
+            AzureSQL_IaaS_InstanceRehost = azureSQL_IaaS_InstanceRehost;
+            AzureSQL_IaaS_ServerRehost = azureSQL_IaaS_ServerRehost;
             SqlServicesVM = sqlServicesVM;
             GeneralVM = generalVM;
 
@@ -105,8 +110,6 @@ namespace Azure.Migrate.Export.Assessment.Processor
             List<Clash_Report> Clash_Report_List = new List<Clash_Report>();
 
             // Dependent lists
-            HashSet<string> AzureSQL_IaaS_Instance = new HashSet<string>(); // Also the list for SQL_MI_Opportunity
-            HashSet<string> AzureSQL_IaaS_Server = new HashSet<string>();
             HashSet<string> AzureVM_Opportunity_Perf = new HashSet<string>();
             HashSet<string> AzureVM_Opportunity_AsOnPrem = new HashSet<string>();
             HashSet<string> AzureWebApp_Opportunity = new HashSet<string>();
@@ -117,15 +120,15 @@ namespace Azure.Migrate.Export.Assessment.Processor
             CreateCorePropertiesModel(corePropertiesObj);
             Process_All_VM_IaaS_Server_Rehost_Perf_Model(All_VM_IaaS_Server_Rehost_Perf_List);
             Process_SQL_All_Instances_Model(SQL_All_Instances_List); // should be the first SQL core report model to be processed.
-            Process_SQL_MI_PaaS_Model(SQL_MI_PaaS_List, AzureSQL_IaaS_Instance);
-            Process_SQL_IaaS_Instance_Rehost_Perf_Model(SQL_IaaS_Instance_Rehost_Perf_List, AzureSQL_IaaS_Instance, AzureSQL_IaaS_Server);
-            Process_SQL_IaaS_Server_Rehost_Perf_Model(SQL_IaaS_Server_Rehost_Perf_List, AzureSQL_IaaS_Server, AzureVM_Opportunity_Perf);
-            Process_SQL_IaaS_Server_Rehost_AsOnPrem_Model(SQL_IaaS_Server_Rehost_AsOnPrem_List, AzureSQL_IaaS_Server, AzureVM_Opportunity_AsOnPrem);
+            Process_SQL_MI_PaaS_Model(SQL_MI_PaaS_List);
+            Process_SQL_IaaS_Instance_Rehost_Perf_Model(SQL_IaaS_Instance_Rehost_Perf_List);
+            Process_SQL_IaaS_Server_Rehost_Perf_Model(SQL_IaaS_Server_Rehost_Perf_List, AzureVM_Opportunity_Perf);
+            Process_SQL_IaaS_Server_Rehost_AsOnPrem_Model(SQL_IaaS_Server_Rehost_AsOnPrem_List, AzureVM_Opportunity_AsOnPrem);
             Process_WebApp_PaaS_Model(WebApp_PaaS_List, AzureWebApp_IaaS, AzureWebApp_Opportunity);
             Process_WebApp_IaaS_Server_Rehost_Perf_Model(WebApp_IaaS_Server_Rehost_Perf_List, AzureWebApp_IaaS, AzureVM_Opportunity_Perf);
             Process_WebApp_IaaS_Server_Rehost_AsOnPrem_Model(WebApp_IaaS_Server_Rehost_AsOnPrem_List, AzureWebApp_IaaS, AzureVM_Opportunity_AsOnPrem);
-            Process_VM_SS_IaaS_Server_Rehost_Perf_Model(VM_SS_IaaS_Server_Rehost_Perf_List, AzureVM_Opportunity_Perf, AzureSQL_IaaS_Server);
-            Process_VM_SS_IaaS_Server_Rehost_AsOnPrem_Model(VM_SS_IaaS_Server_Rehost_AsOnPrem_List, AzureVM_Opportunity_AsOnPrem, AzureSQL_IaaS_Server);
+            Process_VM_SS_IaaS_Server_Rehost_Perf_Model(VM_SS_IaaS_Server_Rehost_Perf_List, AzureVM_Opportunity_Perf);
+            Process_VM_SS_IaaS_Server_Rehost_AsOnPrem_Model(VM_SS_IaaS_Server_Rehost_AsOnPrem_List, AzureVM_Opportunity_AsOnPrem);
             Process_VM_IaaS_Server_Rehost_Perf_Model(VM_IaaS_Server_Rehost_Perf_List, AzureVM_Opportunity_Perf);
             Process_VM_IaaS_Server_Rehost_AsOnPrem_Model(VM_IaaS_Server_Rehost_AsOnPrem_List, AzureVM_Opportunity_AsOnPrem);
 
@@ -133,7 +136,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             Process_AVS_Summary_Model(AVS_Summary_List);
             Process_AVS_IaaS_Rehost_Perf_Model(AVS_IaaS_Rehost_Perf_List);
             Process_SQL_MI_Issues_and_Warnings_Model(SQL_MI_Issues_and_Warnings_List);
-            Process_SQL_MI_Opportunity_Model(SQL_MI_Opportunity_List, AzureSQL_IaaS_Instance);
+            Process_SQL_MI_Opportunity_Model(SQL_MI_Opportunity_List);
             Process_WebApp_Opportunity_Model(WebApp_Opportunity_List, AzureWebApp_Opportunity);
             Process_VM_Opportunity_Perf_Model(VM_Opportunity_Perf_List, AzureVM_Opportunity_Perf);
             Process_VM_Opportunity_AsOnPrem_Model(VM_Opportunity_AsOnPrem_List, AzureVM_Opportunity_AsOnPrem);
@@ -629,33 +632,33 @@ namespace Azure.Migrate.Export.Assessment.Processor
             return true;
         }
 
-        private void Process_SQL_MI_PaaS_Model(List<SQL_MI_PaaS> SQL_MI_PaaS_List, HashSet<string> AzureSQL_IaaS_Instance)
+        private void Process_SQL_MI_PaaS_Model(List<SQL_MI_PaaS> SQL_MI_PaaS_List)
         {
-            if (AzureSQLInstancesData == null)
+            if (AzureSQL_PaaS_ManagedInstance == null)
                 return;
-            if (AzureSQLInstancesData.Count <= 0)
+            if (AzureSQL_PaaS_ManagedInstance.Count <= 0)
                 return;
             
             if (UserInputObj.PreferredOptimizationObj.OptimizationPreference.Value.Equals("Migrate to all IaaS"))
             {
-                if (AzureSQL_IaaS_Instance == null)
-                    AzureSQL_IaaS_Instance = new HashSet<string>();
+                if (AzureSQL_IaaS_InstanceRehost == null)
+                    AzureSQL_IaaS_InstanceRehost = new HashSet<string>();
 
-                foreach (var kvp in AzureSQLInstancesData)
-                    if (!AzureSQL_IaaS_Instance.Contains(kvp.Key))
-                        AzureSQL_IaaS_Instance.Add(kvp.Key);
+                foreach (var instanceSdsArmId in AzureSQL_PaaS_ManagedInstance)
+                    if (!AzureSQL_IaaS_InstanceRehost.Contains(instanceSdsArmId))
+                        AzureSQL_IaaS_InstanceRehost.Add(instanceSdsArmId);
                 
                 return;
             }
 
             bool isSuccessful = false;
-            isSuccessful = Create_SQL_MI_PaaS_Model(SQL_MI_PaaS_List, AzureSQL_IaaS_Instance);
+            isSuccessful = Create_SQL_MI_PaaS_Model(SQL_MI_PaaS_List);
 
             if (!isSuccessful)
                 UserInputObj.LoggerObj.LogWarning("Encountered issue while generating SQL_MI_PaaS excel model");
         }
 
-        private bool Create_SQL_MI_PaaS_Model(List<SQL_MI_PaaS> SQL_MI_PaaS_List, HashSet<string> AzureSQL_IaaS_Instance)
+        private bool Create_SQL_MI_PaaS_Model(List<SQL_MI_PaaS> SQL_MI_PaaS_List)
         {
             if (AzureSQLInstancesData == null)
             {
@@ -667,81 +670,92 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 UserInputObj.LoggerObj.LogWarning("Not creating SQL_MI_PaaS excel model as Azure SQL instances dataset is empty");
                 return false;
             }
+            if (AzureSQL_PaaS_ManagedInstance == null || AzureSQL_PaaS_ManagedInstance.Count <= 0)
+            {
+                UserInputObj.LoggerObj.LogWarning("Not creating SQL_MI_PaaS excel model as set for SQL MI migration recommendations is empty");
+                return false;
+            }
 
             UserInputObj.LoggerObj.LogInformation("Creating excel model for SQL_MI_PaaS");
 
             if (SQL_MI_PaaS_List == null)
                 SQL_MI_PaaS_List = new List<SQL_MI_PaaS>();
-            if (AzureSQL_IaaS_Instance == null)
-                AzureSQL_IaaS_Instance = new HashSet<string>();
-            
-            foreach (var azureSqlInstance in AzureSQLInstancesData)
+
+            foreach (var instanceSdsArmId in AzureSQL_PaaS_ManagedInstance)
             {
-                if (azureSqlInstance.Value.AzureSQLMISuitability != Suitabilities.Suitable)
+                if (!AzureSQLInstancesData.ContainsKey(instanceSdsArmId))
                 {
-                    if (!AzureSQL_IaaS_Instance.Contains(azureSqlInstance.Value.SQLInstanceSDSArmId))
-                        AzureSQL_IaaS_Instance.Add(azureSqlInstance.Value.SQLInstanceSDSArmId);
+                    UserInputObj.LoggerObj.LogWarning($"SQL instance ID {instanceSdsArmId} does not exist in assessed SQL instances dataset, skipping");
+                    continue;
+                }
+
+                var azureSqlInstance = AzureSQLInstancesData[instanceSdsArmId];
+                if (azureSqlInstance.AzureSQLMISuitability != Suitabilities.Suitable)
+                {
+                    UserInputObj.LoggerObj.LogWarning($"{instanceSdsArmId} is not suitable for MI, will be considered for instance rehost");
+                    if (!AzureSQL_IaaS_InstanceRehost.Contains(azureSqlInstance.SQLInstanceSDSArmId))
+                        AzureSQL_IaaS_InstanceRehost.Add(instanceSdsArmId);
                     continue;
                 }
 
                 SQL_MI_PaaS obj = new SQL_MI_PaaS();
 
-                obj.MachineName = azureSqlInstance.Value.MachineName;
-                obj.SQLInstance = azureSqlInstance.Value.InstanceName;
-                obj.Environment = azureSqlInstance.Value.Environment;
-                obj.AzureSQLMIReadiness = new EnumDescriptionHelper().GetEnumDescription(azureSqlInstance.Value.AzureSQLMISuitability);
-                obj.AzureSQLMIReadiness_Warnings = UtilityFunctions.GetMigrationIssueWarnings(azureSqlInstance.Value.AzureSQLMIMigrationIssues);
-                obj.RecommendedDeploymentType = AzureSQLTargetType.AzureSqlManagedInstance.ToString(); // azureSqlInstance.Value.RecommendedAzureSqlTargetType.ToString();
-                obj.AzureSQLMIConfiguration = UtilityFunctions.GetSQLMIConfiguration(azureSqlInstance.Value);
-                obj.MonthlyComputeCostEstimate = azureSqlInstance.Value.AzureSQLMIMonthlyComputeCost;
-                obj.MonthlyComputeCostEstimate_RI3year = azureSqlInstance.Value.AzureSQLMIMonthlyComputeCost_RI3year;
-                obj.MonthlyComputeCostEstimate_AHUB = azureSqlInstance.Value.AzureSQLMIMonthlyComputeCost_AHUB;
-                obj.MonthlyComputeCostEstimate_AHUB_RI3year = azureSqlInstance.Value.AzureSQLMIMonthlyComputeCost_AHUB_RI3year;
-                obj.MonthlyStorageCostEstimate = azureSqlInstance.Value.AzureSQLMIMonthlyStorageCost;
-                obj.UserDatabases = azureSqlInstance.Value.DatabaseSummaryNumberOfUserDatabases;
-                obj.SQLEdition = azureSqlInstance.Value.SQLEdition;
-                obj.SQLVersion = azureSqlInstance.Value.SQLVersion;
-                obj.TotalDBSizeInMB = azureSqlInstance.Value.DatabaseSummaryTotalDatabaseSizeInMB;
-                obj.LargestDBSizeInMB = azureSqlInstance.Value.DatabaseSumaryLargestDatabaseSizeInMB;
-                obj.VCoresAllocated = azureSqlInstance.Value.NumberOfCoresAllocated;
-                obj.CpuUtilizationInPercentage = azureSqlInstance.Value.PercentageCoresUtilization;
-                obj.MemoryInUseInMB = azureSqlInstance.Value.MemoryInUseMB;
-                obj.NumberOfDisks = azureSqlInstance.Value.LogicalDisks.Count;
-                obj.DiskReadInOPS = UtilityFunctions.GetDiskReadInOPS(azureSqlInstance.Value.LogicalDisks);
-                obj.DiskWriteInOPS = UtilityFunctions.GetDiskWriteInOPS(azureSqlInstance.Value.LogicalDisks);
-                obj.DiskReadInMBPS = UtilityFunctions.GetDiskReadInMBPS(azureSqlInstance.Value.LogicalDisks);
-                obj.DiskWriteInMBPS = UtilityFunctions.GetDiskWriteInMBPS(azureSqlInstance.Value.LogicalDisks);
-                obj.AzureSQLMIConfigurationTargetServiceTier = UtilityFunctions.GetStringValue(azureSqlInstance.Value.AzureSQLMISkuServiceTier);
-                obj.AzureSQLMIConfigurationTargetComputeTier = UtilityFunctions.GetStringValue(azureSqlInstance.Value.AzureSQLMISkuComputeTier);
-                obj.AzureSQLMIConfigurationTargetHardwareType = UtilityFunctions.GetStringValue(azureSqlInstance.Value.AzureSQLMISkuHardwareGeneration);
-                obj.AzureSQLMIConfigurationTargetCores = azureSqlInstance.Value.AzureSQLMISkuCores;
-                obj.AzureSQLMIConfigurationTargetStorageInGB = Math.Round(azureSqlInstance.Value.AzureSQLMISkuStorageMaxSizeInMB / 1024.0);
-                obj.GroupName = azureSqlInstance.Value.GroupName;
-                obj.MachineId = AssessmentIdToDiscoveryIdLookup.ContainsKey(azureSqlInstance.Value.MachineArmId) ? AssessmentIdToDiscoveryIdLookup[azureSqlInstance.Value.MachineArmId] : "";
+                obj.MachineName = azureSqlInstance.MachineName;
+                obj.SQLInstance = azureSqlInstance.InstanceName;
+                obj.Environment = azureSqlInstance.Environment;
+                obj.AzureSQLMIReadiness = new EnumDescriptionHelper().GetEnumDescription(azureSqlInstance.AzureSQLMISuitability);
+                obj.AzureSQLMIReadiness_Warnings = UtilityFunctions.GetMigrationIssueWarnings(azureSqlInstance.AzureSQLMIMigrationIssues);
+                obj.RecommendedDeploymentType = AzureSQLTargetType.AzureSqlManagedInstance.ToString();
+                obj.AzureSQLMIConfiguration = UtilityFunctions.GetSQLMIConfiguration(azureSqlInstance);
+                obj.MonthlyComputeCostEstimate = azureSqlInstance.AzureSQLMIMonthlyComputeCost;
+                obj.MonthlyComputeCostEstimate_RI3year = azureSqlInstance.AzureSQLMIMonthlyComputeCost_RI3year;
+                obj.MonthlyComputeCostEstimate_AHUB = azureSqlInstance.AzureSQLMIMonthlyComputeCost_AHUB;
+                obj.MonthlyComputeCostEstimate_AHUB_RI3year = azureSqlInstance.AzureSQLMIMonthlyComputeCost_AHUB_RI3year;
+                obj.MonthlyStorageCostEstimate = azureSqlInstance.AzureSQLMIMonthlyStorageCost;
+                obj.UserDatabases = azureSqlInstance.DatabaseSummaryNumberOfUserDatabases;
+                obj.SQLEdition = azureSqlInstance.SQLEdition;
+                obj.SQLVersion = azureSqlInstance.SQLVersion;
+                obj.TotalDBSizeInMB = azureSqlInstance.DatabaseSummaryTotalDatabaseSizeInMB;
+                obj.LargestDBSizeInMB = azureSqlInstance.DatabaseSumaryLargestDatabaseSizeInMB;
+                obj.VCoresAllocated = azureSqlInstance.NumberOfCoresAllocated;
+                obj.CpuUtilizationInPercentage = azureSqlInstance.PercentageCoresUtilization;
+                obj.MemoryInUseInMB = azureSqlInstance.MemoryInUseMB;
+                obj.NumberOfDisks = azureSqlInstance.LogicalDisks.Count;
+                obj.DiskReadInOPS = UtilityFunctions.GetDiskReadInOPS(azureSqlInstance.LogicalDisks);
+                obj.DiskWriteInOPS = UtilityFunctions.GetDiskWriteInOPS(azureSqlInstance.LogicalDisks);
+                obj.DiskReadInMBPS = UtilityFunctions.GetDiskReadInMBPS(azureSqlInstance.LogicalDisks);
+                obj.DiskWriteInMBPS = UtilityFunctions.GetDiskWriteInMBPS(azureSqlInstance.LogicalDisks);
+                obj.AzureSQLMIConfigurationTargetServiceTier = UtilityFunctions.GetStringValue(azureSqlInstance.AzureSQLMISkuServiceTier);
+                obj.AzureSQLMIConfigurationTargetComputeTier = UtilityFunctions.GetStringValue(azureSqlInstance.AzureSQLMISkuComputeTier);
+                obj.AzureSQLMIConfigurationTargetHardwareType = UtilityFunctions.GetStringValue(azureSqlInstance.AzureSQLMISkuHardwareGeneration);
+                obj.AzureSQLMIConfigurationTargetCores = azureSqlInstance.AzureSQLMISkuCores;
+                obj.AzureSQLMIConfigurationTargetStorageInGB = Math.Round(azureSqlInstance.AzureSQLMISkuStorageMaxSizeInMB / 1024.0);
+                obj.GroupName = azureSqlInstance.GroupName;
+                obj.MachineId = AssessmentIdToDiscoveryIdLookup.ContainsKey(azureSqlInstance.MachineArmId) ? AssessmentIdToDiscoveryIdLookup[azureSqlInstance.MachineArmId] : "";
 
                 SQL_MI_PaaS_List.Add(obj);
             }
 
             UserInputObj.LoggerObj.LogInformation($"Updated SQL_MI_PaaS excel model with data of {SQL_MI_PaaS_List.Count} instances");
-            UserInputObj.LoggerObj.LogInformation($"Number of instances that will be evaluated for Azure SQL instance rehost: {AzureSQL_IaaS_Instance.Count}");
+            UserInputObj.LoggerObj.LogInformation($"Number of instances that will be evaluated for Azure SQL instance rehost: {AzureSQL_IaaS_InstanceRehost.Count}");
             return true;
         }
 
-        private void Process_SQL_IaaS_Instance_Rehost_Perf_Model(List<SQL_IaaS_Instance_Rehost_Perf> SQL_IaaS_Instance_Rehost_Perf_List, HashSet<String> AzureSQL_IaaS_Instance, HashSet<string> AzureSQL_IaaS_Server)
+        private void Process_SQL_IaaS_Instance_Rehost_Perf_Model(List<SQL_IaaS_Instance_Rehost_Perf> SQL_IaaS_Instance_Rehost_Perf_List)
         {
-            if (AzureSQL_IaaS_Instance == null)
+            if (AzureSQL_IaaS_InstanceRehost == null)
                 return;
-            if (AzureSQL_IaaS_Instance.Count <= 0)
+            if (AzureSQL_IaaS_InstanceRehost.Count <= 0)
                 return;
-            
+
             bool isSuccessful = false;
-            isSuccessful = Create_SQL_IaaS_Instance_Rehost_Perf_Model(SQL_IaaS_Instance_Rehost_Perf_List, AzureSQL_IaaS_Instance, AzureSQL_IaaS_Server);
+            isSuccessful = Create_SQL_IaaS_Instance_Rehost_Perf_Model(SQL_IaaS_Instance_Rehost_Perf_List);
 
             if (!isSuccessful)
                 UserInputObj.LoggerObj.LogWarning("Encountered issue while generating SQL_IaaS_Instance_Rehost_Perf excel model");
         }
 
-        private bool Create_SQL_IaaS_Instance_Rehost_Perf_Model(List<SQL_IaaS_Instance_Rehost_Perf> SQL_IaaS_Instance_Rehost_Perf_List, HashSet<String> AzureSQL_IaaS_Instance, HashSet<string> AzureSQL_IaaS_Server)
+        private bool Create_SQL_IaaS_Instance_Rehost_Perf_Model(List<SQL_IaaS_Instance_Rehost_Perf> SQL_IaaS_Instance_Rehost_Perf_List)
         {
             if (AzureSQLInstancesData == null)
             {
@@ -756,10 +770,8 @@ namespace Azure.Migrate.Export.Assessment.Processor
 
             if (SQL_IaaS_Instance_Rehost_Perf_List == null)
                 SQL_IaaS_Instance_Rehost_Perf_List = new List<SQL_IaaS_Instance_Rehost_Perf>();
-            if (AzureSQL_IaaS_Server == null)
-                AzureSQL_IaaS_Server = new HashSet<string>();
 
-            foreach (string sqlInstanceId in AzureSQL_IaaS_Instance)
+            foreach (string sqlInstanceId in AzureSQL_IaaS_InstanceRehost)
             {
                 if (!AzureSQLInstancesData.ContainsKey(sqlInstanceId))
                 {
@@ -775,8 +787,9 @@ namespace Azure.Migrate.Export.Assessment.Processor
                     if (string.IsNullOrEmpty(discoveredMachineId))
                         continue;
 
-                    if (!AzureSQL_IaaS_Server.Contains(discoveredMachineId))
-                        AzureSQL_IaaS_Server.Add(discoveredMachineId);
+                    UserInputObj.LoggerObj.LogWarning($"{sqlInstanceId} is not suitable for instance rehost, will be considered for server rehost");
+                    if (!AzureSQL_IaaS_ServerRehost.Contains(discoveredMachineId))
+                        AzureSQL_IaaS_ServerRehost.Add(discoveredMachineId);
                     
                     continue;
                 }
@@ -833,25 +846,25 @@ namespace Azure.Migrate.Export.Assessment.Processor
             }
 
             UserInputObj.LoggerObj.LogInformation($"Updated SQL_IaaS_Instance_Rehost_Perf excel model with data of {SQL_IaaS_Instance_Rehost_Perf_List.Count} instances");
-            UserInputObj.LoggerObj.LogInformation($"Number of servers that will be evaluated for Azure SQL server rehost: {AzureSQL_IaaS_Server.Count}");
+            UserInputObj.LoggerObj.LogInformation($"Number of servers that will be evaluated for Azure SQL server rehost: {AzureSQL_IaaS_ServerRehost.Count}");
             return true;
         }
 
-        private void Process_SQL_IaaS_Server_Rehost_Perf_Model(List<SQL_IaaS_Server_Rehost_Perf> SQL_IaaS_Server_Rehost_Perf_List, HashSet<string> AzureSQL_IaaS_Server, HashSet<string> AzureVM_Opportunity_Perf)
+        private void Process_SQL_IaaS_Server_Rehost_Perf_Model(List<SQL_IaaS_Server_Rehost_Perf> SQL_IaaS_Server_Rehost_Perf_List, HashSet<string> AzureVM_Opportunity_Perf)
         {
-            if (AzureSQL_IaaS_Server == null)
+            if (AzureSQL_IaaS_ServerRehost == null)
                 return;
-            if (AzureSQL_IaaS_Server.Count <= 0)
+            if (AzureSQL_IaaS_ServerRehost.Count <= 0)
                 return;
             
             bool isSuccessful = false;
-            isSuccessful = Create_SQL_IaaS_Server_Rehost_Perf_Model(SQL_IaaS_Server_Rehost_Perf_List, AzureSQL_IaaS_Server, AzureVM_Opportunity_Perf);
+            isSuccessful = Create_SQL_IaaS_Server_Rehost_Perf_Model(SQL_IaaS_Server_Rehost_Perf_List, AzureVM_Opportunity_Perf);
 
             if (!isSuccessful)
                 UserInputObj.LoggerObj.LogWarning("Encountered issue while generating SQL_IaaS_Server_Rehost_Perf excel model");
         }
 
-        private bool Create_SQL_IaaS_Server_Rehost_Perf_Model(List<SQL_IaaS_Server_Rehost_Perf> SQL_IaaS_Server_Rehost_Perf_List, HashSet<string> AzureSQL_IaaS_Server, HashSet<string> AzureVM_Opportunity_Perf)
+        private bool Create_SQL_IaaS_Server_Rehost_Perf_Model(List<SQL_IaaS_Server_Rehost_Perf> SQL_IaaS_Server_Rehost_Perf_List, HashSet<string> AzureVM_Opportunity_Perf)
         {
             if (AzureSQLMachinesData == null)
             {
@@ -871,7 +884,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             if (AzureVM_Opportunity_Perf == null)
                 AzureVM_Opportunity_Perf = new HashSet<string>();
 
-            foreach (var discoveredMachineId in AzureSQL_IaaS_Server)
+            foreach (var discoveredMachineId in AzureSQL_IaaS_ServerRehost)
             {
                 if (!AzureSQLMachinesData.ContainsKey(discoveredMachineId))
                 {
@@ -942,21 +955,21 @@ namespace Azure.Migrate.Export.Assessment.Processor
             return true;
         }
 
-        private void Process_SQL_IaaS_Server_Rehost_AsOnPrem_Model(List<SQL_IaaS_Server_Rehost_AsOnPrem> SQL_IaaS_Server_Rehost_AsOnPrem_List, HashSet<string> AzureSQL_IaaS_Server, HashSet<string> AzureVM_Opportunity_AsOnPrem)
+        private void Process_SQL_IaaS_Server_Rehost_AsOnPrem_Model(List<SQL_IaaS_Server_Rehost_AsOnPrem> SQL_IaaS_Server_Rehost_AsOnPrem_List, HashSet<string> AzureVM_Opportunity_AsOnPrem)
         {
-            if (AzureSQL_IaaS_Server == null)
+            if (AzureSQL_IaaS_ServerRehost == null)
                 return;
-            if (AzureSQL_IaaS_Server.Count <= 0)
+            if (AzureSQL_IaaS_ServerRehost.Count <= 0)
                 return;
 
             bool isSuccessful = false;
-            isSuccessful = Create_SQL_IaaS_Server_Rehost_AsOnPrem_Model(SQL_IaaS_Server_Rehost_AsOnPrem_List, AzureSQL_IaaS_Server, AzureVM_Opportunity_AsOnPrem);
+            isSuccessful = Create_SQL_IaaS_Server_Rehost_AsOnPrem_Model(SQL_IaaS_Server_Rehost_AsOnPrem_List, AzureVM_Opportunity_AsOnPrem);
 
             if (!isSuccessful)
                 UserInputObj.LoggerObj.LogWarning("Encountered issue while generating SQL_IaaS_Server_Rehost_AsOnPrem excel model");
         }
 
-        private bool Create_SQL_IaaS_Server_Rehost_AsOnPrem_Model(List<SQL_IaaS_Server_Rehost_AsOnPrem> SQL_IaaS_Server_Rehost_AsOnPrem_List, HashSet<string> AzureSQL_IaaS_Server, HashSet<string> AzureVM_Opportunity_AsOnPrem)
+        private bool Create_SQL_IaaS_Server_Rehost_AsOnPrem_Model(List<SQL_IaaS_Server_Rehost_AsOnPrem> SQL_IaaS_Server_Rehost_AsOnPrem_List, HashSet<string> AzureVM_Opportunity_AsOnPrem)
         {
             if (AzureVMAsOnPremMachinesData == null)
             {
@@ -976,7 +989,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             if (AzureVM_Opportunity_AsOnPrem == null)
                 AzureVM_Opportunity_AsOnPrem = new HashSet<string>();
             
-            foreach (string discoveredMachineId in AzureSQL_IaaS_Server)
+            foreach (string discoveredMachineId in AzureSQL_IaaS_ServerRehost)
             {
                 if (!AzureVMAsOnPremMachinesData.ContainsKey(discoveredMachineId))
                 {
@@ -1036,23 +1049,23 @@ namespace Azure.Migrate.Export.Assessment.Processor
             return true;
         }
 
-        private void Process_SQL_MI_Opportunity_Model(List<SQL_MI_Opportunity> SQL_MI_Opportunity_List, HashSet<string> AzureSQL_IaaS_Instance)
+        private void Process_SQL_MI_Opportunity_Model(List<SQL_MI_Opportunity> SQL_MI_Opportunity_List)
         {
-            if (AzureSQL_IaaS_Instance == null)
+            if (AzureSQL_IaaS_InstanceRehost == null)
                 return;
-            if (AzureSQL_IaaS_Instance.Count <= 0)
+            if (AzureSQL_IaaS_InstanceRehost.Count <= 0)
                 return;
             if (UserInputObj.PreferredOptimizationObj.OptimizationPreference.Value.Equals("Migrate to all IaaS"))
                 return;
             
             bool isSuccessful = false;
-            isSuccessful = Create_SQL_MI_Opportunity_Model(SQL_MI_Opportunity_List, AzureSQL_IaaS_Instance);
+            isSuccessful = Create_SQL_MI_Opportunity_Model(SQL_MI_Opportunity_List);
 
             if (!isSuccessful)
                 UserInputObj.LoggerObj.LogWarning("Encountered issue while generating excel model for SQL_MI_Opportunity");
         }
 
-        private bool Create_SQL_MI_Opportunity_Model(List<SQL_MI_Opportunity> SQL_MI_Opportunity_List, HashSet<string> AzureSQL_IaaS_Instance)
+        private bool Create_SQL_MI_Opportunity_Model(List<SQL_MI_Opportunity> SQL_MI_Opportunity_List)
         {
             if (AzureSQLInstancesData == null)
             {
@@ -1070,7 +1083,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             if (SQL_MI_Opportunity_List == null)
                 SQL_MI_Opportunity_List = new List<SQL_MI_Opportunity>();
             
-            foreach (var instanceArmId in AzureSQL_IaaS_Instance)
+            foreach (var instanceArmId in AzureSQL_IaaS_InstanceRehost)
             {
                 if (!AzureSQLInstancesData.ContainsKey(instanceArmId))
                 {
@@ -1462,7 +1475,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             return true;
         }
 
-        private void Process_VM_SS_IaaS_Server_Rehost_Perf_Model(List<VM_SS_IaaS_Server_Rehost_Perf> VM_SS_IaaS_Server_Rehost_Perf_List, HashSet<string> AzureVM_Opportunity_Perf, HashSet<string> AzureSQL_IaaS_Server)
+        private void Process_VM_SS_IaaS_Server_Rehost_Perf_Model(List<VM_SS_IaaS_Server_Rehost_Perf> VM_SS_IaaS_Server_Rehost_Perf_List, HashSet<string> AzureVM_Opportunity_Perf)
         {
             if (SqlServicesVM == null)
                 return;
@@ -1471,17 +1484,14 @@ namespace Azure.Migrate.Export.Assessment.Processor
             if (!UserInputObj.PreferredOptimizationObj.AssessSqlServicesSeparately)
                 return;
             
-            if (AzureSQL_IaaS_Server == null)
-                AzureSQL_IaaS_Server = new HashSet<string>();
-            
             bool isSuccessful = false;
-            isSuccessful = Create_VM_SS_IaaS_Server_Rehost_Perf_Model(VM_SS_IaaS_Server_Rehost_Perf_List, AzureVM_Opportunity_Perf, AzureSQL_IaaS_Server);
+            isSuccessful = Create_VM_SS_IaaS_Server_Rehost_Perf_Model(VM_SS_IaaS_Server_Rehost_Perf_List, AzureVM_Opportunity_Perf);
 
             if (!isSuccessful)
                 UserInputObj.LoggerObj.LogWarning("Encountered issue while generating excel model for VM_SS_IaaS_Server_Rehost_Perf");
         }
 
-        private bool Create_VM_SS_IaaS_Server_Rehost_Perf_Model(List<VM_SS_IaaS_Server_Rehost_Perf> VM_SS_IaaS_Server_Rehost_Perf_List, HashSet<string> AzureVM_Opportunity_Perf, HashSet<string> AzureSQL_IaaS_Server)
+        private bool Create_VM_SS_IaaS_Server_Rehost_Perf_Model(List<VM_SS_IaaS_Server_Rehost_Perf> VM_SS_IaaS_Server_Rehost_Perf_List, HashSet<string> AzureVM_Opportunity_Perf)
         {
             if (AzureVMPerformanceBasedMachinesData == null)
             {
@@ -1503,7 +1513,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             
             foreach (var discoveredMachineId in SqlServicesVM)
             {
-                if (AzureSQL_IaaS_Server.Contains(discoveredMachineId))
+                if (AzureSQL_IaaS_ServerRehost.Contains(discoveredMachineId))
                     continue;
 
                 if (!AzureVMPerformanceBasedMachinesData.ContainsKey(discoveredMachineId))
@@ -1575,7 +1585,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             return true;
         }
 
-        private void Process_VM_SS_IaaS_Server_Rehost_AsOnPrem_Model(List<VM_SS_IaaS_Server_Rehost_AsOnPrem> VM_SS_IaaS_Server_Rehost_AsOnPrem_List, HashSet<string> AzureVM_Opportunity_AsOnPrem, HashSet<string> AzureSQL_IaaS_Server)
+        private void Process_VM_SS_IaaS_Server_Rehost_AsOnPrem_Model(List<VM_SS_IaaS_Server_Rehost_AsOnPrem> VM_SS_IaaS_Server_Rehost_AsOnPrem_List, HashSet<string> AzureVM_Opportunity_AsOnPrem)
         {
             if (SqlServicesVM == null)
                 return;
@@ -1583,18 +1593,15 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 return;
             if (!UserInputObj.PreferredOptimizationObj.AssessSqlServicesSeparately)
                 return;
-
-            if (AzureSQL_IaaS_Server == null)
-                AzureSQL_IaaS_Server = new HashSet<string>();
             
             bool isSuccessful = false;
-            isSuccessful = Create_VM_SS_IaaS_Server_Rehost_AsOnPrem_Model(VM_SS_IaaS_Server_Rehost_AsOnPrem_List, AzureVM_Opportunity_AsOnPrem, AzureSQL_IaaS_Server);
+            isSuccessful = Create_VM_SS_IaaS_Server_Rehost_AsOnPrem_Model(VM_SS_IaaS_Server_Rehost_AsOnPrem_List, AzureVM_Opportunity_AsOnPrem);
 
             if (!isSuccessful)
                 UserInputObj.LoggerObj.LogWarning("Encountered issue while generating excel model for VM_SS_IaaS_Server_Rehost_AsOnPrem");
         }
 
-        private bool Create_VM_SS_IaaS_Server_Rehost_AsOnPrem_Model(List<VM_SS_IaaS_Server_Rehost_AsOnPrem> VM_SS_IaaS_Server_Rehost_AsOnPrem_List, HashSet<string> AzureVM_Opportunity_AsOnPrem, HashSet<string> AzureSQL_IaaS_Server)
+        private bool Create_VM_SS_IaaS_Server_Rehost_AsOnPrem_Model(List<VM_SS_IaaS_Server_Rehost_AsOnPrem> VM_SS_IaaS_Server_Rehost_AsOnPrem_List, HashSet<string> AzureVM_Opportunity_AsOnPrem)
         {
             if (AzureVMAsOnPremMachinesData == null)
             {
@@ -1616,7 +1623,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             
             foreach (var discoveredMachineId in SqlServicesVM)
             {
-                if (AzureSQL_IaaS_Server.Contains(discoveredMachineId))
+                if (AzureSQL_IaaS_ServerRehost.Contains(discoveredMachineId))
                     continue;
 
                 if (!AzureVMAsOnPremMachinesData.ContainsKey(discoveredMachineId))

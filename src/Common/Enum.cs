@@ -135,6 +135,22 @@ namespace Azure.Migrate.Export.Common
         AzureVirtualMachine
     }
 
+    public enum AzureSQLCloudSuitability
+    {
+        Unknown = 0,
+        SuitableForSqlDB,
+        SuitableForSqlMI,
+        SuitableForVM,
+        PotentiallySuitableForVM,
+        ReadinessUnknown,
+        NotSuitable,
+        SuitableForSqlVM,
+        ConditionallySuitableForSqlDB,
+        ConditionallySuitableForSqlMI,
+        ConditionallySuitableForVM,
+        ConditionallySuitableForSqlVM
+    }
+
     public enum IssueCategories
     {
         Unknown,

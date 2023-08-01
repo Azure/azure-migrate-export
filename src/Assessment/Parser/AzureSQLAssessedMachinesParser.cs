@@ -16,7 +16,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureSQLAssessmentStatusMap = azureSQLAssessmentStatusMap;
         }
 
-        public void ParseAssessedSQLMachines(Dictionary<string, AzureSQLMachineDataset> AzureSQLMachinesData, UserInput userInputObj)
+        public void ParseAssessedSQLMachines(Dictionary<string, AzureSQLMachineDataset> AzureSQLMachinesData, Dictionary<string, string> SQLMachineAssessementArmIdToDatacenterMachineArmIdLookup, UserInput userInputObj)
         {
             if (userInputObj == null)
                 throw new Exception("Received null user input object.");
@@ -94,6 +94,10 @@ namespace Azure.Migrate.Export.Assessment.Parser
                     foreach (var value in obj.Values)
                     {
                         string key = value.Properties.DatacenterMachineArmId?.ToLower();
+
+                        string machineAssessmentId = value.Id?.ToLower();
+                        if (!SQLMachineAssessementArmIdToDatacenterMachineArmIdLookup.ContainsKey(machineAssessmentId))
+                            SQLMachineAssessementArmIdToDatacenterMachineArmIdLookup.Add(machineAssessmentId, key);
 
                         UpdateAssessedSQLMachinesDataset(AzureSQLMachinesData, key, value, kvp.Key);
 

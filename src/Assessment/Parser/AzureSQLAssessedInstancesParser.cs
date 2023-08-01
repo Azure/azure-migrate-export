@@ -17,7 +17,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureSQLAssessmentStatusMap = azureSQLAssessmentStatusMap;
         }
 
-        public void ParseAssessedSQLInstances(Dictionary<string, AzureSQLInstanceDataset> AzureSQLInstancesData, UserInput userInputObj)
+        public void ParseAssessedSQLInstances(Dictionary<string, AzureSQLInstanceDataset> AzureSQLInstancesData, Dictionary<string, string> SQLInstanceAssessmentArmIdToSdsArmIdLookup, UserInput userInputObj)
         {
             if (userInputObj == null)
                 throw new Exception("Received null user input object.");
@@ -99,6 +99,10 @@ namespace Azure.Migrate.Export.Assessment.Parser
                     {
                         string key = value.Properties.SqlInstanceSDSArmId?.ToLower();
                         UpdateAssessedInstancesDataset(AzureSQLInstancesData, key, value, kvp.Key);
+
+                        string instanceAssessmentId = value.Id?.ToLower();
+                        if (!SQLInstanceAssessmentArmIdToSdsArmIdLookup.ContainsKey(instanceAssessmentId))
+                            SQLInstanceAssessmentArmIdToSdsArmIdLookup.Add(instanceAssessmentId, key);
 
                         double monthlySqlMIComputeCost = value.Properties.AzureSqlMISuitabilityDetails.MonthlyComputeCost;
                         double monthlySqlVMComputeCost = value.Properties.AzureSqlVMSuitabilityDetails.MonthlyComputeCost;

@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assessment\Parser\AzureSQLRecommendedAssessedEntitiesParser.cs" />
     <Compile Include="Forms\AssessmentSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -159,6 +160,7 @@
     <Compile Include="Models\JSONResponses\Assessment\AzureSQLAssessedMachinesJSON.cs" />
     <Compile Include="Models\JSONResponses\Assessment\AVSAssessmentPropertiesJSON.cs" />
     <Compile Include="Models\JSONResponses\Assessment\AzureAppServiceWebAppPropertiesJSON.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\AzureSQLRecommendedAssessedEntitiesJSON.cs" />
     <Compile Include="Models\JSONRequests\Assessment\CreateGroupBodyJSON.cs" />
     <Compile Include="Models\JSONRequests\Assessment\UpdateMachinesInGroupBodyJSON.cs" />
     <Compile Include="Models\JSONRequests\Assessment\AzureVMAssessmentSettingsJSON.cs" />
