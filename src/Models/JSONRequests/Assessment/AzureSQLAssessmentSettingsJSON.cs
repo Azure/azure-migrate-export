@@ -48,7 +48,7 @@ namespace Azure.Migrate.Export.Models
         public int DiscountPercentage { get; set; } = 0;
 
         [JsonProperty("optimizationLogic")]
-        public string OptimizationLogic { get; set; } = "ModernizeToPaaS";
+        public string OptimizationLogic { get; set; } = "ModernizeToAzureSqlMi";
 
         [JsonProperty("osLicense")]
         public string OSLicense { get; set; }
