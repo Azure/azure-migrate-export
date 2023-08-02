@@ -98,7 +98,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
                     foreach (var value in assessedInstancesObj.Values)
                     {
                         string key = value.Properties.SqlInstanceSDSArmId?.ToLower();
-                        UpdateAssessedInstancesDataset(AzureSQLInstancesData, key, value, kvp.Key);
+                        UpdateAssessedInstancesDataset(AzureSQLInstancesData, key, value, kvp.Key, userInputObj.Currency.Key);
 
                         double monthlySqlMIComputeCost = value.Properties.AzureSqlMISuitabilityDetails.MonthlyComputeCost;
                         double monthlySqlVMComputeCost = value.Properties.AzureSqlVMSuitabilityDetails.MonthlyComputeCost;
@@ -132,7 +132,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             }
         }
 
-        private void UpdateAssessedInstancesDataset(Dictionary<string, AzureSQLInstanceDataset> AzureSQLInstancesData, string key, AzureSQLAssessedInstanceValue value, AssessmentInformation assessmentInfo)
+        private void UpdateAssessedInstancesDataset(Dictionary<string, AzureSQLInstanceDataset> AzureSQLInstancesData, string key, AzureSQLAssessedInstanceValue value, AssessmentInformation assessmentInfo, string currencySymbol)
         {
             if (AzureSQLInstancesData.ContainsKey(key))
                 return;
@@ -202,8 +202,8 @@ namespace Azure.Migrate.Export.Assessment.Parser
                 return;
             }
 
-            AzureSQLInstancesData[key].MonthlyAzureSiteRecoveryCostEstimate = 25;
-            AzureSQLInstancesData[key].MonthlyAzureBackupCostEstimate = UtilityFunctions.GetAzureBackupMonthlyCostEstimate(AzureSQLInstancesData[key].LogicalDisks);
+            AzureSQLInstancesData[key].MonthlyAzureSiteRecoveryCostEstimate = UtilityFunctions.GetAzureSiteRecoveryMonthlyCostEstimate(currencySymbol);
+            AzureSQLInstancesData[key].MonthlyAzureBackupCostEstimate = UtilityFunctions.GetAzureBackupMonthlyCostEstimate(AzureSQLInstancesData[key].LogicalDisks, currencySymbol);
         }
 
         #region Utilities

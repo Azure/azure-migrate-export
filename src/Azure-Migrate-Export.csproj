@@ -169,6 +169,7 @@
     <Compile Include="Logger\LogHandler.cs" />
     <Compile Include="Logger\LogParameters.cs" />
     <Compile Include="Logger\LogEventHandler.cs" />
+    <Compile Include="Forex\ForexConstants.cs" />
     <Compile Include="Processor\Process.cs" />
     <Compile Include="Processor\ValidateUserInput.cs" />
     <Compile Include="Discovery\Discover.cs" />
