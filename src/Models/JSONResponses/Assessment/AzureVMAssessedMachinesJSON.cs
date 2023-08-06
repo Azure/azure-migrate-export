@@ -43,6 +43,9 @@ namespace Azure.Migrate.Export.Models
         [JsonProperty("monthlyStorageCost")]
         public double MonthlyStorageCost { get; set; }
 
+        [JsonProperty("costComponents")]
+        public List<AzureAssessmentCostComponent> CostComponents { get; set; }
+
         [JsonProperty("monthlyStandardSSDStorageCost")]
         public double MonthlyStandardSSDStorageCost { get; set; }
 

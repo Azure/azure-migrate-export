@@ -19,6 +19,9 @@ namespace Azure.Migrate.Export.Models
         [JsonProperty("currency")]
         public string Currency { get; set; }
 
+        [JsonProperty("azureSecurityOfferingType")]
+        public string AzureSecurityOfferingType = "MDC";
+
         [JsonProperty("azureOfferCode")]
         public string AzureOfferCode { get; set; }
 

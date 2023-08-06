@@ -160,6 +160,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureSQLInstancesData[key].AzureSQLMIMonthlyLicenseCost = value.Properties.AzureSqlMISuitabilityDetails.MonthlyLicenseCost;
             AzureSQLInstancesData[key].AzureSQLMIMigrationTargetPlatform = value.Properties.AzureSqlMISuitabilityDetails.MigrationTargetPlatform;
             AzureSQLInstancesData[key].AzureSQLMISuitability = value.Properties.AzureSqlMISuitabilityDetails.Suitability;
+            AzureSQLInstancesData[key].AzureSQLMIMonthlySecurityCost = UtilityFunctions.GetSecurityCost(value.Properties.AzureSqlMISuitabilityDetails.CostComponents);
             AzureSQLInstancesData[key].AzureSQLMIMigrationIssues = GetMigrationIssueList(value.Properties.AzureSqlMISuitabilityDetails.MigrationIssues);
 
             AzureSQLInstancesData[key].AzureSQLVMFamily = value.Properties.AzureSqlVMSuitabilityDetails.AzureSqlSku?.VirtualMachineSize?.AzureVmFamily;
@@ -173,6 +174,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureSQLInstancesData[key].AzureSQLVMMonthlyLicenseCost = value.Properties.AzureSqlVMSuitabilityDetails.MonthlyLicenseCost;
             AzureSQLInstancesData[key].AzureSQLVMMonthlyStorageCost = value.Properties.AzureSqlVMSuitabilityDetails.MonthlyStorageCost;
             AzureSQLInstancesData[key].AzureSQLVMMigrationTargetPlatform = value.Properties.AzureSqlVMSuitabilityDetails.MigrationTargetPlatform;
+            AzureSQLInstancesData[key].AzureSQLVMMonthlySecurityCost = UtilityFunctions.GetSecurityCost(value.Properties.AzureSqlVMSuitabilityDetails.CostComponents);
             AzureSQLInstancesData[key].AzureSQLVMSuitability = value.Properties.AzureSqlVMSuitabilityDetails.Suitability;
             AzureSQLInstancesData[key].AzureSQLVMMigrationIssues = GetMigrationIssueList(value.Properties.AzureSqlVMSuitabilityDetails.MigrationIssues);
 

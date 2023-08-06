@@ -12,6 +12,7 @@ namespace Azure.Migrate.Export.Models
         public double MonthlyComputeCostEstimate { get; set; }
         public double MonthlyComputeCostEstimate_RI3year { get; set; }
         public double MonthlyComputeCostEstimate_ASP3year { get; set; }
+        public double MonthlySecurityCostEstimate { get; set; }
         public string AzureRecommendedTarget { get; set; }
         public string GroupName { get; set; }
         public string MachineId { get; set; }

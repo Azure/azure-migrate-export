@@ -152,6 +152,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureVMAsOnPremMachinesData[key].Disks = GetAssessedDiskList(value.Properties.Disks);
             AzureVMAsOnPremMachinesData[key].StorageMonthlyCost = value.Properties.MonthlyStorageCost;
             AzureVMAsOnPremMachinesData[key].MonthlyComputeCostEstimate = value.Properties.MonthlyComputeCostForRecommendedSize;
+            AzureVMAsOnPremMachinesData[key].MonthlySecurityCost = UtilityFunctions.GetSecurityCost(value.Properties.CostComponents);
             AzureVMAsOnPremMachinesData[key].GroupName = assessmentInfo.GroupName;
         }
 
@@ -184,6 +185,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureVMPerformanceBasedMachinesData[key].RecommendedVMSize = value.Properties.RecommendedSize;
             AzureVMPerformanceBasedMachinesData[key].Disks = GetAssessedDiskList(value.Properties.Disks);
             AzureVMPerformanceBasedMachinesData[key].StorageMonthlyCost = value.Properties.MonthlyStorageCost;
+            AzureVMPerformanceBasedMachinesData[key].MonthlySecurityCost = UtilityFunctions.GetSecurityCost(value.Properties.CostComponents);
             AzureVMPerformanceBasedMachinesData[key].GroupName = assessmentInfo.GroupName;
 
             if (AzureVMPerformanceBasedMachinesData[key].Environment.Equals("Dev"))
