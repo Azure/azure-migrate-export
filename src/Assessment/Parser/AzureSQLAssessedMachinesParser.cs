@@ -148,6 +148,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureSQLMachinesData[key].OperatingSystemVersion = value.Properties.OperatingSystemVersion;
             AzureSQLMachinesData[key].OperatingSystemArchitecture = value.Properties.OperatingSystemArchitecture;
             AzureSQLMachinesData[key].CreatedTimestamp = value.Properties.CreatedTimestamp;
+            AzureSQLMachinesData[key].MonthlySecurityCost = UtilityFunctions.GetSecurityCost(value.Properties.CostComponents);
             AzureSQLMachinesData[key].MegabytesOfMemory = value.Properties.MegabytesOfMemory;
             AzureSQLMachinesData[key].NumberOfCores = value.Properties.NumberOfCores;
             AzureSQLMachinesData[key].ConfidenceRatingInPercentage = value.Properties.ConfidenceRatingInPercentage;

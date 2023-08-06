@@ -269,6 +269,24 @@ namespace Azure.Migrate.Export.Common
             return value;
         }
 
+        public static double GetBusinessCaseTotalOsLicensingCost(List<BusinessCaseOsLicensingDetail> details)
+        {
+            double total = 0;
+            foreach (var detail in details)
+                total += detail.TotalCost;
+
+            return total;
+        }
+
+        public static double GetBusinessCaseTotalPaaSLicensingCost(List<BusinessCaseOnPremisesPaaSLicensingCost> details)
+        {
+            double total = 0;
+            foreach (var detail in details)
+                total += detail.TotalCost;
+
+            return total;
+        }
+
         public static string GetSQLMIConfiguration(AzureSQLInstanceDataset azureSqlInstance)
         {
             string value = "";
@@ -292,6 +310,15 @@ namespace Azure.Migrate.Export.Common
         {
             for (int i = 0; i < columns.Count; i++)
                 sheet.Cell(1, i + 1).Value = columns[i];
+        }
+
+        public static double GetSecurityCost(List<AzureAssessmentCostComponent> costComponents)
+        {
+            foreach (var component in costComponents)
+                if (component.Name.Equals("MonthlySecurityCost"))
+                    return component.Value;
+
+            return 0;
         }
     }
 }

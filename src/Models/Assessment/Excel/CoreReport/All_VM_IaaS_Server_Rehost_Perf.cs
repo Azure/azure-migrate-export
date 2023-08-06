@@ -9,6 +9,7 @@ namespace Azure.Migrate.Export.Models
         public string RecommendedVMSize { get; set; }
         public double MonthlyComputeCostEstimate { get; set; }
         public double MonthlyStorageCostEstimate { get; set; }
+        public double MonthlySecurityCostEstimate { get; set; }
         public string OperatingSystem { get; set; }
         public string VMHost { get; set; }
         public string BootType { get; set; }

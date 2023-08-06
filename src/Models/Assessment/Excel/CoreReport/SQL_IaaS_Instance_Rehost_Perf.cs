@@ -14,6 +14,7 @@ namespace Azure.Migrate.Export.Models
         public double MonthlyComputeCostEstimate_AHUB_RI3year { get; set; }
         public double MonthlyComputeCostEstimate_ASP3year { get; set; }
         public double MonthlyStorageCostEstimate { get; set; }
+        public double MonthlySecurityCostEstimate { get; set; }
         public string SQLServerONAzureVMManagedDiskConfiguration { get; set; }
         public int UserDatabases { get; set; }
         public string RecommendedDeploymentType { get; set; }

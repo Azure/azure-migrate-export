@@ -21,6 +21,7 @@ namespace Azure.Migrate.Export.Models
         public string RecommendedVMSize { get; set; }
         public List<AssessedDisk> Disks { get; set; }
         public double StorageMonthlyCost { get; set; }
+        public double MonthlySecurityCost { get; set; }
         public double MonthlyComputeCostEstimate { get; set; }
         public string GroupName { get; set; }
     }

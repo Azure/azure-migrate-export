@@ -101,9 +101,9 @@ namespace Azure.Migrate.Export.HttpRequestHelper
         #endregion
 
         #region General information
-        public async Task<string> GetHttpRequestJsonStringResponse(string Url, UserInput userInputObj)
+        public async Task<string> GetHttpRequestJsonStringResponse(string Url, UserInput userInputObj, bool isPost = false)
         {
-            HttpResponseMessage response = await GetHttpResponse(Url, userInputObj);
+            HttpResponseMessage response = await GetHttpResponse(Url, userInputObj, isPost);
 
             if (response == null)
                 throw new Exception($"Could not obtain a HTTP GET response for url {Url}.");
@@ -117,7 +117,7 @@ namespace Azure.Migrate.Export.HttpRequestHelper
             return await response.Content.ReadAsStringAsync();
         }
 
-        private async Task<HttpResponseMessage> GetHttpResponse(string Url, UserInput userInputObj)
+        private async Task<HttpResponseMessage> GetHttpResponse(string Url, UserInput userInputObj, bool isPost = false)
         {
             if (userInputObj.CancellationContext.IsCancellationRequested)
                 UtilityFunctions.InitiateCancellation(userInputObj);
@@ -151,7 +151,16 @@ namespace Azure.Migrate.Export.HttpRequestHelper
                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
                 httpClient.DefaultRequestHeaders.Add("x-ms-client-request-id", clientRequestId + "-" + workflow + "-azmigexp");
 
-                response = await httpClient.GetAsync(baseAddress);
+                if (isPost)
+                {
+                    string blankContent = "";
+                    byte[] buffer = Encoding.UTF8.GetBytes(blankContent);
+                    ByteArrayContent byteContent = new ByteArrayContent(buffer);
+                    byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    response = await httpClient.PostAsync(baseAddress, byteContent);
+                }
+                else
+                    response = await httpClient.GetAsync(baseAddress);
             }
             catch (Exception exGeneralGetHttpRequest)
             {
@@ -642,6 +651,190 @@ namespace Azure.Migrate.Export.HttpRequestHelper
                 userInputObj.LoggerObj.LogWarning($"Assessment {assessmentInfo.AssessmentName} polling error: {exPollAssessment.Message}");
 
                 if (!HttpUtilities.IsRetryNeeded(null, exPollAssessment))
+                    return AssessmentPollResponse.Error;
+            }
+
+            return AssessmentPollResponse.NotCompleted;
+        }
+        #endregion
+
+        #region Business case creation
+        public async Task<bool> CreateBusinessCase(UserInput userInputObj, BusinessCaseInformation businessCaseInfo)
+        {
+            userInputObj.LoggerObj.LogInformation($"Creating business case {businessCaseInfo.BusinessCaseName}");
+            HttpResponseMessage createResponse = await SendBusinessCaseCreationRequest(userInputObj, businessCaseInfo);
+
+            if (createResponse == null)
+                throw new Exception($"Could not obtain a HTTP response for business case {businessCaseInfo.BusinessCaseName}.");
+
+            else if (!createResponse.IsSuccessStatusCode)
+            {
+                string createResponseContent = await createResponse.Content.ReadAsStringAsync();
+                throw new Exception($"HTTP create assessment {businessCaseInfo.BusinessCaseName} response was not successful: {createResponse.StatusCode}: {createResponseContent}");
+            }
+
+            else if (createResponse.StatusCode != HttpStatusCode.Created)
+                throw new Exception($"Received response for assessment {businessCaseInfo.BusinessCaseName}: {createResponse.StatusCode} is not as expected: {HttpStatusCode.Created}");
+
+            userInputObj.LoggerObj.LogInformation($"Business case {businessCaseInfo.BusinessCaseName} created");
+
+            return true;
+        }
+
+        private async Task<HttpResponseMessage> SendBusinessCaseCreationRequest(UserInput userInputObj, BusinessCaseInformation businessCaseInfo)
+        {
+            if (userInputObj.CancellationContext.IsCancellationRequested)
+                UtilityFunctions.InitiateCancellation(userInputObj);
+
+            NumberOfTries++;
+            AuthenticationResult authResult = null;
+            HttpResponseMessage response;
+            bool isException = false;
+            try
+            {
+                authResult = await AzureAuthenticationHandler.RetrieveAuthenticationToken();
+            }
+            catch (Exception exCacheTokenRetrieval)
+            {
+                throw new Exception($"Cached token retrieval failed: {exCacheTokenRetrieval.Message} Please re-login");
+            }
+
+            string workflow = userInputObj.WorkflowObj.IsExpressWorkflow ? "express" : "custom";
+
+            try
+            {
+                HttpClient httpClient = new HttpClient()
+                {
+                    Timeout = TimeSpan.FromSeconds(60),
+                };
+
+                string url = Routes.ProtocolScheme + Routes.AzureManagementApiHostname + Routes.ForwardSlash +
+                             Routes.SubscriptionPath + Routes.ForwardSlash + userInputObj.Subscription.Key + Routes.ForwardSlash +
+                             Routes.ResourceGroupPath + Routes.ForwardSlash + userInputObj.ResourceGroupName.Value + Routes.ForwardSlash +
+                             Routes.ProvidersPath + Routes.ForwardSlash + Routes.MigrateProvidersPath + Routes.ForwardSlash +
+                             Routes.AssessmentProjectsPath + Routes.ForwardSlash + userInputObj.AssessmentProjectName + Routes.ForwardSlash +
+                             Routes.BusinessCasesPath + Routes.ForwardSlash + businessCaseInfo.BusinessCaseName + Routes.QueryStringQuestionMark +
+                             Routes.QueryParameterApiVersion + Routes.QueryStringEquals + Routes.BusinessCaseApiVersion;
+                Uri baseAddress = new Uri(url);
+                string clientRequestId = Guid.NewGuid().ToString();
+                httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + authResult.AccessToken);
+                httpClient.DefaultRequestHeaders.Add("x-ms-client-request-id", clientRequestId + "-" + workflow + "-azmigexp");
+
+                string businessCaseSettings = businessCaseInfo.BusinessCaseSettings;
+                byte[] buffer = Encoding.UTF8.GetBytes(businessCaseSettings);
+                ByteArrayContent byteContent = new ByteArrayContent(buffer);
+                byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+                response = await httpClient.PutAsync(baseAddress, byteContent);
+            }
+            catch (Exception exCreateBizCase)
+            {
+                isException = true;
+                if (NumberOfTries < HttpUtilities.MaxInformationDataRetries && HttpUtilities.IsRetryNeeded(null, exCreateBizCase))
+                {
+                    userInputObj.LoggerObj.LogWarning($"HTTP PUT business case {businessCaseInfo.BusinessCaseName} request error: {exCreateBizCase.Message} Will try again after 1 minute");
+                    Thread.Sleep(60000);
+                    response = await SendBusinessCaseCreationRequest(userInputObj, businessCaseInfo);
+                }
+                else
+                    throw;
+            }
+
+            if (!isException)
+            {
+                if ((response == null || !response.IsSuccessStatusCode) && HttpUtilities.IsRetryNeeded(response, null) && NumberOfTries < HttpUtilities.MaxInformationDataRetries)
+                {
+                    userInputObj.LoggerObj.LogWarning($"HTTP PUT business case {businessCaseInfo.BusinessCaseName} request failed: {response.StatusCode}: {response.Content} Will try again after 1 minute");
+                    Thread.Sleep(60000);
+                    response = await SendBusinessCaseCreationRequest(userInputObj, businessCaseInfo);
+                }
+            }
+
+            return response;
+        }
+        #endregion
+
+        #region Business case polling
+        public async Task<AssessmentPollResponse> PollBusinessCase(UserInput userInputObj, BusinessCaseInformation businessCaseInfo)
+        {
+            if (userInputObj.CancellationContext.IsCancellationRequested)
+                UtilityFunctions.InitiateCancellation(userInputObj);
+
+            userInputObj.LoggerObj.LogInformation($"Polling business case {businessCaseInfo.BusinessCaseName} for status");
+
+            AuthenticationResult authResult = null;
+            HttpResponseMessage response;
+
+            try
+            {
+                authResult = await AzureAuthenticationHandler.RetrieveAuthenticationToken();
+            }
+            catch (Exception exCacheTokenRetrieval)
+            {
+                throw new Exception($"Cached token retrieval failed: {exCacheTokenRetrieval.Message} Please re-login");
+            }
+
+            string workflow = userInputObj.WorkflowObj.IsExpressWorkflow ? "express" : "custom";
+
+            try
+            {
+                HttpClient httpClient = new HttpClient()
+                {
+                    Timeout = TimeSpan.FromSeconds(60),
+                };
+
+                string url = Routes.ProtocolScheme + Routes.AzureManagementApiHostname + Routes.ForwardSlash +
+                             Routes.SubscriptionPath + Routes.ForwardSlash + userInputObj.Subscription.Key + Routes.ForwardSlash +
+                             Routes.ResourceGroupPath + Routes.ForwardSlash + userInputObj.ResourceGroupName.Value + Routes.ForwardSlash +
+                             Routes.ProvidersPath + Routes.ForwardSlash + Routes.MigrateProvidersPath + Routes.ForwardSlash +
+                             Routes.AssessmentProjectsPath + Routes.ForwardSlash + userInputObj.AssessmentProjectName + Routes.ForwardSlash +
+                             Routes.BusinessCasesPath + Routes.ForwardSlash + businessCaseInfo.BusinessCaseName + Routes.QueryStringQuestionMark +
+                             Routes.QueryParameterApiVersion + Routes.QueryStringEquals + Routes.BusinessCaseApiVersion;
+                Uri baseAddress = new Uri(url);
+                string clientRequestId = Guid.NewGuid().ToString();
+                httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + authResult.AccessToken);
+                httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+                httpClient.DefaultRequestHeaders.Add("x-ms-client-request-id", clientRequestId + "-" + workflow + "-azmigexp");
+
+                response = await httpClient.GetAsync(baseAddress);
+
+                if (response == null || !response.IsSuccessStatusCode)
+                {
+                    userInputObj.LoggerObj.LogWarning($"Business case {businessCaseInfo.BusinessCaseName} polling response was not success. Status: {response?.StatusCode} Content: {response?.Content}");
+                    if (!HttpUtilities.IsRetryNeeded(response, null))
+                        return AssessmentPollResponse.Error;
+
+                    return AssessmentPollResponse.NotCompleted;
+                }
+
+                string responseContent = await response.Content.ReadAsStringAsync();
+                BusinessCaseInformationJSON businessCaseInformationObj = JsonConvert.DeserializeObject<BusinessCaseInformationJSON>(responseContent);
+
+                if (businessCaseInformationObj.Properties.State.Equals("Completed"))
+                {
+                    userInputObj.LoggerObj.LogInformation($"Business case {businessCaseInfo.BusinessCaseName} completed");
+                    return AssessmentPollResponse.Completed;
+                }
+                else if (businessCaseInformationObj.Properties.State.Equals("OutDated"))
+                {
+                    userInputObj.LoggerObj.LogWarning($"Business case {businessCaseInfo.BusinessCaseName} became out-dated during computation");
+                    return AssessmentPollResponse.OutDated;
+                }
+                else if (businessCaseInformationObj.Properties.State.Equals("Invalid"))
+                {
+                    userInputObj.LoggerObj.LogError($"Business case {businessCaseInfo.BusinessCaseName} is invalid, corresponding datapoints will contain default values");
+                    return AssessmentPollResponse.Invalid;
+                }
+
+                userInputObj.LoggerObj.LogInformation($"Business case {businessCaseInfo.BusinessCaseName} status is {businessCaseInformationObj.Properties.State}");
+
+                return AssessmentPollResponse.NotCompleted;
+            }
+            catch (Exception exPollBizCase)
+            {
+                userInputObj.LoggerObj.LogWarning($"Business case {businessCaseInfo.BusinessCaseName} polling error: {exPollBizCase.Message}");
+
+                if (!HttpUtilities.IsRetryNeeded(null, exPollBizCase))
                     return AssessmentPollResponse.Error;
             }
 

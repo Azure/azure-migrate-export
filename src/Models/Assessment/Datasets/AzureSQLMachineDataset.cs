@@ -28,6 +28,7 @@ namespace Azure.Migrate.Export.Models
         public double MonthlyBandwidthCost { get; set; }
         public double MonthlyStorageCost { get; set; }
         public string Type { get; set; }
+        public double MonthlySecurityCost { get; set; }
         public string BootType { get; set; }
         public string OperatingSystemType { get; set; }
         public string OperatingSystemName { get; set; }

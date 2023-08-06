@@ -15,6 +15,7 @@ namespace Azure.Migrate.Export.Models
         public double MonthlyComputeCostEstimate_AHUB { get; set; }
         public double MonthlyComputeCostEstimate_AHUB_RI3year { get; set; }
         public double MonthlyStorageCostEstimate { get; set; }
+        public double MonthlySecurityCostEstimate { get; set; }
         public int UserDatabases { get; set; }
         public string SQLEdition { get; set; }
         public string SQLVersion { get; set; }

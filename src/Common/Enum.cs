@@ -144,6 +144,12 @@ namespace Azure.Migrate.Export.Common
         Internal
     }
 
+    public enum BusinessCaseTypes
+    {
+        OptimizeForPaaS,
+        IaaSOnly
+    }
+
     public class EnumDescriptionHelper
     {
         public string GetEnumDescription(Enum value)

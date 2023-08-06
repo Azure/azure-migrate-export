@@ -57,6 +57,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assessment\Parser\BusinessCaseParser.cs" />
+    <Compile Include="Common\AzureIaaSCostCalculator.cs" />
+    <Compile Include="Common\AzurePaaSCostCalculator.cs" />
     <Compile Include="Forms\AssessmentSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,6 +90,18 @@
     <Compile Include="Forms\TrackProgressForm.Designer.cs">
       <DependentUpon>TrackProgressForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Assessment\Datasets\BusinessCaseDataset.cs" />
+    <Compile Include="Models\Assessment\Datasets\Helpers\BusinessCaseDatasetCostDetails.cs" />
+    <Compile Include="Models\Assessment\Excel\CoreReport\Business_Case.cs" />
+    <Compile Include="Models\Assessment\Excel\CoreReport\Cash_Flows.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\BusinessCaseCompareSummaryJSON.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\BusinessCaseCostDetailsJSON.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\BusinessCaseIaaSSummaryJSON.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\BusinessCaseInformationJSON.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\BusinessCaseOverviewSummaryJSON.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\BusinessCasePaaSSummaryJSON.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\BusinessCaseYOYCostDetailsJSON.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\Helpers\AzureAssessmentCostComponent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Extensions\ExtendActionButtonEnableDisable.cs" />
     <Compile Include="Extensions\ExtendTabButtonEnableDisable.cs" />
@@ -107,11 +122,13 @@
     <Compile Include="Factory\AzureVMWareSolutionAssessmentSettingsFactory.cs" />
     <Compile Include="Factory\AzureSQLAssessmentSettingsFactory.cs" />
     <Compile Include="Factory\AzureWebAppAssessmentSettingsFactory.cs" />
+    <Compile Include="Factory\BusinessCaseSettingsFactory.cs" />
     <Compile Include="Models\UserInput.cs" />
     <Compile Include="Models\Discovery\DiscoveryData.cs" />
     <Compile Include="Models\Discovery\DiscoveryProperties.cs" />
     <Compile Include="Models\Assessment\AssessmentSiteMachine.cs" />
     <Compile Include="Models\Assessment\AssessmentInformation.cs" />
+    <Compile Include="Models\Assessment\BusinessCaseInformation.cs" />
     <Compile Include="Models\Assessment\Datasets\AzureVMAsOnPremDataset.cs" />
     <Compile Include="Models\Assessment\Datasets\AzureVMPerformanceBasedDataset.cs" />
     <Compile Include="Models\Assessment\Datasets\AVSAssessmentPropertiesDataset.cs" />
@@ -165,6 +182,7 @@
     <Compile Include="Models\JSONRequests\Assessment\AzureVMWareSolutionAssessmentSettingsJSON.cs" />
     <Compile Include="Models\JSONRequests\Assessment\AzureSQLAssessmentSettingsJSON.cs" />
     <Compile Include="Models\JSONRequests\Assessment\AzureWebAppAssessmentSettingsJSON.cs" />
+    <Compile Include="Models\JSONRequests\Assessment\BusinessCaseSettingsJSON.cs" />
     <Compile Include="Logger\Interfaces\ILogHandler.cs" />
     <Compile Include="Logger\LogHandler.cs" />
     <Compile Include="Logger\LogParameters.cs" />
@@ -178,6 +196,7 @@
     <Compile Include="Assessment\Assess.cs" />
     <Compile Include="Assessment\DiscoveryDataValidation.cs" />
     <Compile Include="Assessment\BatchAssessments.cs" />
+    <Compile Include="Assessment\BusinessCaseBuilder.cs" />
     <Compile Include="Assessment\Parser\AzureVMAssessmentParser.cs" />
     <Compile Include="Assessment\Parser\AVSAssessmentParser.cs" />
     <Compile Include="Assessment\Parser\AzureWebAppParser.cs" />

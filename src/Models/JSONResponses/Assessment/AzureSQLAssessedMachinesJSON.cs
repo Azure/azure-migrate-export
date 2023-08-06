@@ -46,6 +46,9 @@ namespace Azure.Migrate.Export.Models
         [JsonProperty("recommendedVmFamily")]
         public string RecommendedVmFamily { get; set; }
 
+        [JsonProperty("costComponents")]
+        public List<AzureAssessmentCostComponent> CostComponents { get; set; }
+
         [JsonProperty("recommendedVmSizeNumberOfCores")]
         public int RecommendedVmSizeNumberOfCores { get; set; }
 
