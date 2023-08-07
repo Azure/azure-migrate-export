@@ -25,6 +25,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
         private readonly Dictionary<string, AzureSQLInstanceDataset> AzureSQLInstancesData;
         private readonly Dictionary<string, AzureSQLMachineDataset> AzureSQLMachinesData;
         private readonly BusinessCaseDataset BusinessCaseData;
+        private readonly Dictionary<string, string> DecommissionedMachinesData;
 
         private AzureIaaSCostCalculator AzureIaaSCalculator;
         private AzurePaaSCostCalculator AzurePaaSCalculator;
@@ -47,6 +48,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 Dictionary<string, AzureSQLInstanceDataset> azureSQLInstancesData,
                 Dictionary<string, AzureSQLMachineDataset> azureSQLMachinesData,
                 BusinessCaseDataset businessCaseData, 
+                Dictionary<string, string> decommissionedMachinesData,
 
                 UserInput userInputObj
             )
@@ -65,6 +67,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             AzureSQLInstancesData = azureSQLInstancesData;
             AzureSQLMachinesData = azureSQLMachinesData;
             BusinessCaseData = businessCaseData;
+            DecommissionedMachinesData = decommissionedMachinesData;
 
             AzureIaaSCalculator = new AzureIaaSCostCalculator();
             AzurePaaSCalculator = new AzurePaaSCostCalculator();
@@ -96,6 +99,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             List<VM_IaaS_Server_Rehost_AsOnPrem> VM_IaaS_Server_Rehost_AsOnPrem_List = new List<VM_IaaS_Server_Rehost_AsOnPrem>();
             Business_Case Business_Case_Data = new Business_Case();
             Cash_Flows Cash_Flows_Data = new Cash_Flows();
+            List<Decommissioned_Machines> Decommissioned_Machines_List = new List<Decommissioned_Machines>();
 
             // Opportunity report models
             List<AVS_Summary> AVS_Summary_List = new List<AVS_Summary>();
@@ -137,6 +141,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                                         WebApp_PaaS_List, WebApp_IaaS_Server_Rehost_Perf_List,
                                         VM_IaaS_Server_Rehost_Perf_List);
             Process_Cash_Flows_Model(Cash_Flows_Data);
+            Process_Decommissioned_Machines_Model(Decommissioned_Machines_List);
 
             // Opportunity report tabs
             Process_AVS_Summary_Model(AVS_Summary_List);
@@ -232,7 +237,8 @@ namespace Azure.Migrate.Export.Assessment.Processor
                     VM_IaaS_Server_Rehost_Perf_List,
                     VM_IaaS_Server_Rehost_AsOnPrem_List,
                     Business_Case_Data,
-                    Cash_Flows_Data
+                    Cash_Flows_Data,
+                    Decommissioned_Machines_List
                 );
             exportCoreReportObj.GenerateCoreReportExcel();
             UserInputObj.LoggerObj.LogInformation(93 - UserInputObj.LoggerObj.GetCurrentProgress(), "Generated core report excel sheet");
@@ -2263,6 +2269,45 @@ namespace Azure.Migrate.Export.Assessment.Processor
             Cash_Flows_Data.PaaSYOYCosts.SavingsYOY.Year3 = Cash_Flows_Data.TotalYOYCosts.SavingsYOY.Year3 - Cash_Flows_Data.IaaSYOYCosts.SavingsYOY.Year3;
 
             UserInputObj.LoggerObj.LogInformation("Updated excel model for Cash_Flows");
+        }
+
+        private void Process_Decommissioned_Machines_Model(List<Decommissioned_Machines> Decommissioned_Machines_List)
+        {
+            if (DecommissionedMachinesData == null)
+                return;
+            if (DecommissionedMachinesData.Count <= 0)
+                return;
+
+            bool isSuccessful = false;
+            isSuccessful = Create_Decommissioned_Machines_Model(Decommissioned_Machines_List);
+
+            if (!isSuccessful)
+                UserInputObj.LoggerObj.LogWarning("Encountered issue while generating excel model for Decommissioned_Machines");
+        }
+
+        private bool Create_Decommissioned_Machines_Model(List<Decommissioned_Machines> Decommissioned_Machines_List)
+        {
+            if (DecommissionedMachinesData == null || DecommissionedMachinesData.Count <= 0)
+            {
+                UserInputObj.LoggerObj.LogWarning("Empty decommissioned machines data");
+                return false;
+            }
+
+            if (Decommissioned_Machines_List == null)
+                Decommissioned_Machines_List = new List<Decommissioned_Machines>();
+
+            foreach (var kvp in DecommissionedMachinesData)
+            {
+                Decommissioned_Machines obj = new Decommissioned_Machines();
+
+                obj.MachineName = kvp.Value;
+                obj.MachineId = kvp.Key;
+
+                Decommissioned_Machines_List.Add(obj);
+            }
+
+            UserInputObj.LoggerObj.LogInformation($"Updated Decommissioned_Machines excel model with data of {Decommissioned_Machines_List.Count} machines");
+            return true;
         }
     }
 }

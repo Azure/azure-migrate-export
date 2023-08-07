@@ -107,6 +107,7 @@ namespace Azure.Migrate.Export.Assessment
                 {
                     AssessmentSiteMachine obj = new AssessmentSiteMachine
                     {
+                        DisplayName = value.Properties.DisplayName,
                         AssessmentId = value.Id?.ToLower(),
                         DiscoveryMachineArmId = value.Properties.DiscoveryMachineArmId?.ToLower(),
                         SqlInstancesCount = value.Properties.SqlInstances.Count,
@@ -135,6 +136,9 @@ namespace Azure.Migrate.Export.Assessment
             Dictionary<string, List<string>> GroupMachinesMap = new Dictionary<string, List<string>>();
             List<string> CreatedGroups = new List<string>();
 
+            HashSet<string> discoveryMachineArmIdSet = GetDiscoveredMachineIDsSet();
+            Dictionary<string, string> DecommissionedMachinesData = new Dictionary<string, string>();
+
             foreach (var assessmentSiteMachine in assessmentSiteMachines)
             {
                 if (string.IsNullOrEmpty(assessmentSiteMachine.AssessmentId))
@@ -142,6 +146,12 @@ namespace Azure.Migrate.Export.Assessment
 
                 if (string.IsNullOrEmpty(assessmentSiteMachine.DiscoveryMachineArmId))
                     continue;
+
+                if (!discoveryMachineArmIdSet.Contains(assessmentSiteMachine.DiscoveryMachineArmId))
+                {
+                    if (!DecommissionedMachinesData.ContainsKey(assessmentSiteMachine.DiscoveryMachineArmId))
+                        DecommissionedMachinesData.Add(assessmentSiteMachine.DiscoveryMachineArmId, assessmentSiteMachine.DisplayName);
+                }
 
                 foreach (var discoverySiteMachine in DiscoveredData)
                 {
@@ -597,6 +607,7 @@ namespace Azure.Migrate.Export.Assessment
                     AzureSQLInstancesData,
                     AzureSQLMachinesData,
                     BusinessCaseData,
+                    DecommissionedMachinesData,
                     UserInputObj
                 );
             processorObj.InititateProcessing();
@@ -876,6 +887,19 @@ namespace Azure.Migrate.Export.Assessment
                 return 1;
 
             return a.AssessmentCreationPriority.CompareTo(b.AssessmentCreationPriority);
+        }
+
+        private HashSet<string> GetDiscoveredMachineIDsSet()
+        {
+            HashSet<string> result = new HashSet<string>();
+
+            foreach (var discoveredMachine in DiscoveredData)
+            {
+                if (!result.Contains(discoveredMachine.MachineId))
+                    result.Add(discoveredMachine.MachineId);
+            }
+
+            return result;
         }
         #endregion
     }

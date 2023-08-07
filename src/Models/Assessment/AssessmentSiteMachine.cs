@@ -2,6 +2,7 @@ namespace Azure.Migrate.Export.Models
 {
     public class AssessmentSiteMachine
     {
+        public string DisplayName { get; set; }
         public string AssessmentId { get; set; }
         public string DiscoveryMachineArmId { get; set; }
         public int SqlInstancesCount { get; set; }

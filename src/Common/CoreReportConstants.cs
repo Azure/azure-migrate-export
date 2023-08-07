@@ -554,5 +554,12 @@ namespace Azure.Migrate.Export.Common
             "Future state Cash Flow",
             "Savings"
         };
+
+        public const string Decommissioned_Machines_TabName = "Decommissioned_Machines";
+        public static readonly List<string> Decommissioned_Machines_Columns = new List<string>
+        {
+            "Machine Name",
+            "Machine ID"
+        };
     }
 }
