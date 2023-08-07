@@ -146,7 +146,7 @@ namespace Azure.Migrate.Export.Common
 
     public enum BusinessCaseTypes
     {
-        OptimizeForPaaS,
+        OptimizeForPaas,
         IaaSOnly
     }
 

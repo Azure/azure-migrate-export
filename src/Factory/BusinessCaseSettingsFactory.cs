@@ -23,7 +23,7 @@ namespace Azure.Migrate.Export.Factory
             obj.Location = userInputObj.TargetRegion.Key;
             obj.Properties.Settings.AzureSettings.Currency = "USD"; // userInputObj.Currency.Key;
 
-            BusinessCaseTypes type = BusinessCaseTypes.OptimizeForPaaS;
+            BusinessCaseTypes type = BusinessCaseTypes.OptimizeForPaas;
             if (userInputObj.PreferredOptimizationObj.OptimizationPreference.Key.Equals("MigrateToAllIaaS"))
                 type = BusinessCaseTypes.IaaSOnly;
 
