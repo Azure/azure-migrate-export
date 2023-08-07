@@ -153,6 +153,7 @@
     <Compile Include="Models\Assessment\Excel\CoreReport\SQL_MI_PaaS.cs" />
     <Compile Include="Models\Assessment\Excel\CoreReport\SQL_All_Instances.cs" />
     <Compile Include="Models\Assessment\Excel\CoreReport\WebApp_PaaS.cs" />
+    <Compile Include="Models\Assessment\Excel\CoreReport\Decommissioned_Machines.cs" />
     <Compile Include="Models\Assessment\Excel\OpportunityReport\AVS_Summary.cs" />
     <Compile Include="Models\Assessment\Excel\OpportunityReport\AVS_IaaS_Rehost_Perf.cs" />
     <Compile Include="Models\Assessment\Excel\OpportunityReport\VM_Opportunity_Perf.cs" />

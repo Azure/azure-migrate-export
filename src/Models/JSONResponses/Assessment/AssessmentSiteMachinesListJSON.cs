@@ -26,6 +26,9 @@ namespace Azure.Migrate.Export.Models
         [JsonProperty("discoveryMachineArmId")]
         public string DiscoveryMachineArmId { get; set; }
 
+        [JsonProperty("displayName")]
+        public string DisplayName { get; set; }
+
         [JsonProperty("sqlInstances")]
         public List<string> SqlInstances { get; set; }
 
