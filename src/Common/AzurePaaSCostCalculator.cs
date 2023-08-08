@@ -24,6 +24,9 @@ namespace Azure.Migrate.Export.Common
         private double WebAppPaaSSecurityCost;
         private double TotalPaaSSecurityCost;
 
+        private double SqlPaaSAhubSavings;
+        private double TotalPaaSAhubSavings;
+
         public AzurePaaSCostCalculator()
         {
             SQL_MI_PaaS_List = new List<SQL_MI_PaaS>();
@@ -42,6 +45,9 @@ namespace Azure.Migrate.Export.Common
             SqlPaaSSecurityCost = 0.0;
             WebAppPaaSSecurityCost = 0.0;
             TotalPaaSSecurityCost = 0.0;
+
+            SqlPaaSAhubSavings = 0.0;
+            TotalPaaSAhubSavings = 0.0;
         }
 
         public void Calculate()
@@ -52,6 +58,7 @@ namespace Azure.Migrate.Export.Common
             TotalPaaSComputeCost = SqlPaaSComputeCost + WebAppPaaSComputeCost;
             TotalPaaSStorageCost = SqlPaaSStorageCost + WebAppPaaSStorageCost;
             TotalPaaSSecurityCost = SqlPaaSSecurityCost + WebAppPaaSSecurityCost;
+            TotalPaaSAhubSavings = SqlPaaSAhubSavings;
 
             IsCalculated = true;
         }
@@ -66,6 +73,11 @@ namespace Azure.Migrate.Export.Common
             return TotalPaaSSecurityCost;
         }
 
+        public double GetTotalAhubSavings()
+        {
+            return TotalPaaSAhubSavings;
+        }
+
         public double GetTotalComputeCost()
         {
             return TotalPaaSComputeCost;
@@ -78,16 +90,25 @@ namespace Azure.Migrate.Export.Common
 
         private void CalculateSqlPaaSCost()
         {
+            double nonAhubCost = 0.0;
             foreach (var sqlInstance in SQL_MI_PaaS_List)
             {
                 if (sqlInstance.Environment.Equals("Dev"))
+                {
                     SqlPaaSComputeCost += sqlInstance.MonthlyComputeCostEstimate_AHUB_RI3year == 0 ? sqlInstance.MonthlyComputeCostEstimate_AHUB : sqlInstance.MonthlyComputeCostEstimate_AHUB_RI3year;
+                    nonAhubCost += sqlInstance.MonthlyComputeCostEstimate_RI3year == 0 ? sqlInstance.MonthlyComputeCostEstimate : sqlInstance.MonthlyComputeCostEstimate_RI3year;
+                }
                 else
+                {
                     SqlPaaSComputeCost += sqlInstance.MonthlyComputeCostEstimate_AHUB_RI3year;
+                    nonAhubCost += sqlInstance.MonthlyComputeCostEstimate_RI3year;
+                }
 
                 SqlPaaSStorageCost += sqlInstance.MonthlyStorageCostEstimate;
                 SqlPaaSSecurityCost += sqlInstance.MonthlySecurityCostEstimate;
             }
+
+            SqlPaaSAhubSavings = nonAhubCost - SqlPaaSComputeCost;
         }
 
         private void CalculateWebAppPaaSCost()

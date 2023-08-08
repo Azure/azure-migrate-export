@@ -2208,7 +2208,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             }
 
             Business_Case_Data.AzureIaaSCost.ComputeCost = AzureIaaSCalculator.GetTotalComputeCost() * 12.0;
-            Business_Case_Data.AzureIaaSCost.LicenseCost = 0; // TODO: how to calculate azure license costs?
+            Business_Case_Data.AzureIaaSCost.LicenseCost = AzureIaaSCalculator.GetTotalAhubSavings() * 12.0;
             Business_Case_Data.AzureIaaSCost.EsuIaaSLicenseCost = 0;
             Business_Case_Data.AzureIaaSCost.EsuPaaSLicenseCost = 0;
             Business_Case_Data.AzureIaaSCost.StorageCost = AzureIaaSCalculator.GetTotalStorageCost() * 12.0;
@@ -2224,7 +2224,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             }
 
             Business_Case_Data.AzurePaaSCost.ComputeCost = AzurePaaSCalculator.GetTotalComputeCost() * 12.0;
-            Business_Case_Data.AzurePaaSCost.LicenseCost = 0; // TODO: how to calculate azure license costs?
+            Business_Case_Data.AzurePaaSCost.LicenseCost = AzurePaaSCalculator.GetTotalAhubSavings() * 12.0;
             Business_Case_Data.AzurePaaSCost.EsuIaaSLicenseCost = 0;
             Business_Case_Data.AzurePaaSCost.EsuPaaSLicenseCost = 0;
             Business_Case_Data.AzurePaaSCost.StorageCost = AzurePaaSCalculator.GetTotalStorageCost() * 12.0;

@@ -30,6 +30,11 @@ namespace Azure.Migrate.Export.Common
         private double VmIaaSSecurityCost;
         private double TotalIaaSSecurityCost;
 
+        private double SqlIaaSAhubSavings;
+        private double VmIaaSAhubSavings;
+        private double WebAppIaaSAhubSavings;
+        private double TotalIaaSAhubSavings;
+
         public AzureIaaSCostCalculator()
         {
             SQL_IaaS_Instance_Rehost_Perf_List = new List<SQL_IaaS_Instance_Rehost_Perf>();
@@ -53,6 +58,11 @@ namespace Azure.Migrate.Export.Common
             WebAppIaaSSecurityCost = 0.0;
             VmIaaSSecurityCost = 0.0;
             TotalIaaSSecurityCost = 0.0;
+
+            SqlIaaSAhubSavings = 0.0;
+            VmIaaSAhubSavings = 0.0;
+            WebAppIaaSAhubSavings = 0.0;
+            TotalIaaSAhubSavings = 0.0;
         }
 
         public bool IsCalculationComplete()
@@ -68,6 +78,11 @@ namespace Azure.Migrate.Export.Common
         public double GetTotalComputeCost()
         {
             return TotalIaaSComputeCost;
+        }
+        
+        public double GetTotalAhubSavings()
+        {
+            return TotalIaaSAhubSavings;
         }
 
         public double GetTotalSecurityCost()
@@ -95,18 +110,26 @@ namespace Azure.Migrate.Export.Common
             TotalIaaSComputeCost = SqlIaaSComputeCost + WebAppIaaSComputeCost + VmIaaSComputeCost;
             TotalIaaSStorageCost = SqlIaaSStorageCost + WebAppIaaSStorageCost + VmIaaSStorageCost;
             TotalIaaSSecurityCost = SqlIaaSSecurityCost + WebAppIaaSSecurityCost + VmIaaSSecurityCost;
+            TotalIaaSAhubSavings = SqlIaaSAhubSavings + WebAppIaaSAhubSavings + VmIaaSAhubSavings;
 
             IsCalculated = true;
         }
 
         private void CalculateSqlIaaSCost()
         {
+            double nonAhubCost = 0.0;
             foreach (var sqlInstance in SQL_IaaS_Instance_Rehost_Perf_List)
             {
                 if (sqlInstance.Environment.Equals("Dev"))
+                {
                     SqlIaaSComputeCost += sqlInstance.MonthlyComputeCostEstimate_AHUB_RI3year == 0 ? sqlInstance.MonthlyComputeCostEstimate_AHUB : sqlInstance.MonthlyComputeCostEstimate_AHUB_RI3year;
+                    nonAhubCost += sqlInstance.MonthlyComputeCostEstimate_RI3year == 0 ? sqlInstance.MonthlyComputeCostEstimate : sqlInstance.MonthlyComputeCostEstimate_RI3year;
+                }
                 else
+                {
                     SqlIaaSComputeCost += sqlInstance.MonthlyComputeCostEstimate_AHUB_RI3year;
+                    nonAhubCost += sqlInstance.MonthlyComputeCostEstimate_RI3year;
+                }
 
                 SqlIaaSStorageCost += sqlInstance.MonthlyStorageCostEstimate;
                 SqlIaaSSecurityCost += sqlInstance.MonthlySecurityCostEstimate;
@@ -115,41 +138,67 @@ namespace Azure.Migrate.Export.Common
             foreach (var sqlServer in SQL_IaaS_Server_Rehost_Perf_List)
             {
                 if (sqlServer.Environment.Equals("Dev"))
+                {
                     SqlIaaSComputeCost += sqlServer.MonthlyComputeCostEstimate_AHUB_RI3year == 0 ? sqlServer.MonthlyComputeCostEstimate_AHUB : sqlServer.MonthlyComputeCostEstimate_AHUB_RI3year;
+                    nonAhubCost += sqlServer.MonthlyComputeCostEstimate_RI3year == 0 ? sqlServer.MonthlyComputeCostEstimate : sqlServer.MonthlyComputeCostEstimate_RI3year;
+                }
                 else
+                {
                     SqlIaaSComputeCost += sqlServer.MonthlyComputeCostEstimate_AHUB_RI3year;
+                    nonAhubCost += sqlServer.MonthlyComputeCostEstimate_RI3year;
+                }
 
                 SqlIaaSStorageCost += sqlServer.MonthlyStorageCostEstimate;
                 SqlIaaSSecurityCost += sqlServer.MonthlySecurityCostEstimate;
             }
+
+            SqlIaaSAhubSavings = nonAhubCost - SqlIaaSComputeCost;
         }
 
         private void CalculateWebAppIaaSCost()
         {
+            double nonAhubCost = 0.0;
             foreach (var webappServer in WebApp_IaaS_Server_Rehost_Perf_List)
             {
                 if (webappServer.Environment.Equals("Dev"))
+                {
                     WebAppIaaSComputeCost += webappServer.MonthlyComputeCostEstimate_AHUB_RI3year == 0 ? webappServer.MonthlyComputeCostEstimate_AHUB : webappServer.MonthlyComputeCostEstimate_AHUB_RI3year;
+                    nonAhubCost += webappServer.MonthlyComputeCostEstimate_RI3year == 0 ? webappServer.MonthlyComputeCostEstimate : webappServer.MonthlyComputeCostEstimate_RI3year;
+                }
                 else
+                {
                     WebAppIaaSComputeCost += webappServer.MonthlyComputeCostEstimate_AHUB_RI3year;
+                    nonAhubCost += webappServer.MonthlyComputeCostEstimate_RI3year;
+                }
 
                 WebAppIaaSStorageCost += webappServer.MonthlyStorageCostEstimate;
                 WebAppIaaSSecurityCost += webappServer.MonthlySecurityCostEstimate;
             }
+
+            WebAppIaaSAhubSavings = nonAhubCost - WebAppIaaSComputeCost;
         }
 
         private void CalculateVMIaaSCost()
         {
+            double nonAhubCost = 0.0;
             foreach (var vm in VM_IaaS_Server_Rehost_Perf_List)
             {
                 if (vm.Environment.Equals("Dev"))
+                {
                     VmIaaSComputeCost += vm.MonthlyComputeCostEstimate_AHUB_RI3year == 0 ? vm.MonthlyComputeCostEstimate_AHUB : vm.MonthlyComputeCostEstimate_AHUB_RI3year;
+                    nonAhubCost += vm.MonthlyComputeCostEstimate_RI3year == 0 ? vm.MonthlyComputeCostEstimate : vm.MonthlyComputeCostEstimate_RI3year;
+                }
                 else
+                {
                     VmIaaSComputeCost += vm.MonthlyComputeCostEstimate_AHUB_RI3year;
+                    nonAhubCost += vm.MonthlyComputeCostEstimate_RI3year;
+                }
 
                 VmIaaSStorageCost += vm.MonthlyStorageCostEstimate;
                 VmIaaSSecurityCost += vm.MonthlySecurityCostEstimate;
             }
+
+            VmIaaSAhubSavings = nonAhubCost - VmIaaSComputeCost;
         }
     }
 }
