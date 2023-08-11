@@ -77,8 +77,8 @@ namespace Azure.Migrate.Export.Excel
         {
             Generate_Properties_Worksheet();
             Generate_Business_Case_Worksheet();
-            Generate_Financial_Summary_Worksheet();
             Generate_Cash_Flows_Worksheet();
+            Generate_Financial_Summary_Worksheet();
             Generate_SQL_MI_PaaS_Worksheet();
             Generate_SQL_IaaS_Instance_Rehost_Perf_Worksheet();
             Generate_SQL_IaaS_Server_Rehost_Perf_Worksheet();
@@ -252,7 +252,7 @@ namespace Azure.Migrate.Export.Excel
         }
         private void Generate_Financial_Summary_Worksheet()
         {
-            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.Financial_Summary_TabName, 16);
+            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.Financial_Summary_TabName, 4);
 
             UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, CoreReportConstants.Financial_Summary_Columns);
 
@@ -264,7 +264,7 @@ namespace Azure.Migrate.Export.Excel
         }
         private void Generate_SQL_MI_PaaS_Worksheet()
         {
-            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.SQL_MI_PaaS_TabName, 4);
+            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.SQL_MI_PaaS_TabName, 5);
 
             UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, CoreReportConstants.SQL_MI_PaaS_Columns);
 
@@ -274,7 +274,7 @@ namespace Azure.Migrate.Export.Excel
 
         private void Generate_SQL_IaaS_Instance_Rehost_Perf_Worksheet()
         {
-            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.SQL_IaaS_Instance_Rehost_Perf_TabName, 5);
+            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.SQL_IaaS_Instance_Rehost_Perf_TabName, 6);
 
             UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, CoreReportConstants.SQL_IaaS_Instance_Rehost_Perf_Columns);
 
@@ -284,7 +284,7 @@ namespace Azure.Migrate.Export.Excel
 
         private void Generate_SQL_IaaS_Server_Rehost_Perf_Worksheet()
         {
-            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.SQL_IaaS_Server_Rehost_Perf_TabName, 6);
+            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.SQL_IaaS_Server_Rehost_Perf_TabName, 7);
 
             UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, CoreReportConstants.SQL_IaaS_Server_Rehost_Perf_Columns);
 
@@ -294,7 +294,7 @@ namespace Azure.Migrate.Export.Excel
 
         private void Generate_SQL_IaaS_Server_Rehost_AsOnPrem_Worksheet()
         {
-            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.SQL_IaaS_Server_Rehost_AsOnPrem_TabName, 7);
+            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.SQL_IaaS_Server_Rehost_AsOnPrem_TabName, 8);
 
             UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, CoreReportConstants.SQL_IaaS_Server_Rehost_AsOnPrem_Columns);
 
@@ -304,7 +304,7 @@ namespace Azure.Migrate.Export.Excel
 
         private void Generate_WebApp_PaaS_Worksheet()
         {
-            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.WebApp_PaaS_TabName, 8);
+            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.WebApp_PaaS_TabName, 9);
 
             UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, CoreReportConstants.WebApp_PaaS_Columns);
 
@@ -314,7 +314,7 @@ namespace Azure.Migrate.Export.Excel
 
         private void Generate_WebApp_IaaS_Server_Rehost_Perf_Worksheet()
         {
-            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.WebApp_IaaS_Server_Rehost_Perf_TabName, 9);
+            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.WebApp_IaaS_Server_Rehost_Perf_TabName, 10);
 
             UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, CoreReportConstants.WebApp_IaaS_Server_Rehost_Perf_Columns);
 
@@ -324,7 +324,7 @@ namespace Azure.Migrate.Export.Excel
 
         private void Generate_WebApp_IaaS_Server_Rehost_AsOnPrem_Worksheet()
         {
-            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.WebApp_IaaS_Server_Rehost_AsOnPrem_TabName, 10);
+            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.WebApp_IaaS_Server_Rehost_AsOnPrem_TabName, 11);
 
             UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, CoreReportConstants.WebApp_IaaS_Server_Rehost_AsOnPrem_Columns);
 
@@ -334,7 +334,7 @@ namespace Azure.Migrate.Export.Excel
 
         private void Generate_VM_IaaS_Server_Rehost_Perf_Worksheet()
         {
-            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.VM_IaaS_Server_Rehost_Perf_TabName, 11);
+            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.VM_IaaS_Server_Rehost_Perf_TabName, 12);
 
             UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, CoreReportConstants.VM_IaaS_Server_Rehost_Perf_Columns);
 
@@ -344,7 +344,7 @@ namespace Azure.Migrate.Export.Excel
 
         private void Generate_VM_IaaS_Server_Rehost_AsOnPrem_Worksheet()
         {
-            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.VM_IaaS_Server_Rehost_AsOnPrem_TabName, 12);
+            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.VM_IaaS_Server_Rehost_AsOnPrem_TabName, 13);
 
             UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, CoreReportConstants.VM_IaaS_Server_Rehost_AsOnPrem_Columns);
 
@@ -376,7 +376,7 @@ namespace Azure.Migrate.Export.Excel
 
         private void Generate_SQL_All_Instances_Worksheet()
         {
-            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.SQL_All_Instances_TabName, 13);
+            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.SQL_All_Instances_TabName, 14);
 
             UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, CoreReportConstants.SQL_All_Instances_Columns);
 
@@ -386,7 +386,7 @@ namespace Azure.Migrate.Export.Excel
         
         private void Generate_All_VM_IaaS_Server_Rehost_Perf_Worksheet()
         {
-            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.All_VM_IaaS_Server_Rehost_Perf_TabName, 14);
+            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.All_VM_IaaS_Server_Rehost_Perf_TabName, 15);
 
             UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, CoreReportConstants.All_VM_IaaS_Server_Rehost_Perf_Columns);
 
@@ -396,7 +396,7 @@ namespace Azure.Migrate.Export.Excel
 
         private void Generate_Decommissioned_Machines_Worksheet()
         {
-            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.Decommissioned_Machines_TabName, 15);
+            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.Decommissioned_Machines_TabName, 16);
 
             UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, CoreReportConstants.Decommissioned_Machines_Columns);
 
