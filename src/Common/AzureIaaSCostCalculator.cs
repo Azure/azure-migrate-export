@@ -12,11 +12,19 @@ namespace Azure.Migrate.Export.Common
         private List<SQL_IaaS_Server_Rehost_Perf> SQL_IaaS_Server_Rehost_Perf_List;
         private List<WebApp_IaaS_Server_Rehost_Perf> WebApp_IaaS_Server_Rehost_Perf_List;
         private List<VM_IaaS_Server_Rehost_Perf> VM_IaaS_Server_Rehost_Perf_List;
-        private Dictionary<string, double> SqlIaaSCostMap = new Dictionary<string, double>();
-        private Dictionary<string, double> WebAppIaaSCostMap = new Dictionary<string, double>();
-        private Dictionary<string, double> VMIaaSCostMap = new Dictionary<string, double>();
+        private HashSet<string> sqlUniqueDevMachines;
+        private HashSet<string> sqlUniqueProdMachines;
+        private HashSet<string> managementUniqueProdMachines;
 
         private bool IsCalculated;
+
+        int sqlDevRowCount;
+        int sqlProdRowCount;
+        int webappDevRowCount;
+        int webappProdRowCount;
+        int vmserverDevRowCount;
+        int vmserverProdRowCount;
+        int managementTargetCount;
 
         private double SqlIaaSComputeCost;
         private double SqlIaaSDevComputeCost;
@@ -58,21 +66,38 @@ namespace Azure.Migrate.Export.Common
             SQL_IaaS_Server_Rehost_Perf_List = new List<SQL_IaaS_Server_Rehost_Perf>();
             WebApp_IaaS_Server_Rehost_Perf_List = new List<WebApp_IaaS_Server_Rehost_Perf>();
             VM_IaaS_Server_Rehost_Perf_List = new List<VM_IaaS_Server_Rehost_Perf>();
+            sqlUniqueDevMachines = new HashSet<string>();
+            sqlUniqueProdMachines = new HashSet<string>();
+            managementUniqueProdMachines = new HashSet<string>();
 
             IsCalculated = false;
 
+            sqlDevRowCount = 0;
+            sqlProdRowCount = 0;
+            webappDevRowCount = 0;
+            webappProdRowCount = 0;
+            vmserverDevRowCount = 0;
+            vmserverProdRowCount = 0;
+            managementTargetCount = 0;
+
+            SqlIaaSComputeCost = 0.0;
             SqlIaaSDevComputeCost = 0.0;
             SqlIaaSProdComputeCost = 0.0;
+            WebAppIaaSComputeCost = 0.0;
             WebAppIaaSDevComputeCost = 0.0;
             WebAppIaaSProdComputeCost = 0.0;
+            VmIaaSComputeCost = 0.0;
             VmIaaSDevComputeCost = 0.0;
             VmIaaSProdComputeCost = 0.0;
             TotalIaaSComputeCost = 0.0;
 
+            SqlIaaSStorageCost = 0.0;
             SqlIaaSDevStorageCost = 0.0;
             SqlIaaSProdStorageCost = 0.0;
+            WebAppIaaSStorageCost = 0.0;
             WebAppIaaSDevStorageCost = 0.0;
             WebAppIaaSProdStorageCost = 0.0;
+            VmIaaSStorageCost = 0.0;
             VmIaaSDevStorageCost = 0.0;
             VmIaaSProdStorageCost = 0.0;
             TotalIaaSStorageCost = 0.0;
@@ -89,8 +114,6 @@ namespace Azure.Migrate.Export.Common
 
             BackupComputeCost = 0.0;
             RecoveryComputeCost = 0.0;
-
-
         }
 
         public bool IsCalculationComplete()
@@ -117,18 +140,67 @@ namespace Azure.Migrate.Export.Common
         {
             return TotalIaaSSecurityCost;
         }
-        public Dictionary<string, double> GetSqlIaaSCosts()
+
+        public double GetSqlIaaSDevComputeCost()
         {
-            return SqlIaaSCostMap;
+            return SqlIaaSDevComputeCost;
         }
-        public Dictionary<string, double> GetWebAppIaaSCost()
+
+        public double GetSqlIaaSDevStorageCost()
         {
-            return WebAppIaaSCostMap;
+            return SqlIaaSDevStorageCost;
         }
-        public Dictionary<string, double> GetVMIaaSCost()
+
+        public double GetSqlIaaSProdComputeCost()
         {
-            return VMIaaSCostMap;
+            return SqlIaaSProdComputeCost;
         }
+
+        public double GetSqlIaaSProdStorageCost()
+        {
+            return SqlIaaSProdStorageCost;
+        }
+
+        public double GetWebAppIaaSDevComputeCost()
+        {
+            return WebAppIaaSDevComputeCost;
+        }
+
+        public double GetWebAppIaaSDevStorageCost()
+        {
+            return WebAppIaaSDevStorageCost;
+        }
+
+        public double GetWebAppIaaSProdComputeCost()
+        {
+            return WebAppIaaSProdComputeCost;
+        }
+
+        public double GetWebAppIaaSProdStorageCost()
+        {
+            return WebAppIaaSProdStorageCost;
+        }
+
+        public double GetVmIaaSDevComputeCost()
+        {
+            return VmIaaSDevComputeCost;
+        }
+
+        public double GetVmIaaSDevStorageCost()
+        {
+            return VmIaaSDevStorageCost;
+        }
+
+        public double GetVmIaaSProdComputeCost()
+        {
+            return VmIaaSProdComputeCost;
+        }
+
+        public double GetVmIaaSProdStorageCost()
+        {
+            return VmIaaSProdStorageCost;
+        }
+
         public double GetTotalBackupComputeCost()
         {
             return BackupComputeCost;
@@ -137,6 +209,57 @@ namespace Azure.Migrate.Export.Common
         {
             return RecoveryComputeCost;
         }
+
+        public int GetsqlIaaSDevMachineIdCount()
+        {
+            return sqlUniqueDevMachines.Count;
+        }
+
+        public int GetsqlIaaSProdMachineIdCount()
+        {
+            return sqlUniqueProdMachines.Count;
+        }
+
+        public int GetsqlIaaSDevMachinesCountTarget()
+        {
+            return sqlDevRowCount;
+        }
+
+        public int GetsqlIaaSProdMachinesCountTarget()
+        {
+            return sqlProdRowCount;
+        }
+
+        public int GetwebappIaaSDevMachinesCount()
+        {
+            return webappDevRowCount;
+        }
+
+        public int GetwebappIaaSProdMachinesCount()
+        {
+            return webappProdRowCount;
+        }
+
+        public int GetvmserverIaaSDevMachinesCount()
+        {
+            return vmserverDevRowCount;
+        }
+
+        public int GetvmserverIaaSProdMachinesCount()
+        {
+            return vmserverProdRowCount;
+        }
+
+        public int GetManagementSourceMachinesCount()
+        {
+            return managementUniqueProdMachines.Count;
+        }
+
+        public int GetManagementTargetMachinesCount()
+        {
+            return managementTargetCount;
+        }
+
         public void SetParameters(List<SQL_IaaS_Instance_Rehost_Perf> sql_IaaS_Instance_Rehost_Perf_List,
                                   List<SQL_IaaS_Server_Rehost_Perf> sql_IaaS_Server_Rehost_Perf_List,
                                   List<WebApp_IaaS_Server_Rehost_Perf> webApp_IaaS_Server_Rehost_Perf_List,
@@ -159,6 +282,8 @@ namespace Azure.Migrate.Export.Common
             TotalIaaSSecurityCost = SqlIaaSSecurityCost + WebAppIaaSSecurityCost + VmIaaSSecurityCost;
             TotalIaaSAhubSavings = SqlIaaSAhubSavings + WebAppIaaSAhubSavings + VmIaaSAhubSavings;
 
+            managementTargetCount = vmserverProdRowCount + sqlProdRowCount + webappProdRowCount;
+
             IsCalculated = true;
         }
 
@@ -172,6 +297,11 @@ namespace Azure.Migrate.Export.Common
                     SqlIaaSDevComputeCost += sqlInstance.MonthlyComputeCostEstimate_AHUB_RI3year == 0 ? sqlInstance.MonthlyComputeCostEstimate_AHUB : sqlInstance.MonthlyComputeCostEstimate_AHUB_RI3year;
                     SqlIaaSDevStorageCost += sqlInstance.MonthlyStorageCostEstimate;
                     nonAhubCost += sqlInstance.MonthlyComputeCostEstimate_RI3year == 0 ? sqlInstance.MonthlyComputeCostEstimate : sqlInstance.MonthlyComputeCostEstimate_RI3year;
+
+                    sqlDevRowCount += 1;
+
+                    if (!sqlUniqueDevMachines.Contains(sqlInstance.MachineId))
+                        sqlUniqueDevMachines.Add(sqlInstance.MachineId);
                 }
                 else
                 {
@@ -180,6 +310,14 @@ namespace Azure.Migrate.Export.Common
                     BackupComputeCost += sqlInstance.MonthlyAzureBackupCostEstimate;
                     RecoveryComputeCost += sqlInstance.MonthlyAzureSiteRecoveryCostEstimate;
                     nonAhubCost += sqlInstance.MonthlyComputeCostEstimate_RI3year;
+
+                    sqlProdRowCount += 1;
+
+                    if (!sqlUniqueProdMachines.Contains(sqlInstance.MachineId))
+                        sqlUniqueProdMachines.Add(sqlInstance.MachineId);
+
+                    if (!managementUniqueProdMachines.Contains(sqlInstance.MachineId))
+                        managementUniqueProdMachines.Add(sqlInstance.MachineId);
                 }
                 SqlIaaSSecurityCost += sqlInstance.MonthlySecurityCostEstimate;
             }
@@ -189,9 +327,13 @@ namespace Azure.Migrate.Export.Common
                 if (sqlServer.Environment.Equals("Dev"))
                 {
                     SqlIaaSDevComputeCost += sqlServer.MonthlyComputeCostEstimate_AHUB_RI3year == 0 ? sqlServer.MonthlyComputeCostEstimate_AHUB : sqlServer.MonthlyComputeCostEstimate_AHUB_RI3year;
-                    SqlIaaSDevStorageCost += sqlServer.MonthlyStorageCostEstimate;
-                   
+                    SqlIaaSDevStorageCost += sqlServer.MonthlyStorageCostEstimate;               
                     nonAhubCost += sqlServer.MonthlyComputeCostEstimate_RI3year == 0 ? sqlServer.MonthlyComputeCostEstimate : sqlServer.MonthlyComputeCostEstimate_RI3year;
+
+                    sqlDevRowCount += 1;
+
+                    if (!sqlUniqueDevMachines.Contains(sqlServer.MachineId))
+                        sqlUniqueDevMachines.Add(sqlServer.MachineId);
                 }
                 else
                 {
@@ -200,6 +342,14 @@ namespace Azure.Migrate.Export.Common
                     BackupComputeCost += sqlServer.MonthlyAzureBackupCostEstimate;
                     RecoveryComputeCost += sqlServer.MonthlyAzureSiteRecoveryCostEstimate;
                     nonAhubCost += sqlServer.MonthlyComputeCostEstimate_RI3year;
+
+                    sqlProdRowCount += 1;
+
+                    if (!sqlUniqueProdMachines.Contains(sqlServer.MachineId))
+                        sqlUniqueProdMachines.Add(sqlServer.MachineId);
+
+                    if (!managementUniqueProdMachines.Contains(sqlServer.MachineId))
+                        managementUniqueProdMachines.Add(sqlServer.MachineId);
                 }
 
                 SqlIaaSSecurityCost += sqlServer.MonthlySecurityCostEstimate;
@@ -207,12 +357,6 @@ namespace Azure.Migrate.Export.Common
             SqlIaaSComputeCost = SqlIaaSDevComputeCost + SqlIaaSProdComputeCost;
             SqlIaaSStorageCost = SqlIaaSDevStorageCost + SqlIaaSProdStorageCost;
             SqlIaaSAhubSavings = nonAhubCost - SqlIaaSComputeCost;
-            SqlIaaSCostMap.Add("SqlIaaSDevComputeCost", SqlIaaSDevComputeCost);
-            SqlIaaSCostMap.Add("SqlIaaSDevStorageCost", SqlIaaSDevStorageCost);
-            SqlIaaSCostMap.Add("SqlIaaSProdComputeCost", SqlIaaSProdComputeCost);
-            SqlIaaSCostMap.Add("SqlIaaSProdStorageCost", SqlIaaSProdStorageCost);
-            SqlIaaSCostMap.Add("SqlIaaSProdStorageCost", SqlIaaSProdStorageCost);
-            SqlIaaSCostMap.Add("SqlIaaSProdStorageCost", SqlIaaSProdStorageCost);
 
         }
 
@@ -226,6 +370,8 @@ namespace Azure.Migrate.Export.Common
                     WebAppIaaSDevComputeCost += webappServer.MonthlyComputeCostEstimate_AHUB_RI3year == 0 ? webappServer.MonthlyComputeCostEstimate_AHUB : webappServer.MonthlyComputeCostEstimate_AHUB_RI3year;
                     WebAppIaaSDevStorageCost += webappServer.MonthlyStorageCostEstimate;
                     nonAhubCost += webappServer.MonthlyComputeCostEstimate_RI3year == 0 ? webappServer.MonthlyComputeCostEstimate : webappServer.MonthlyComputeCostEstimate_RI3year;
+
+                    webappDevRowCount += 1;
                 }
                 else
                 {
@@ -234,16 +380,17 @@ namespace Azure.Migrate.Export.Common
                     BackupComputeCost += webappServer.MonthlyAzureBackupCostEstimate;
                     RecoveryComputeCost += webappServer.MonthlyAzureSiteRecoveryCostEstimate;
                     nonAhubCost += webappServer.MonthlyComputeCostEstimate_RI3year;
+
+                    webappProdRowCount += 1;
+
+                    if (!managementUniqueProdMachines.Contains(webappServer.MachineId))
+                        managementUniqueProdMachines.Add(webappServer.MachineId);
                 }
                 WebAppIaaSSecurityCost += webappServer.MonthlySecurityCostEstimate;
             }
             WebAppIaaSComputeCost = WebAppIaaSDevComputeCost + WebAppIaaSProdComputeCost;
             WebAppIaaSStorageCost = WebAppIaaSDevStorageCost + WebAppIaaSProdStorageCost;
             WebAppIaaSAhubSavings = nonAhubCost - WebAppIaaSComputeCost;
-            WebAppIaaSCostMap.Add("WebAppIaaSDevComputeCost", WebAppIaaSDevComputeCost);
-            WebAppIaaSCostMap.Add("WebAppIaaSDevStorageCost", WebAppIaaSDevStorageCost);
-            WebAppIaaSCostMap.Add("WebAppIaaSProdComputeCost", WebAppIaaSProdComputeCost);
-            WebAppIaaSCostMap.Add("WebAppIaaSProdStorageCost", WebAppIaaSProdStorageCost);
         }
 
         private void CalculateVMIaaSCost()
@@ -256,6 +403,8 @@ namespace Azure.Migrate.Export.Common
                     VmIaaSDevComputeCost += vm.MonthlyComputeCostEstimate_AHUB_RI3year == 0 ? vm.MonthlyComputeCostEstimate_AHUB : vm.MonthlyComputeCostEstimate_AHUB_RI3year;
                     VmIaaSDevStorageCost += vm.MonthlyStorageCostEstimate;
                     nonAhubCost += vm.MonthlyComputeCostEstimate_RI3year == 0 ? vm.MonthlyComputeCostEstimate : vm.MonthlyComputeCostEstimate_RI3year;
+
+                    vmserverDevRowCount += 1;
                 }
                 else
                 {
@@ -264,16 +413,17 @@ namespace Azure.Migrate.Export.Common
                     BackupComputeCost += vm.MonthlyAzureBackupCostEstimate;
                     RecoveryComputeCost += vm.MonthlyAzureSiteRecoveryCostEstimate;
                     nonAhubCost += vm.MonthlyComputeCostEstimate_RI3year;
+
+                    vmserverProdRowCount += 1;
+
+                    if (!managementUniqueProdMachines.Contains(vm.MachineId))
+                        managementUniqueProdMachines.Add(vm.MachineId);
                 }
                 VmIaaSSecurityCost += vm.MonthlySecurityCostEstimate; ;
             }
             VmIaaSComputeCost = VmIaaSDevComputeCost + VmIaaSProdComputeCost;
             VmIaaSStorageCost = VmIaaSDevStorageCost + VmIaaSProdStorageCost;
             VmIaaSAhubSavings = nonAhubCost - VmIaaSComputeCost;
-            VMIaaSCostMap.Add("VmIaaSDevComputeCost", VmIaaSDevComputeCost);
-            VMIaaSCostMap.Add("VmIaaSDevStorageCost", VmIaaSDevStorageCost);
-            VMIaaSCostMap.Add("VmIaaSProdComputeCost", VmIaaSProdComputeCost);
-            VMIaaSCostMap.Add("VmIaaSProdStorageCost", VmIaaSProdStorageCost);
         }
     }
 }

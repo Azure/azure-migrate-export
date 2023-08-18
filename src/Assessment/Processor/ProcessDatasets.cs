@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using Azure.Migrate.Export.Common;
 using Azure.Migrate.Export.Excel;
@@ -99,8 +98,8 @@ namespace Azure.Migrate.Export.Assessment.Processor
             List<VM_IaaS_Server_Rehost_Perf> VM_IaaS_Server_Rehost_Perf_List = new List<VM_IaaS_Server_Rehost_Perf>();
             List<VM_IaaS_Server_Rehost_AsOnPrem> VM_IaaS_Server_Rehost_AsOnPrem_List = new List<VM_IaaS_Server_Rehost_AsOnPrem>();
             Business_Case Business_Case_Data = new Business_Case();
+            List<Financial_Summary> Financial_Summary_List = new List<Financial_Summary>();
             Cash_Flows Cash_Flows_Data = new Cash_Flows();
-            List<Financial_Summary> Financial_Summary_Data_List = new List<Financial_Summary>();
             List<Decommissioned_Machines> Decommissioned_Machines_List = new List<Decommissioned_Machines>();
 
             // Opportunity report models
@@ -142,10 +141,10 @@ namespace Azure.Migrate.Export.Assessment.Processor
             Process_Business_Case_Model(Business_Case_Data, SQL_MI_PaaS_List, SQL_IaaS_Instance_Rehost_Perf_List, SQL_IaaS_Server_Rehost_Perf_List,
                                         WebApp_PaaS_List, WebApp_IaaS_Server_Rehost_Perf_List,
                                         VM_IaaS_Server_Rehost_Perf_List);
-            Process_Cash_Flows_Model(Cash_Flows_Data);
-            Process_Financial_Summary_Model(Financial_Summary_Data_List, SQL_MI_PaaS_List, SQL_IaaS_Instance_Rehost_Perf_List, SQL_IaaS_Server_Rehost_Perf_List,
+            Process_Financial_Summary_Model(Financial_Summary_List, SQL_MI_PaaS_List, SQL_IaaS_Instance_Rehost_Perf_List, SQL_IaaS_Server_Rehost_Perf_List,
                                         WebApp_PaaS_List, WebApp_IaaS_Server_Rehost_Perf_List,
                                         VM_IaaS_Server_Rehost_Perf_List);
+            Process_Cash_Flows_Model(Cash_Flows_Data);
             Process_Decommissioned_Machines_Model(Decommissioned_Machines_List);
 
             // Opportunity report tabs
@@ -242,8 +241,8 @@ namespace Azure.Migrate.Export.Assessment.Processor
                     VM_IaaS_Server_Rehost_Perf_List,
                     VM_IaaS_Server_Rehost_AsOnPrem_List,
                     Business_Case_Data,
+                    Financial_Summary_List,
                     Cash_Flows_Data,
-                    Financial_Summary_Data_List,
                     Decommissioned_Machines_List
                 );
             exportCoreReportObj.GenerateCoreReportExcel();
@@ -1249,277 +1248,6 @@ namespace Azure.Migrate.Export.Assessment.Processor
             }
         }
 
-        private WebApp_PaaS_FS DetailsWebApp_PaaS(List<WebApp_PaaS> WebApp_PaaS_List)
-        {
-            WebApp_PaaS_FS WebApp_PaaSObj = new WebApp_PaaS_FS();
-            Dictionary<string, int> EnvironmentToUniqueIdMap = new Dictionary<string, int>();
-            Dictionary<string, int> PlanToAppCountMap = new Dictionary<string, int>();
-            HashSet<string> devMachines = new HashSet<string>();
-            HashSet<string> prodMachines = new HashSet<string>();
-
-            foreach (var webApp in WebApp_PaaS_List)
-            {
-                if (webApp.Environment.Equals("Dev"))
-                {
-                    if (!devMachines.Contains(webApp.MachineId))
-                        devMachines.Add(webApp.MachineId); 
-                }
-                else if (webApp.Environment.Equals("Prod"))
-                {
-                    if (!prodMachines.Contains(webApp.MachineId))
-                        prodMachines.Add(webApp.MachineId); 
-                }
-
-                EnvironmentToUniqueIdMap.Add("Dev", devMachines.Count);
-                EnvironmentToUniqueIdMap.Add("Prod", prodMachines.Count);
-            }
-            Dictionary<string, int> PlanToTargetCountMap = GetPlanToAppCountMap(WebApp_PaaS_List);
-
-            int devCount = PlanToTargetCountMap.Keys.Count(key => key.StartsWith("Dev_"));
-            int prodCount = PlanToTargetCountMap.Keys.Count(key => key.StartsWith("Prod_"));
-            PlanToAppCountMap.Add("Dev", devCount);
-            PlanToAppCountMap.Add("Prod", prodCount);
-
-            WebApp_PaaSObj.EnvironmentToUniqueIdMap = EnvironmentToUniqueIdMap;
-            WebApp_PaaSObj.PlanToAppCountMap = PlanToAppCountMap;
-            return WebApp_PaaSObj;
-        }
-
-        private SQL_MI_PaaS_FS DetailsSQLMI_PaaS(List<SQL_MI_PaaS> SQL_MI_PaaS_List)
-        {
-            SQL_MI_PaaS_FS SQL_MI_PaaSMachineObj = new SQL_MI_PaaS_FS();
-            Dictionary<string, int> EnvironmentCountDictionary = new Dictionary<string, int>();
-            Dictionary<string, HashSet<string>> EnvironmentToUniqueIdMap = new Dictionary<string, HashSet<string>>();
-            EnvironmentToUniqueIdMap["Dev"] = new HashSet<string>();
-            EnvironmentToUniqueIdMap["Prod"] = new HashSet<string>();
-
-            foreach (var sqlinstance in SQL_MI_PaaS_List)
-            {
-                if (sqlinstance.Environment.Equals("Dev"))
-                {
-                    if (!EnvironmentCountDictionary.ContainsKey("Dev"))
-                    {
-                        EnvironmentCountDictionary.Add("Dev", 0);
-                    }
-                    if (!EnvironmentToUniqueIdMap["Dev"].Contains(sqlinstance.MachineId))
-                        EnvironmentToUniqueIdMap["Dev"].Add(sqlinstance.MachineId);
-                }
-                else
-                {
-                    if (!EnvironmentCountDictionary.ContainsKey("Prod"))
-                    {
-                        EnvironmentCountDictionary.Add("Prod", 0);
-                    }
-                    if (!EnvironmentToUniqueIdMap["Prod"].Contains(sqlinstance.MachineId))
-                        EnvironmentToUniqueIdMap["Prod"].Add(sqlinstance.MachineId);
-                }
-                EnvironmentCountDictionary[sqlinstance.Environment] = +1;
-            }
-
-            SQL_MI_PaaSMachineObj.DevMachinesCountTarget = EnvironmentCountDictionary["Dev"];
-            SQL_MI_PaaSMachineObj.ProdMachinesCountTarget = EnvironmentCountDictionary["Prod"];
-            SQL_MI_PaaSMachineObj.DevUniqueMachinesSource = EnvironmentToUniqueIdMap["Dev"].Count;
-            SQL_MI_PaaSMachineObj.ProdUniqueMachinesSource = EnvironmentToUniqueIdMap["Prod"].Count;
-            return SQL_MI_PaaSMachineObj;
-        }
-
-        private WebApp_IaaS_FS DetailsWebapp_IaaS(List<WebApp_IaaS_Server_Rehost_Perf> WebApp_IaaS_Server_Rehost_Perf_List)
-        {
-            WebApp_IaaS_FS WebappIaaSMachineObj = new WebApp_IaaS_FS();
-            Dictionary<string, int> EnvironmentCountDictionary = new Dictionary<string, int>();
-            Dictionary<string, HashSet<string>> EnvironmentToUniqueIdMap = new Dictionary<string, HashSet<string>>();
-            EnvironmentToUniqueIdMap["Dev"] = new HashSet<string>();
-            EnvironmentToUniqueIdMap["Prod"] = new HashSet<string>();
-
-            foreach (var webapp in WebApp_IaaS_Server_Rehost_Perf_List)
-            {
-                if (webapp.Environment.Equals("Dev"))
-                {
-                    if (!EnvironmentCountDictionary.ContainsKey("Dev"))
-                    {
-                        EnvironmentCountDictionary.Add("Dev", 0);
-                    }
-                    if (!EnvironmentToUniqueIdMap["Dev"].Contains(webapp.MachineId))
-                        EnvironmentToUniqueIdMap["Dev"].Add(webapp.MachineId);
-                }
-                else
-                {
-                    if (!EnvironmentCountDictionary.ContainsKey("Prod"))
-                    {
-                        EnvironmentCountDictionary.Add("Prod", 0);
-                    }
-                    if (!EnvironmentToUniqueIdMap["Prod"].Contains(webapp.MachineId))
-                        EnvironmentToUniqueIdMap["Prod"].Add(webapp.MachineId);
-                }
-                EnvironmentCountDictionary[webapp.Environment] = +1;
-            }
-
-            WebappIaaSMachineObj.DevMachinesCountTarget = EnvironmentCountDictionary["Dev"];
-            WebappIaaSMachineObj.ProdMachinesCountTarget = EnvironmentCountDictionary["Prod"];
-            WebappIaaSMachineObj.DevUniqueMachinesSource = EnvironmentToUniqueIdMap["Dev"].Count;
-            WebappIaaSMachineObj.ProdUniqueMachinesSource = EnvironmentToUniqueIdMap["Prod"].Count;
-            WebappIaaSMachineObj.EnvironmentToUniqueIdMap = EnvironmentToUniqueIdMap;
-            WebappIaaSMachineObj.EnvironmentCountDictionary = EnvironmentCountDictionary;
-            return WebappIaaSMachineObj;
-        }
-
-        private SQL_IaaS_FS DetailsSQL_IaaS(List<SQL_IaaS_Server_Rehost_Perf> SQL_IaaS_Server_Rehost_Perf_List, List<SQL_IaaS_Instance_Rehost_Perf> SQL_IaaS_Instance_Rehost_Perf_List)
-        {
-            SQL_IaaS_FS SQLIaaSObj = new SQL_IaaS_FS();
-            Dictionary<string, int> EnvironmentCountDictionary = new Dictionary<string, int>();
-            Dictionary<string, HashSet<string>> EnvironmentToUniqueIdMap = new Dictionary<string, HashSet<string>>();
-            EnvironmentToUniqueIdMap["Dev"] = new HashSet<string>();
-            EnvironmentToUniqueIdMap["Prod"] = new HashSet<string>();
-
-            foreach (var sqlinstance in SQL_IaaS_Server_Rehost_Perf_List)
-            {
-                if (sqlinstance.Environment.Equals("Dev"))
-                {
-                    if (!EnvironmentCountDictionary.ContainsKey("Dev"))
-                    {
-                        EnvironmentCountDictionary.Add("Dev", 0);
-                    }
-                    if (!EnvironmentToUniqueIdMap["Dev"].Contains(sqlinstance.MachineId))
-                        EnvironmentToUniqueIdMap["Dev"].Add(sqlinstance.MachineId);
-                }
-                else
-                {
-                    if (!EnvironmentCountDictionary.ContainsKey("Prod"))
-                    {
-                        EnvironmentCountDictionary.Add("Prod", 0);
-                    }
-                    if (!EnvironmentToUniqueIdMap["Prod"].Contains(sqlinstance.MachineId))
-                        EnvironmentToUniqueIdMap["Prod"].Add(sqlinstance.MachineId);
-                }
-                EnvironmentCountDictionary[sqlinstance.Environment] = +1;
-            }
-
-            foreach (var sqlinstance in SQL_IaaS_Instance_Rehost_Perf_List)
-            {
-                if (sqlinstance.Environment.Equals("Dev"))
-                {
-                    if (!EnvironmentCountDictionary.ContainsKey("Dev"))
-                    {
-                        EnvironmentCountDictionary.Add("Dev", 0);
-                    }
-                    if (!EnvironmentToUniqueIdMap["Dev"].Contains(sqlinstance.MachineId))
-                        EnvironmentToUniqueIdMap["Dev"].Add(sqlinstance.MachineId);
-                }
-                else
-                {
-                    if (!EnvironmentCountDictionary.ContainsKey("Prod"))
-                    {
-                        EnvironmentCountDictionary.Add("Prod", 0);
-                    }
-                    if (!EnvironmentToUniqueIdMap["Prod"].Contains(sqlinstance.MachineId))
-                        EnvironmentToUniqueIdMap["Prod"].Add(sqlinstance.MachineId);
-                }
-                EnvironmentCountDictionary[sqlinstance.Environment] = +1;
-            }
-
-            SQLIaaSObj.DevMachinesCountTarget = EnvironmentCountDictionary["Dev"];
-            SQLIaaSObj.ProdMachinesCountTarget = EnvironmentCountDictionary["Prod"];
-            SQLIaaSObj.DevUniqueMachinesSource = EnvironmentToUniqueIdMap["Dev"].Count;
-            SQLIaaSObj.ProdUniqueMachinesSource = EnvironmentToUniqueIdMap["Prod"].Count;
-            SQLIaaSObj.EnvironmentToUniqueIdMap = EnvironmentToUniqueIdMap;
-            SQLIaaSObj.EnvironmentCountDictionary = EnvironmentCountDictionary;
-            return SQLIaaSObj;
-        }
-
-        private VMServer_IaaS_FS DetailsVMServer_IaaS(List<VM_IaaS_Server_Rehost_Perf> VM_IaaS_Server_Rehost_Perf_List)
-        {
-            VMServer_IaaS_FS VMServer_IaaS_FSObj = new VMServer_IaaS_FS();
-            Dictionary<string, int> EnvironmentCountDictionary = new Dictionary<string, int>();
-            Dictionary<string, HashSet<string>> EnvironmentToUniqueIdMap = new Dictionary<string, HashSet<string>>();
-            EnvironmentToUniqueIdMap["Dev"] = new HashSet<string>();
-            EnvironmentToUniqueIdMap["Prod"] = new HashSet<string>();
-
-            foreach (var machine in VM_IaaS_Server_Rehost_Perf_List)
-            {
-                if (machine.Environment.Equals("Dev"))
-                {
-                    if (!EnvironmentCountDictionary.ContainsKey("Dev"))
-                    {
-                        EnvironmentCountDictionary.Add("Dev", 0);
-                    }
-                    if (!EnvironmentToUniqueIdMap["Dev"].Contains(machine.MachineId))
-                        EnvironmentToUniqueIdMap["Dev"].Add(machine.MachineId);
-                }
-                else
-                {
-                    if (!EnvironmentCountDictionary.ContainsKey("Prod"))
-                    {
-                        EnvironmentCountDictionary.Add("Prod", 0);
-                    }
-                    if (!EnvironmentToUniqueIdMap["Prod"].Contains(machine.MachineId))
-                        EnvironmentToUniqueIdMap["Prod"].Add(machine.MachineId);
-                }
-                EnvironmentCountDictionary[machine.Environment] = +1;
-            }
-
-            VMServer_IaaS_FSObj.DevMachinesCountTarget = EnvironmentCountDictionary["Dev"];
-            VMServer_IaaS_FSObj.ProdMachinesCountTarget = EnvironmentCountDictionary["Prod"];
-            VMServer_IaaS_FSObj.DevUniqueMachinesSource = EnvironmentToUniqueIdMap["Dev"].Count;
-            VMServer_IaaS_FSObj.ProdUniqueMachinesSource = EnvironmentToUniqueIdMap["Prod"].Count;
-            VMServer_IaaS_FSObj.EnvironmentToUniqueIdMap = EnvironmentToUniqueIdMap;
-            VMServer_IaaS_FSObj.EnvironmentCountDictionary = EnvironmentCountDictionary;
-            return VMServer_IaaS_FSObj;
-        }
-
-        private Management_FS DetailsManagement_IaaS(List<VM_IaaS_Server_Rehost_Perf> VM_IaaS_Server_Rehost_Perf_List, List<SQL_IaaS_Server_Rehost_Perf> SQL_IaaS_Server_Rehost_Perf_List, 
-                                                    List<SQL_IaaS_Instance_Rehost_Perf> SQL_IaaS_Instance_Rehost_Perf, List<WebApp_IaaS_Server_Rehost_Perf> WebApp_IaaS_Server_Rehost_Perf_List)
-        {
-            Management_FS ManagementObj = new Management_FS();
-            Dictionary<string, int> EnvironmentCountDictionary = new Dictionary<string, int>();
-            Dictionary<string, HashSet<string>> EnvironmentToUniqueIdMap = new Dictionary<string, HashSet<string>>();
-            EnvironmentToUniqueIdMap["Prod"] = new HashSet<string>();
-            Dictionary<string, HashSet<string>> VMServer_IaaSEnvironmentToUniqueIdMap = DetailsVMServer_IaaS(VM_IaaS_Server_Rehost_Perf_List).EnvironmentToUniqueIdMap;
-            Dictionary<string, HashSet<string>> SQL_IaaSEnvironmentToUniqueIdMap = DetailsSQL_IaaS(SQL_IaaS_Server_Rehost_Perf_List, SQL_IaaS_Instance_Rehost_Perf).EnvironmentToUniqueIdMap;
-            Dictionary<string, HashSet<string>> Webapp_IaaSEnvironmentToUniqueIdMap = DetailsWebapp_IaaS(WebApp_IaaS_Server_Rehost_Perf_List).EnvironmentToUniqueIdMap;
-            Dictionary<string, int> VMServerEnvironmentCountDictionary = DetailsVMServer_IaaS(VM_IaaS_Server_Rehost_Perf_List).EnvironmentCountDictionary;
-            Dictionary<string, int> SQL_IaaSEnvironmentCountDictionary = DetailsSQL_IaaS(SQL_IaaS_Server_Rehost_Perf_List, SQL_IaaS_Instance_Rehost_Perf).EnvironmentCountDictionary;
-            Dictionary<string, int> Webapp_IaaSEnvironmentCountDictionary = DetailsWebapp_IaaS(WebApp_IaaS_Server_Rehost_Perf_List).EnvironmentCountDictionary;
-
-            foreach (var kvp in VMServer_IaaSEnvironmentToUniqueIdMap)
-            {
-                if (kvp.Key.Equals("Prod"))
-                {
-                    foreach ( var item in VMServer_IaaSEnvironmentToUniqueIdMap["Prod"])
-                    {
-                        if (!EnvironmentToUniqueIdMap["Prod"].Contains(item))
-                            EnvironmentToUniqueIdMap["Prod"].Add(item);
-                    }
-                }
-            }
-
-            foreach (var kvp in SQL_IaaSEnvironmentToUniqueIdMap)
-            {
-                if (kvp.Key.Equals("Prod"))
-                {
-                    foreach (var item in SQL_IaaSEnvironmentToUniqueIdMap["Prod"])
-                    {
-                        if (!EnvironmentToUniqueIdMap["Prod"].Contains(item))
-                            EnvironmentToUniqueIdMap["Prod"].Add(item);
-                    }
-                }
-            }
-
-            foreach (var kvp in Webapp_IaaSEnvironmentToUniqueIdMap)
-            {
-                if (kvp.Key.Equals("Prod"))
-                {
-                    foreach (var item in Webapp_IaaSEnvironmentToUniqueIdMap["Prod"])
-                    {
-                        if (!EnvironmentToUniqueIdMap["Prod"].Contains(item))
-                            EnvironmentToUniqueIdMap["Prod"].Add(item);
-                    }
-                }
-            }
-
-            ManagementObj.SourceCount = EnvironmentToUniqueIdMap.Count;
-            ManagementObj.TargetCount = VMServerEnvironmentCountDictionary["Prod"] + SQL_IaaSEnvironmentCountDictionary["Prod"] + Webapp_IaaSEnvironmentCountDictionary["Prod"];
-            return ManagementObj;
-        }
         private Dictionary<string, int> GetPlanNameToDivisionFactorMap(List<WebApp_PaaS> WebApp_PaaS_List)
         {
             Dictionary<string, int> EnvironmentToPlanCountMap = GetEnvironmentToPlanCountMap(WebApp_PaaS_List);
@@ -2523,7 +2251,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             UserInputObj.LoggerObj.LogInformation("Updated Business_Case excel model");
         }
 
-        private void Process_Financial_Summary_Model(List<Financial_Summary> Financial_Summary_Data_List, List<SQL_MI_PaaS> SQL_MI_PaaS_List, List<SQL_IaaS_Instance_Rehost_Perf> SQL_IaaS_Instance_Rehost_Perf_List, List<SQL_IaaS_Server_Rehost_Perf> SQL_IaaS_Server_Rehost_Perf_List,
+        private void Process_Financial_Summary_Model(List<Financial_Summary> Financial_Summary_List, List<SQL_MI_PaaS> SQL_MI_PaaS_List, List<SQL_IaaS_Instance_Rehost_Perf> SQL_IaaS_Instance_Rehost_Perf_List, List<SQL_IaaS_Server_Rehost_Perf> SQL_IaaS_Server_Rehost_Perf_List,
                                           List<WebApp_PaaS> WebApp_PaaS_List, List<WebApp_IaaS_Server_Rehost_Perf> WebApp_IaaS_Server_Rehost_Perf_List,
                                           List<VM_IaaS_Server_Rehost_Perf> VM_IaaS_Server_Rehost_Perf_List)
         {
@@ -2540,165 +2268,133 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 AzureIaaSCalculator.Calculate();
             }
 
-            WebApp_PaaS_FS PaaSWebappMachineCount = DetailsWebApp_PaaS(WebApp_PaaS_List);
-            SQL_MI_PaaS_FS PaaSSQLMIMachineCount = DetailsSQLMI_PaaS(SQL_MI_PaaS_List);
-            WebApp_IaaS_FS IaaSWebappMachineCount = DetailsWebapp_IaaS(WebApp_IaaS_Server_Rehost_Perf_List);
-            VMServer_IaaS_FS IaaSServerMachineCount = DetailsVMServer_IaaS(VM_IaaS_Server_Rehost_Perf_List);
-            SQL_IaaS_FS IaaSSQLMachineCount = DetailsSQL_IaaS(SQL_IaaS_Server_Rehost_Perf_List, SQL_IaaS_Instance_Rehost_Perf_List);
-            Management_FS ManagementMachineCount = DetailsManagement_IaaS(VM_IaaS_Server_Rehost_Perf_List, SQL_IaaS_Server_Rehost_Perf_List, SQL_IaaS_Instance_Rehost_Perf_List, WebApp_IaaS_Server_Rehost_Perf_List);
-            Dictionary<string, double> WebAppPaaSCostMap = AzurePaaSCalculator.GetWebAppPaaSCosts();
-            Dictionary<string, double> SQLMIPaaSCostMap = AzurePaaSCalculator.GetSqlPaaSCosts();
-            Dictionary<string, double> WebAppIaaSCostMap = AzureIaaSCalculator.GetWebAppIaaSCost();
-            Dictionary<string, double> ServerIaaSCostMap = AzureIaaSCalculator.GetVMIaaSCost();
-            Dictionary<string, double> SQLIaaSCostMap = AzureIaaSCalculator.GetSqlIaaSCosts();
-          
-            Financial_Summary PaaSWebAppDev = new Financial_Summary
-            {
-                MigrationStrategy= "Modernize/Re-Platform(PaaS)",
-                Workload= "ASP.NET WebApps on IIS - Dev/Test",
-                SourceCount = PaaSWebappMachineCount.EnvironmentToUniqueIdMap["Dev"],
-                TargetCount = PaaSWebappMachineCount.PlanToAppCountMap["Dev"],
-                StorageCost = WebAppPaaSCostMap["WebAppPaaSStorageCost"] * 12.0,
-                ComputeCost = WebAppPaaSCostMap["WebAppPaaSDevComputeCost"] * 12.0,
-                TotalAnnualCost = (WebAppPaaSCostMap["WebAppPaaSStorageCost"] + WebAppPaaSCostMap["WebAppPaaSDevComputeCost"]) * 12.0
+            Financial_Summary PaaSWebAppDev = new Financial_Summary();
+            PaaSWebAppDev.MigrationStrategy = "Modernize/Re-Platform(PaaS)";
+            PaaSWebAppDev.Workload = "ASP.NET WebApps on IIS - Dev/Test";
+            PaaSWebAppDev.SourceCount = AzurePaaSCalculator.GetWebAppPaaSDevMachineIdCount();
+            if (GetEnvironmentToPlanCountMap(WebApp_PaaS_List).ContainsKey("Dev")) 
+                PaaSWebAppDev.TargetCount = GetEnvironmentToPlanCountMap(WebApp_PaaS_List)["Dev"];
+            else 
+                PaaSWebAppDev.TargetCount = 0;
+            PaaSWebAppDev.StorageCost = AzurePaaSCalculator.GetWebAppPaaSStorageCost() * 12.0;
+            PaaSWebAppDev.ComputeCost = AzurePaaSCalculator.GetWebAppPaaSDevComputeCost() * 12.0;
+            PaaSWebAppDev.TotalAnnualCost = (AzurePaaSCalculator.GetWebAppPaaSStorageCost() + AzurePaaSCalculator.GetWebAppPaaSDevComputeCost()) * 12.0;
+            Financial_Summary_List.Add(PaaSWebAppDev);
 
-            };
-            Financial_Summary_Data_List.Add(PaaSWebAppDev);
+            Financial_Summary PaaSWebAppProd = new Financial_Summary();
+            PaaSWebAppProd.MigrationStrategy = "Modernize/Re-Platform(PaaS)";
+            PaaSWebAppProd.Workload = "ASP.NET WebApps on IIS - Prod";
+            PaaSWebAppProd.SourceCount = AzurePaaSCalculator.GetWebAppPaaSProdMachineIdCount();
+            if (GetEnvironmentToPlanCountMap(WebApp_PaaS_List).ContainsKey("Prod")) 
+                PaaSWebAppProd.TargetCount = GetEnvironmentToPlanCountMap(WebApp_PaaS_List)["Prod"];
+            else 
+                PaaSWebAppProd.TargetCount = 0;
+            PaaSWebAppProd.StorageCost = AzurePaaSCalculator.GetWebAppPaaSStorageCost() * 12.0;
+            PaaSWebAppProd.ComputeCost = AzurePaaSCalculator.GetWebAppPaaSProdComputeCost() * 12.0;
+            PaaSWebAppProd.TotalAnnualCost = (AzurePaaSCalculator.GetWebAppPaaSStorageCost() + AzurePaaSCalculator.GetWebAppPaaSProdComputeCost()) * 12.0;
+            Financial_Summary_List.Add(PaaSWebAppProd);
 
-            Financial_Summary PaaSWebAppProd = new Financial_Summary
-            {
-                MigrationStrategy = "Modernize/Re-Platform(PaaS)",
-                Workload = "ASP.NET WebApps on IIS - Prod",
-                SourceCount = PaaSWebappMachineCount.EnvironmentToUniqueIdMap["Prod"],
-                TargetCount = PaaSWebappMachineCount.PlanToAppCountMap["Prod"],
-                StorageCost = WebAppPaaSCostMap["WebAppPaaSStorageCost"] * 12.0,
-                ComputeCost = WebAppPaaSCostMap["WebAppPaaSProdComputeCost"] * 12.0,
-                TotalAnnualCost = (WebAppPaaSCostMap["WebAppPaaSStorageCost"] + WebAppPaaSCostMap["WebAppPaaSProdComputeCost"]) * 12.0
+            Financial_Summary PaaSSQLDev = new Financial_Summary();
+            PaaSSQLDev.MigrationStrategy = "Modernize/Re-Platform(PaaS)";
+            PaaSSQLDev.Workload = "SQL Server Database Engine - Dev/Test";
+            PaaSSQLDev.SourceCount = AzurePaaSCalculator.GetsqlPaaSDevMachineIdCount();
+            PaaSSQLDev.TargetCount = AzurePaaSCalculator.GetsqlPaaSDevMachinesCountTarget();
+            PaaSSQLDev.StorageCost = AzurePaaSCalculator.GetSqlPaaSDevStorageCost() * 12.0;
+            PaaSSQLDev.ComputeCost = AzurePaaSCalculator.GetSqlPaaSDevComputeCost() * 12.0;
+            PaaSSQLDev.TotalAnnualCost = (AzurePaaSCalculator.GetSqlPaaSDevStorageCost() + AzurePaaSCalculator.GetSqlPaaSDevComputeCost()) * 12.0;
+            Financial_Summary_List.Add(PaaSSQLDev);
 
-            };
-            Financial_Summary_Data_List.Add(PaaSWebAppProd);
+            Financial_Summary PaaSSQLProd = new Financial_Summary();
+            PaaSSQLProd.MigrationStrategy = "Modernize/Re-Platform(PaaS)";
+            PaaSSQLProd.Workload = "SQL Server Database Engine - Prod";
+            PaaSSQLProd.SourceCount = AzurePaaSCalculator.GetsqlPaaSProdMachineIdCount();
+            PaaSSQLProd.TargetCount = AzurePaaSCalculator.GetsqlPaaSProdMachinesCountTarget();
+            PaaSSQLProd.StorageCost = AzurePaaSCalculator.GetSqlPaaSProdStorageCost() * 12.0;
+            PaaSSQLProd.ComputeCost = AzurePaaSCalculator.GetSqlPaaSProdComputeCost() * 12.0;
+            PaaSSQLProd.TotalAnnualCost = (AzurePaaSCalculator.GetSqlPaaSProdStorageCost() + AzurePaaSCalculator.GetSqlPaaSProdComputeCost()) * 12.0;
+            Financial_Summary_List.Add(PaaSSQLProd);
 
-            Financial_Summary PaaSSQLDev = new Financial_Summary
-            {
-                MigrationStrategy = "Modernize/Re-Platform(PaaS)",
-                Workload = "SQL Server Database Engine - Dev/Test",
-                SourceCount = PaaSSQLMIMachineCount.DevUniqueMachinesSource,
-                TargetCount = PaaSSQLMIMachineCount.DevMachinesCountTarget,
-                StorageCost = SQLMIPaaSCostMap["SqlPaaSDevStorageCost"] * 12.0,
-                ComputeCost = SQLMIPaaSCostMap["SqlPaaSDevComputeCost"] * 12.0,
-                TotalAnnualCost = (SQLMIPaaSCostMap["SqlPaaSDevStorageCost"] + SQLMIPaaSCostMap["SqlPaaSDevComputeCost"]) * 12.0
-            };
-            Financial_Summary_Data_List.Add(PaaSSQLDev);
+            Financial_Summary IaaSWebAppDev = new Financial_Summary();
+            IaaSWebAppDev.MigrationStrategy = "Migrate/Rehost to Azure (IaaS)";
+            IaaSWebAppDev.Workload = "ASP.NET WebApps on IIS - Dev/Test";
+            IaaSWebAppDev.SourceCount = AzureIaaSCalculator.GetwebappIaaSDevMachinesCount();
+            IaaSWebAppDev.TargetCount = AzureIaaSCalculator.GetwebappIaaSDevMachinesCount();
+            IaaSWebAppDev.StorageCost = AzureIaaSCalculator.GetWebAppIaaSDevStorageCost() * 12.0;
+            IaaSWebAppDev.ComputeCost = AzureIaaSCalculator.GetWebAppIaaSDevComputeCost() * 12.0;
+            IaaSWebAppDev.TotalAnnualCost = (AzureIaaSCalculator.GetWebAppIaaSDevStorageCost() + AzureIaaSCalculator.GetWebAppIaaSDevComputeCost()) * 12.0;
+            Financial_Summary_List.Add(IaaSWebAppDev);
 
-            Financial_Summary PaaSSQLProd = new Financial_Summary
-            {
-                MigrationStrategy = "Modernize/Re-Platform(PaaS)",
-                Workload = "SQL Server Database Engine - Prod",
-                SourceCount = PaaSSQLMIMachineCount.ProdUniqueMachinesSource,
-                TargetCount = PaaSSQLMIMachineCount.ProdMachinesCountTarget,
-                StorageCost = SQLMIPaaSCostMap["SqlPaaSProdStorageCost"] * 12.0,
-                ComputeCost = SQLMIPaaSCostMap["SqlPaaSProdComputeCost"] * 12.0,
-                TotalAnnualCost = (SQLMIPaaSCostMap["SqlPaaSProdStorageCost"] + SQLMIPaaSCostMap["SqlPaaSProdComputeCost"]) * 12.0
-            };
-            Financial_Summary_Data_List.Add(PaaSSQLProd);
+            Financial_Summary IaaSWebAppProd = new Financial_Summary();
+            IaaSWebAppProd.MigrationStrategy = "Migrate/Rehost to Azure (IaaS)";
+            IaaSWebAppProd.Workload = "ASP.NET WebApps on IIS - Prod";
+            IaaSWebAppProd.SourceCount = AzureIaaSCalculator.GetwebappIaaSProdMachinesCount();
+            IaaSWebAppProd.TargetCount = AzureIaaSCalculator.GetwebappIaaSProdMachinesCount();
+            IaaSWebAppProd.StorageCost = AzureIaaSCalculator.GetWebAppIaaSProdStorageCost() * 12.0;
+            IaaSWebAppProd.ComputeCost = AzureIaaSCalculator.GetWebAppIaaSProdComputeCost() * 12.0;
+            IaaSWebAppProd.TotalAnnualCost = (AzureIaaSCalculator.GetWebAppIaaSProdStorageCost() + AzureIaaSCalculator.GetWebAppIaaSProdComputeCost()) * 12.0;
+            Financial_Summary_List.Add(IaaSWebAppProd);
 
-            Financial_Summary IaaSWebAppDev = new Financial_Summary
-            {
-                MigrationStrategy = "Migrate/Rehost to Azure (IaaS)",
-                Workload = "ASP.NET WebApps on IIS - Dev/Test",
-                SourceCount = IaaSWebappMachineCount.DevUniqueMachinesSource,
-                TargetCount = IaaSWebappMachineCount.DevMachinesCountTarget,
-                StorageCost = WebAppIaaSCostMap["WebAppIaaSDevStorageCost"] * 12.0,
-                ComputeCost = WebAppIaaSCostMap["WebAppIaaSDevComputeCost"] * 12.0,
-                TotalAnnualCost = (WebAppIaaSCostMap["WebAppIaaSDevStorageCost"] + WebAppIaaSCostMap["WebAppIaaSDevComputeCost"]) * 12.0
-            };
-            Financial_Summary_Data_List.Add(IaaSWebAppDev);
+            Financial_Summary IaaSServerDev = new Financial_Summary();
+            IaaSServerDev.MigrationStrategy = "Migrate/Rehost to Azure (IaaS)";
+            IaaSServerDev.Workload = "Servers - Dev/Test";
+            IaaSServerDev.SourceCount = AzureIaaSCalculator.GetvmserverIaaSDevMachinesCount();
+            IaaSServerDev.TargetCount = AzureIaaSCalculator.GetvmserverIaaSDevMachinesCount();
+            IaaSServerDev.StorageCost = AzureIaaSCalculator.GetVmIaaSDevStorageCost() * 12.0;
+            IaaSServerDev.ComputeCost = AzureIaaSCalculator.GetVmIaaSDevComputeCost() * 12.0;
+            IaaSServerDev.TotalAnnualCost = (AzureIaaSCalculator.GetVmIaaSDevStorageCost() + AzureIaaSCalculator.GetVmIaaSDevComputeCost()) * 12.0;
+            Financial_Summary_List.Add(IaaSServerDev);
 
-            Financial_Summary IaaSWebAppProd = new Financial_Summary
-            {
-                MigrationStrategy = "Migrate/Rehost to Azure (IaaS)",
-                Workload = "ASP.NET WebApps on IIS - Prod",
-                SourceCount = IaaSWebappMachineCount.ProdUniqueMachinesSource,
-                TargetCount = IaaSWebappMachineCount.ProdMachinesCountTarget,
-                StorageCost = WebAppIaaSCostMap["WebAppIaaSProdStorageCost"] * 12.0,
-                ComputeCost = WebAppIaaSCostMap["WebAppIaaSProdComputeCost"] * 12.0,
-                TotalAnnualCost = (WebAppIaaSCostMap["WebAppIaaSProdStorageCost"] + WebAppIaaSCostMap["WebAppIaaSProdComputeCost"]) * 12.0
-            };
-            Financial_Summary_Data_List.Add(IaaSWebAppProd);
+            Financial_Summary IaaSServerProd = new Financial_Summary();
+            IaaSServerProd.MigrationStrategy = "Migrate/Rehost to Azure (IaaS)";
+            IaaSServerProd.Workload = "Servers - Prod";
+            IaaSServerProd.SourceCount = AzureIaaSCalculator.GetvmserverIaaSProdMachinesCount();
+            IaaSServerProd.TargetCount = AzureIaaSCalculator.GetvmserverIaaSProdMachinesCount();
+            IaaSServerProd.StorageCost = AzureIaaSCalculator.GetVmIaaSProdStorageCost() * 12.0;
+            IaaSServerProd.ComputeCost = AzureIaaSCalculator.GetVmIaaSProdComputeCost() * 12.0;
+            IaaSServerProd.TotalAnnualCost = (AzureIaaSCalculator.GetVmIaaSProdStorageCost() + AzureIaaSCalculator.GetVmIaaSProdComputeCost()) * 12.0;
+            Financial_Summary_List.Add(IaaSServerProd);
 
-            Financial_Summary IaaSServerDev = new Financial_Summary
-            {
-                MigrationStrategy = "Migrate/Rehost to Azure (IaaS)",
-                Workload = "Servers - Dev/Test",
-                SourceCount = IaaSServerMachineCount.DevUniqueMachinesSource,
-                TargetCount = IaaSServerMachineCount.DevMachinesCountTarget,
-                StorageCost = ServerIaaSCostMap["VmIaaSDevStorageCost"] * 12.0,
-                ComputeCost = ServerIaaSCostMap["VmIaaSDevComputeCost"] * 12.0,
-                TotalAnnualCost = (ServerIaaSCostMap["VmIaaSDevStorageCost"] + ServerIaaSCostMap["VmIaaSDevComputeCost"]) * 12.0
-            };
-            Financial_Summary_Data_List.Add(IaaSServerDev);
+            Financial_Summary IaaSSQLDev = new Financial_Summary();
+            IaaSSQLDev.MigrationStrategy = "Migrate/Rehost to Azure (IaaS)";
+            IaaSSQLDev.Workload = "SQL Server Database Engine - Dev/Test";
+            IaaSSQLDev.SourceCount = AzureIaaSCalculator.GetsqlIaaSDevMachineIdCount();
+            IaaSSQLDev.TargetCount = AzureIaaSCalculator.GetsqlIaaSDevMachinesCountTarget();
+            IaaSSQLDev.StorageCost = AzureIaaSCalculator.GetSqlIaaSDevStorageCost() * 12.0;
+            IaaSSQLDev.ComputeCost = AzureIaaSCalculator.GetSqlIaaSDevComputeCost() * 12.0;
+            IaaSSQLDev.TotalAnnualCost = (AzureIaaSCalculator.GetSqlIaaSDevStorageCost() + AzureIaaSCalculator.GetSqlIaaSDevComputeCost()) * 12.0;
+            Financial_Summary_List.Add(IaaSSQLDev);
 
-            Financial_Summary IaaSServerProd= new Financial_Summary
-            {
-                MigrationStrategy = "Migrate/Rehost to Azure (IaaS)",
-                Workload = "Servers - Prod",
-                SourceCount = IaaSServerMachineCount.ProdUniqueMachinesSource,
-                TargetCount = IaaSServerMachineCount.ProdMachinesCountTarget,
-                StorageCost = ServerIaaSCostMap["VmIaaSProdStorageCost"] * 12.0,
-                ComputeCost = ServerIaaSCostMap["VmIaaSProdComputeCost"] * 12.0,
-                TotalAnnualCost = (ServerIaaSCostMap["VmIaaSProdStorageCost"] + ServerIaaSCostMap["VmIaaSProdComputeCost"]) * 12.0
-            };
-            Financial_Summary_Data_List.Add(IaaSServerProd);
+            Financial_Summary IaaSSQLProd = new Financial_Summary();
+            IaaSSQLProd.MigrationStrategy = "Migrate/Rehost to Azure (IaaS)";
+            IaaSSQLProd.Workload = "SQL Server Database Engine - Prod";
+            IaaSSQLProd.SourceCount = AzureIaaSCalculator.GetsqlIaaSProdMachineIdCount();
+            IaaSSQLProd.TargetCount = AzureIaaSCalculator.GetsqlIaaSProdMachinesCountTarget();
+            IaaSSQLProd.StorageCost = AzureIaaSCalculator.GetSqlIaaSProdStorageCost() * 12.0;
+            IaaSSQLProd.ComputeCost = AzureIaaSCalculator.GetSqlIaaSProdComputeCost() * 12.0;
+            IaaSSQLProd.TotalAnnualCost = (AzureIaaSCalculator.GetSqlIaaSProdStorageCost() + AzureIaaSCalculator.GetSqlIaaSProdComputeCost()) * 12.0;
+            Financial_Summary_List.Add(IaaSSQLProd);
 
-            Financial_Summary IaaSSQLDev = new Financial_Summary
-            {
-                MigrationStrategy = "Migrate/Rehost to Azure (IaaS)",
-                Workload = "SQL Server Database Engine - Dev/Test",
-                SourceCount = IaaSSQLMachineCount.DevUniqueMachinesSource,
-                TargetCount = IaaSSQLMachineCount.DevMachinesCountTarget,
-                StorageCost = SQLIaaSCostMap["SqlIaaSDevStorageCost"] * 12.0,
-                ComputeCost = SQLIaaSCostMap["SqlIaaSDevComputeCost"] * 12.0,
-                TotalAnnualCost = (SQLIaaSCostMap["SqlIaaSDevStorageCost"] + SQLIaaSCostMap["SqlIaaSDevComputeCost"]) * 12.0
-            };
-            Financial_Summary_Data_List.Add(IaaSSQLDev);
+            Financial_Summary ManagementBackup = new Financial_Summary();
+            ManagementBackup.MigrationStrategy = "Management";
+            ManagementBackup.Workload = "Backup Servers";
+            ManagementBackup.SourceCount = AzureIaaSCalculator.GetManagementSourceMachinesCount();
+            ManagementBackup.TargetCount = AzureIaaSCalculator.GetManagementTargetMachinesCount();
+            ManagementBackup.StorageCost = 0;
+            ManagementBackup.ComputeCost = AzureIaaSCalculator.GetTotalBackupComputeCost() * 12.0;
+            ManagementBackup.TotalAnnualCost = AzureIaaSCalculator.GetTotalBackupComputeCost() * 12.0;
+            Financial_Summary_List.Add(ManagementBackup);
 
-            Financial_Summary IaaSSQLProd = new Financial_Summary
-            {
-                MigrationStrategy = "Migrate/Rehost to Azure (IaaS)",
-                Workload = "SQL Server Database Engine - Prod",
-                SourceCount = IaaSSQLMachineCount.ProdUniqueMachinesSource,
-                TargetCount = IaaSSQLMachineCount.ProdMachinesCountTarget,
-                StorageCost = SQLIaaSCostMap["SqlIaaSProdStorageCost"] * 12.0,
-                ComputeCost = SQLIaaSCostMap["SqlIaaSProdComputeCost"] * 12.0,
-                TotalAnnualCost = (SQLIaaSCostMap["SqlIaaSProdStorageCost"] + SQLIaaSCostMap["SqlIaaSProdComputeCost"]) * 12.0
-            };
-            Financial_Summary_Data_List.Add(IaaSSQLProd);
+            Financial_Summary ManagementRecovery = new Financial_Summary();
+            ManagementRecovery.MigrationStrategy = "Management";
+            ManagementRecovery.Workload = "Disaster Recovery";
+            ManagementRecovery.SourceCount = AzureIaaSCalculator.GetManagementSourceMachinesCount();
+            ManagementRecovery.TargetCount = AzureIaaSCalculator.GetManagementTargetMachinesCount();
+            ManagementRecovery.StorageCost = 0;
+            ManagementRecovery.ComputeCost = AzureIaaSCalculator.GetTotalRecoveryComputeCost() * 12.0;
+            ManagementRecovery.TotalAnnualCost = AzureIaaSCalculator.GetTotalRecoveryComputeCost() * 12.0;
+            Financial_Summary_List.Add(ManagementRecovery);
 
-            Financial_Summary ManagementBackup = new Financial_Summary
-            {
-                MigrationStrategy = "Management",
-                Workload = "Backup Servers",
-                SourceCount = ManagementMachineCount.SourceCount,
-                TargetCount = ManagementMachineCount.TargetCount,
-                StorageCost = 0,
-                ComputeCost = AzureIaaSCalculator.GetTotalBackupComputeCost() * 12.0,
-                TotalAnnualCost = AzureIaaSCalculator.GetTotalBackupComputeCost() * 12.0,
-            };
-            Financial_Summary_Data_List.Add(ManagementBackup);
-
-            Financial_Summary ManagementRecovery = new Financial_Summary
-            {
-                MigrationStrategy = "Management",
-                Workload = "Disaster Recovery",
-                SourceCount = ManagementMachineCount.SourceCount,
-                TargetCount = ManagementMachineCount.TargetCount,
-                StorageCost = 0,
-                ComputeCost = AzureIaaSCalculator.GetTotalRecoveryComputeCost() * 12.0,
-                TotalAnnualCost = AzureIaaSCalculator.GetTotalRecoveryComputeCost() * 12.0,
-            };
-            Financial_Summary_Data_List.Add(ManagementRecovery);
-
-            UserInputObj.LoggerObj.LogInformation("Updated excel model for Financial_Summary");
+            UserInputObj.LoggerObj.LogInformation("Updated excel model for Financial Summary");
         }
 
         private void Process_Cash_Flows_Model(Cash_Flows Cash_Flows_Data)

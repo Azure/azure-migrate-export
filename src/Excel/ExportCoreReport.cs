@@ -23,7 +23,7 @@ namespace Azure.Migrate.Export.Excel
         private readonly List<VM_IaaS_Server_Rehost_Perf> VM_IaaS_Server_Rehost_Perf_List;
         private readonly List<VM_IaaS_Server_Rehost_AsOnPrem> VM_IaaS_Server_Rehost_AsOnPrem_List;
         private readonly Business_Case Business_Case_Data;
-        private readonly List<Financial_Summary> Financial_Summary_Data_List;
+        private readonly List<Financial_Summary> Financial_Summary_List;
         private readonly Cash_Flows Cash_Flows_Data;
         private readonly List<Decommissioned_Machines> Decommissioned_Machines_List;
 
@@ -45,9 +45,9 @@ namespace Azure.Migrate.Export.Excel
                 List<VM_SS_IaaS_Server_Rehost_AsOnPrem> vm_SS_IaaS_Server_Rehost_AsOnPrem_List,
                 List<VM_IaaS_Server_Rehost_Perf> vm_IaaS_Server_Rehost_Perf_List,
                 List<VM_IaaS_Server_Rehost_AsOnPrem> vm_IaaS_Server_Rehost_AsOnPrem_List,
-                Business_Case business_Case_Data,                
+                Business_Case business_Case_Data,
+                List<Financial_Summary> financial_Summary_List,
                 Cash_Flows cash_Flows_Data,
-                List<Financial_Summary> financial_Summary_Data_List,
                 List<Decommissioned_Machines> decommissioned_Machines_List
             )
         {
@@ -66,8 +66,8 @@ namespace Azure.Migrate.Export.Excel
             VM_IaaS_Server_Rehost_Perf_List = vm_IaaS_Server_Rehost_Perf_List;
             VM_IaaS_Server_Rehost_AsOnPrem_List = vm_IaaS_Server_Rehost_AsOnPrem_List;
             Business_Case_Data = business_Case_Data;
+            Financial_Summary_List = financial_Summary_List;
             Cash_Flows_Data = cash_Flows_Data;
-            Financial_Summary_Data_List = financial_Summary_Data_List;
             Decommissioned_Machines_List = decommissioned_Machines_List;
 
             CoreWb = new XLWorkbook();
@@ -256,11 +256,8 @@ namespace Azure.Migrate.Export.Excel
 
             UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, CoreReportConstants.Financial_Summary_Columns);
 
-            if (Financial_Summary_Data_List.Count == 0)
-                return;
-
-            if (Financial_Summary_Data_List != null && Financial_Summary_Data_List.Count > 0)
-                dataWs.Cell(2, 1).InsertData(Financial_Summary_Data_List);
+            if (Financial_Summary_List != null && Financial_Summary_List.Count > 0)
+                dataWs.Cell(2, 1).InsertData(Financial_Summary_List);
         }
         private void Generate_SQL_MI_PaaS_Worksheet()
         {
