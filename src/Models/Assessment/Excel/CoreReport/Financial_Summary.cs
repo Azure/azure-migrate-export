@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-namespace Azure.Migrate.Export.Models
+﻿namespace Azure.Migrate.Export.Models
 {
     public class Financial_Summary
     {

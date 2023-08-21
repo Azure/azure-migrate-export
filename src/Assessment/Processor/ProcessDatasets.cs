@@ -2268,37 +2268,39 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 AzureIaaSCalculator.Calculate();
             }
 
+            Dictionary<string, int> WebPaaSEnvironmentToPlanCountMap = GetEnvironmentToPlanCountMap(WebApp_PaaS_List);
+
             Financial_Summary PaaSWebAppDev = new Financial_Summary();
             PaaSWebAppDev.MigrationStrategy = "Modernize/Re-Platform(PaaS)";
             PaaSWebAppDev.Workload = "ASP.NET WebApps on IIS - Dev/Test";
             PaaSWebAppDev.SourceCount = AzurePaaSCalculator.GetWebAppPaaSDevMachineIdCount();
-            if (GetEnvironmentToPlanCountMap(WebApp_PaaS_List).ContainsKey("Dev")) 
-                PaaSWebAppDev.TargetCount = GetEnvironmentToPlanCountMap(WebApp_PaaS_List)["Dev"];
+            if (WebPaaSEnvironmentToPlanCountMap.ContainsKey("Dev")) 
+                PaaSWebAppDev.TargetCount = WebPaaSEnvironmentToPlanCountMap["Dev"];
             else 
                 PaaSWebAppDev.TargetCount = 0;
-            PaaSWebAppDev.StorageCost = AzurePaaSCalculator.GetWebAppPaaSStorageCost() * 12.0;
+            PaaSWebAppDev.StorageCost = AzurePaaSCalculator.GetWebAppPaaSDevStorageCost() * 12.0;
             PaaSWebAppDev.ComputeCost = AzurePaaSCalculator.GetWebAppPaaSDevComputeCost() * 12.0;
-            PaaSWebAppDev.TotalAnnualCost = (AzurePaaSCalculator.GetWebAppPaaSStorageCost() + AzurePaaSCalculator.GetWebAppPaaSDevComputeCost()) * 12.0;
+            PaaSWebAppDev.TotalAnnualCost = (AzurePaaSCalculator.GetWebAppPaaSDevStorageCost() + AzurePaaSCalculator.GetWebAppPaaSDevComputeCost()) * 12.0;
             Financial_Summary_List.Add(PaaSWebAppDev);
 
             Financial_Summary PaaSWebAppProd = new Financial_Summary();
             PaaSWebAppProd.MigrationStrategy = "Modernize/Re-Platform(PaaS)";
             PaaSWebAppProd.Workload = "ASP.NET WebApps on IIS - Prod";
             PaaSWebAppProd.SourceCount = AzurePaaSCalculator.GetWebAppPaaSProdMachineIdCount();
-            if (GetEnvironmentToPlanCountMap(WebApp_PaaS_List).ContainsKey("Prod")) 
-                PaaSWebAppProd.TargetCount = GetEnvironmentToPlanCountMap(WebApp_PaaS_List)["Prod"];
+            if (WebPaaSEnvironmentToPlanCountMap.ContainsKey("Prod")) 
+                PaaSWebAppProd.TargetCount = WebPaaSEnvironmentToPlanCountMap["Prod"];
             else 
                 PaaSWebAppProd.TargetCount = 0;
-            PaaSWebAppProd.StorageCost = AzurePaaSCalculator.GetWebAppPaaSStorageCost() * 12.0;
+            PaaSWebAppProd.StorageCost = AzurePaaSCalculator.GetWebAppPaaSProdStorageCost() * 12.0;
             PaaSWebAppProd.ComputeCost = AzurePaaSCalculator.GetWebAppPaaSProdComputeCost() * 12.0;
-            PaaSWebAppProd.TotalAnnualCost = (AzurePaaSCalculator.GetWebAppPaaSStorageCost() + AzurePaaSCalculator.GetWebAppPaaSProdComputeCost()) * 12.0;
+            PaaSWebAppProd.TotalAnnualCost = (AzurePaaSCalculator.GetWebAppPaaSProdStorageCost() + AzurePaaSCalculator.GetWebAppPaaSProdComputeCost()) * 12.0;
             Financial_Summary_List.Add(PaaSWebAppProd);
 
             Financial_Summary PaaSSQLDev = new Financial_Summary();
             PaaSSQLDev.MigrationStrategy = "Modernize/Re-Platform(PaaS)";
             PaaSSQLDev.Workload = "SQL Server Database Engine - Dev/Test";
-            PaaSSQLDev.SourceCount = AzurePaaSCalculator.GetsqlPaaSDevMachineIdCount();
-            PaaSSQLDev.TargetCount = AzurePaaSCalculator.GetsqlPaaSDevMachinesCountTarget();
+            PaaSSQLDev.SourceCount = AzurePaaSCalculator.GetSqlPaaSDevMachineIdCount();
+            PaaSSQLDev.TargetCount = AzurePaaSCalculator.GetSqlPaaSDevMachinesCountTarget();
             PaaSSQLDev.StorageCost = AzurePaaSCalculator.GetSqlPaaSDevStorageCost() * 12.0;
             PaaSSQLDev.ComputeCost = AzurePaaSCalculator.GetSqlPaaSDevComputeCost() * 12.0;
             PaaSSQLDev.TotalAnnualCost = (AzurePaaSCalculator.GetSqlPaaSDevStorageCost() + AzurePaaSCalculator.GetSqlPaaSDevComputeCost()) * 12.0;
@@ -2307,8 +2309,8 @@ namespace Azure.Migrate.Export.Assessment.Processor
             Financial_Summary PaaSSQLProd = new Financial_Summary();
             PaaSSQLProd.MigrationStrategy = "Modernize/Re-Platform(PaaS)";
             PaaSSQLProd.Workload = "SQL Server Database Engine - Prod";
-            PaaSSQLProd.SourceCount = AzurePaaSCalculator.GetsqlPaaSProdMachineIdCount();
-            PaaSSQLProd.TargetCount = AzurePaaSCalculator.GetsqlPaaSProdMachinesCountTarget();
+            PaaSSQLProd.SourceCount = AzurePaaSCalculator.GetSqlPaaSProdMachineIdCount();
+            PaaSSQLProd.TargetCount = AzurePaaSCalculator.GetSqlPaaSProdMachinesCountTarget();
             PaaSSQLProd.StorageCost = AzurePaaSCalculator.GetSqlPaaSProdStorageCost() * 12.0;
             PaaSSQLProd.ComputeCost = AzurePaaSCalculator.GetSqlPaaSProdComputeCost() * 12.0;
             PaaSSQLProd.TotalAnnualCost = (AzurePaaSCalculator.GetSqlPaaSProdStorageCost() + AzurePaaSCalculator.GetSqlPaaSProdComputeCost()) * 12.0;
