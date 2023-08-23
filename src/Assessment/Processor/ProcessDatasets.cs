@@ -98,6 +98,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             List<VM_IaaS_Server_Rehost_Perf> VM_IaaS_Server_Rehost_Perf_List = new List<VM_IaaS_Server_Rehost_Perf>();
             List<VM_IaaS_Server_Rehost_AsOnPrem> VM_IaaS_Server_Rehost_AsOnPrem_List = new List<VM_IaaS_Server_Rehost_AsOnPrem>();
             Business_Case Business_Case_Data = new Business_Case();
+            List<Financial_Summary> Financial_Summary_List = new List<Financial_Summary>();
             Cash_Flows Cash_Flows_Data = new Cash_Flows();
             List<Decommissioned_Machines> Decommissioned_Machines_List = new List<Decommissioned_Machines>();
 
@@ -138,6 +139,9 @@ namespace Azure.Migrate.Export.Assessment.Processor
             Process_VM_IaaS_Server_Rehost_Perf_Model(VM_IaaS_Server_Rehost_Perf_List, AzureVM_Opportunity_Perf);
             Process_VM_IaaS_Server_Rehost_AsOnPrem_Model(VM_IaaS_Server_Rehost_AsOnPrem_List, AzureVM_Opportunity_AsOnPrem);
             Process_Business_Case_Model(Business_Case_Data, SQL_MI_PaaS_List, SQL_IaaS_Instance_Rehost_Perf_List, SQL_IaaS_Server_Rehost_Perf_List,
+                                        WebApp_PaaS_List, WebApp_IaaS_Server_Rehost_Perf_List,
+                                        VM_IaaS_Server_Rehost_Perf_List);
+            Process_Financial_Summary_Model(Financial_Summary_List, SQL_MI_PaaS_List, SQL_IaaS_Instance_Rehost_Perf_List, SQL_IaaS_Server_Rehost_Perf_List,
                                         WebApp_PaaS_List, WebApp_IaaS_Server_Rehost_Perf_List,
                                         VM_IaaS_Server_Rehost_Perf_List);
             Process_Cash_Flows_Model(Cash_Flows_Data);
@@ -237,6 +241,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                     VM_IaaS_Server_Rehost_Perf_List,
                     VM_IaaS_Server_Rehost_AsOnPrem_List,
                     Business_Case_Data,
+                    Financial_Summary_List,
                     Cash_Flows_Data,
                     Decommissioned_Machines_List
                 );
@@ -1177,7 +1182,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 return false;
             }
 
-            UserInputObj.LoggerObj.LogInformation("Creating excel model fro WebApp_PaaS");
+            UserInputObj.LoggerObj.LogInformation("Creating excel model for WebApp_PaaS");
 
             if (WebApp_PaaS_List == null)
                 WebApp_PaaS_List = new List<WebApp_PaaS>();
@@ -2244,6 +2249,154 @@ namespace Azure.Migrate.Export.Assessment.Processor
             Business_Case_Data.TotalAzureCost.FacilitiesCost = Business_Case_Data.AzureIaaSCost.FacilitiesCost + Business_Case_Data.AzurePaaSCost.FacilitiesCost;
 
             UserInputObj.LoggerObj.LogInformation("Updated Business_Case excel model");
+        }
+
+        private void Process_Financial_Summary_Model(List<Financial_Summary> Financial_Summary_List, List<SQL_MI_PaaS> SQL_MI_PaaS_List, List<SQL_IaaS_Instance_Rehost_Perf> SQL_IaaS_Instance_Rehost_Perf_List, List<SQL_IaaS_Server_Rehost_Perf> SQL_IaaS_Server_Rehost_Perf_List,
+                                          List<WebApp_PaaS> WebApp_PaaS_List, List<WebApp_IaaS_Server_Rehost_Perf> WebApp_IaaS_Server_Rehost_Perf_List,
+                                          List<VM_IaaS_Server_Rehost_Perf> VM_IaaS_Server_Rehost_Perf_List)
+        {
+            UserInputObj.LoggerObj.LogInformation("Creating excel model for Financial_Summary");
+            if (!AzurePaaSCalculator.IsCalculationComplete())
+            {
+                AzurePaaSCalculator.SetParameters(SQL_MI_PaaS_List, WebApp_PaaS_List);
+                AzurePaaSCalculator.Calculate();
+            }
+
+            if (!AzureIaaSCalculator.IsCalculationComplete())
+            {
+                AzureIaaSCalculator.SetParameters(SQL_IaaS_Instance_Rehost_Perf_List, SQL_IaaS_Server_Rehost_Perf_List, WebApp_IaaS_Server_Rehost_Perf_List, VM_IaaS_Server_Rehost_Perf_List);
+                AzureIaaSCalculator.Calculate();
+            }
+
+            Dictionary<string, int> WebPaaSEnvironmentToPlanCountMap = GetEnvironmentToPlanCountMap(WebApp_PaaS_List);
+
+            Financial_Summary PaaSWebAppDev = new Financial_Summary();
+            PaaSWebAppDev.MigrationStrategy = "Modernize/Re-Platform(PaaS)";
+            PaaSWebAppDev.Workload = "ASP.NET WebApps on IIS - Dev/Test";
+            PaaSWebAppDev.SourceCount = AzurePaaSCalculator.GetWebAppPaaSDevMachineIdCount();
+            if (WebPaaSEnvironmentToPlanCountMap.ContainsKey("Dev")) 
+                PaaSWebAppDev.TargetCount = WebPaaSEnvironmentToPlanCountMap["Dev"];
+            else 
+                PaaSWebAppDev.TargetCount = 0;
+            PaaSWebAppDev.StorageCost = AzurePaaSCalculator.GetWebAppPaaSDevStorageCost() * 12.0;
+            PaaSWebAppDev.ComputeCost = AzurePaaSCalculator.GetWebAppPaaSDevComputeCost() * 12.0;
+            PaaSWebAppDev.TotalAnnualCost = (AzurePaaSCalculator.GetWebAppPaaSDevStorageCost() + AzurePaaSCalculator.GetWebAppPaaSDevComputeCost()) * 12.0;
+            Financial_Summary_List.Add(PaaSWebAppDev);
+
+            Financial_Summary PaaSWebAppProd = new Financial_Summary();
+            PaaSWebAppProd.MigrationStrategy = "Modernize/Re-Platform(PaaS)";
+            PaaSWebAppProd.Workload = "ASP.NET WebApps on IIS - Prod";
+            PaaSWebAppProd.SourceCount = AzurePaaSCalculator.GetWebAppPaaSProdMachineIdCount();
+            if (WebPaaSEnvironmentToPlanCountMap.ContainsKey("Prod")) 
+                PaaSWebAppProd.TargetCount = WebPaaSEnvironmentToPlanCountMap["Prod"];
+            else 
+                PaaSWebAppProd.TargetCount = 0;
+            PaaSWebAppProd.StorageCost = AzurePaaSCalculator.GetWebAppPaaSProdStorageCost() * 12.0;
+            PaaSWebAppProd.ComputeCost = AzurePaaSCalculator.GetWebAppPaaSProdComputeCost() * 12.0;
+            PaaSWebAppProd.TotalAnnualCost = (AzurePaaSCalculator.GetWebAppPaaSProdStorageCost() + AzurePaaSCalculator.GetWebAppPaaSProdComputeCost()) * 12.0;
+            Financial_Summary_List.Add(PaaSWebAppProd);
+
+            Financial_Summary PaaSSQLDev = new Financial_Summary();
+            PaaSSQLDev.MigrationStrategy = "Modernize/Re-Platform(PaaS)";
+            PaaSSQLDev.Workload = "SQL Server Database Engine - Dev/Test";
+            PaaSSQLDev.SourceCount = AzurePaaSCalculator.GetSqlPaaSDevMachineIdCount();
+            PaaSSQLDev.TargetCount = AzurePaaSCalculator.GetSqlPaaSDevMachinesCountTarget();
+            PaaSSQLDev.StorageCost = AzurePaaSCalculator.GetSqlPaaSDevStorageCost() * 12.0;
+            PaaSSQLDev.ComputeCost = AzurePaaSCalculator.GetSqlPaaSDevComputeCost() * 12.0;
+            PaaSSQLDev.TotalAnnualCost = (AzurePaaSCalculator.GetSqlPaaSDevStorageCost() + AzurePaaSCalculator.GetSqlPaaSDevComputeCost()) * 12.0;
+            Financial_Summary_List.Add(PaaSSQLDev);
+
+            Financial_Summary PaaSSQLProd = new Financial_Summary();
+            PaaSSQLProd.MigrationStrategy = "Modernize/Re-Platform(PaaS)";
+            PaaSSQLProd.Workload = "SQL Server Database Engine - Prod";
+            PaaSSQLProd.SourceCount = AzurePaaSCalculator.GetSqlPaaSProdMachineIdCount();
+            PaaSSQLProd.TargetCount = AzurePaaSCalculator.GetSqlPaaSProdMachinesCountTarget();
+            PaaSSQLProd.StorageCost = AzurePaaSCalculator.GetSqlPaaSProdStorageCost() * 12.0;
+            PaaSSQLProd.ComputeCost = AzurePaaSCalculator.GetSqlPaaSProdComputeCost() * 12.0;
+            PaaSSQLProd.TotalAnnualCost = (AzurePaaSCalculator.GetSqlPaaSProdStorageCost() + AzurePaaSCalculator.GetSqlPaaSProdComputeCost()) * 12.0;
+            Financial_Summary_List.Add(PaaSSQLProd);
+
+            Financial_Summary IaaSWebAppDev = new Financial_Summary();
+            IaaSWebAppDev.MigrationStrategy = "Migrate/Rehost to Azure (IaaS)";
+            IaaSWebAppDev.Workload = "ASP.NET WebApps on IIS - Dev/Test";
+            IaaSWebAppDev.SourceCount = AzureIaaSCalculator.GetwebappIaaSDevMachinesCount();
+            IaaSWebAppDev.TargetCount = AzureIaaSCalculator.GetwebappIaaSDevMachinesCount();
+            IaaSWebAppDev.StorageCost = AzureIaaSCalculator.GetWebAppIaaSDevStorageCost() * 12.0;
+            IaaSWebAppDev.ComputeCost = AzureIaaSCalculator.GetWebAppIaaSDevComputeCost() * 12.0;
+            IaaSWebAppDev.TotalAnnualCost = (AzureIaaSCalculator.GetWebAppIaaSDevStorageCost() + AzureIaaSCalculator.GetWebAppIaaSDevComputeCost()) * 12.0;
+            Financial_Summary_List.Add(IaaSWebAppDev);
+
+            Financial_Summary IaaSWebAppProd = new Financial_Summary();
+            IaaSWebAppProd.MigrationStrategy = "Migrate/Rehost to Azure (IaaS)";
+            IaaSWebAppProd.Workload = "ASP.NET WebApps on IIS - Prod";
+            IaaSWebAppProd.SourceCount = AzureIaaSCalculator.GetwebappIaaSProdMachinesCount();
+            IaaSWebAppProd.TargetCount = AzureIaaSCalculator.GetwebappIaaSProdMachinesCount();
+            IaaSWebAppProd.StorageCost = AzureIaaSCalculator.GetWebAppIaaSProdStorageCost() * 12.0;
+            IaaSWebAppProd.ComputeCost = AzureIaaSCalculator.GetWebAppIaaSProdComputeCost() * 12.0;
+            IaaSWebAppProd.TotalAnnualCost = (AzureIaaSCalculator.GetWebAppIaaSProdStorageCost() + AzureIaaSCalculator.GetWebAppIaaSProdComputeCost()) * 12.0;
+            Financial_Summary_List.Add(IaaSWebAppProd);
+
+            Financial_Summary IaaSServerDev = new Financial_Summary();
+            IaaSServerDev.MigrationStrategy = "Migrate/Rehost to Azure (IaaS)";
+            IaaSServerDev.Workload = "Servers - Dev/Test";
+            IaaSServerDev.SourceCount = AzureIaaSCalculator.GetvmserverIaaSDevMachinesCount();
+            IaaSServerDev.TargetCount = AzureIaaSCalculator.GetvmserverIaaSDevMachinesCount();
+            IaaSServerDev.StorageCost = AzureIaaSCalculator.GetVmIaaSDevStorageCost() * 12.0;
+            IaaSServerDev.ComputeCost = AzureIaaSCalculator.GetVmIaaSDevComputeCost() * 12.0;
+            IaaSServerDev.TotalAnnualCost = (AzureIaaSCalculator.GetVmIaaSDevStorageCost() + AzureIaaSCalculator.GetVmIaaSDevComputeCost()) * 12.0;
+            Financial_Summary_List.Add(IaaSServerDev);
+
+            Financial_Summary IaaSServerProd = new Financial_Summary();
+            IaaSServerProd.MigrationStrategy = "Migrate/Rehost to Azure (IaaS)";
+            IaaSServerProd.Workload = "Servers - Prod";
+            IaaSServerProd.SourceCount = AzureIaaSCalculator.GetvmserverIaaSProdMachinesCount();
+            IaaSServerProd.TargetCount = AzureIaaSCalculator.GetvmserverIaaSProdMachinesCount();
+            IaaSServerProd.StorageCost = AzureIaaSCalculator.GetVmIaaSProdStorageCost() * 12.0;
+            IaaSServerProd.ComputeCost = AzureIaaSCalculator.GetVmIaaSProdComputeCost() * 12.0;
+            IaaSServerProd.TotalAnnualCost = (AzureIaaSCalculator.GetVmIaaSProdStorageCost() + AzureIaaSCalculator.GetVmIaaSProdComputeCost()) * 12.0;
+            Financial_Summary_List.Add(IaaSServerProd);
+
+            Financial_Summary IaaSSQLDev = new Financial_Summary();
+            IaaSSQLDev.MigrationStrategy = "Migrate/Rehost to Azure (IaaS)";
+            IaaSSQLDev.Workload = "SQL Server Database Engine - Dev/Test";
+            IaaSSQLDev.SourceCount = AzureIaaSCalculator.GetsqlIaaSDevMachineIdCount();
+            IaaSSQLDev.TargetCount = AzureIaaSCalculator.GetsqlIaaSDevMachinesCountTarget();
+            IaaSSQLDev.StorageCost = AzureIaaSCalculator.GetSqlIaaSDevStorageCost() * 12.0;
+            IaaSSQLDev.ComputeCost = AzureIaaSCalculator.GetSqlIaaSDevComputeCost() * 12.0;
+            IaaSSQLDev.TotalAnnualCost = (AzureIaaSCalculator.GetSqlIaaSDevStorageCost() + AzureIaaSCalculator.GetSqlIaaSDevComputeCost()) * 12.0;
+            Financial_Summary_List.Add(IaaSSQLDev);
+
+            Financial_Summary IaaSSQLProd = new Financial_Summary();
+            IaaSSQLProd.MigrationStrategy = "Migrate/Rehost to Azure (IaaS)";
+            IaaSSQLProd.Workload = "SQL Server Database Engine - Prod";
+            IaaSSQLProd.SourceCount = AzureIaaSCalculator.GetsqlIaaSProdMachineIdCount();
+            IaaSSQLProd.TargetCount = AzureIaaSCalculator.GetsqlIaaSProdMachinesCountTarget();
+            IaaSSQLProd.StorageCost = AzureIaaSCalculator.GetSqlIaaSProdStorageCost() * 12.0;
+            IaaSSQLProd.ComputeCost = AzureIaaSCalculator.GetSqlIaaSProdComputeCost() * 12.0;
+            IaaSSQLProd.TotalAnnualCost = (AzureIaaSCalculator.GetSqlIaaSProdStorageCost() + AzureIaaSCalculator.GetSqlIaaSProdComputeCost()) * 12.0;
+            Financial_Summary_List.Add(IaaSSQLProd);
+
+            Financial_Summary ManagementBackup = new Financial_Summary();
+            ManagementBackup.MigrationStrategy = "Management";
+            ManagementBackup.Workload = "Backup Servers";
+            ManagementBackup.SourceCount = AzureIaaSCalculator.GetManagementSourceMachinesCount();
+            ManagementBackup.TargetCount = AzureIaaSCalculator.GetManagementTargetMachinesCount();
+            ManagementBackup.StorageCost = 0;
+            ManagementBackup.ComputeCost = AzureIaaSCalculator.GetTotalBackupComputeCost() * 12.0;
+            ManagementBackup.TotalAnnualCost = AzureIaaSCalculator.GetTotalBackupComputeCost() * 12.0;
+            Financial_Summary_List.Add(ManagementBackup);
+
+            Financial_Summary ManagementRecovery = new Financial_Summary();
+            ManagementRecovery.MigrationStrategy = "Management";
+            ManagementRecovery.Workload = "Disaster Recovery";
+            ManagementRecovery.SourceCount = AzureIaaSCalculator.GetManagementSourceMachinesCount();
+            ManagementRecovery.TargetCount = AzureIaaSCalculator.GetManagementTargetMachinesCount();
+            ManagementRecovery.StorageCost = 0;
+            ManagementRecovery.ComputeCost = AzureIaaSCalculator.GetTotalRecoveryComputeCost() * 12.0;
+            ManagementRecovery.TotalAnnualCost = AzureIaaSCalculator.GetTotalRecoveryComputeCost() * 12.0;
+            Financial_Summary_List.Add(ManagementRecovery);
+
+            UserInputObj.LoggerObj.LogInformation("Updated excel model for Financial Summary");
         }
 
         private void Process_Cash_Flows_Model(Cash_Flows Cash_Flows_Data)

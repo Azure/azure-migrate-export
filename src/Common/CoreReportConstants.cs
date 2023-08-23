@@ -555,6 +555,18 @@ namespace Azure.Migrate.Export.Common
             "Savings"
         };
 
+        public const string Financial_Summary_TabName = "Financial_Summary";
+        public static readonly List<string> Financial_Summary_Columns = new List<string>
+        {
+            "Migration Strategy",
+            "Workload",
+            "Source Count",
+            "Target Count",
+            "Storage Cost",
+            "Compute Cost",
+            "Total Annual Cost"
+        };
+
         public const string Decommissioned_Machines_TabName = "Decommissioned_Machines";
         public static readonly List<string> Decommissioned_Machines_Columns = new List<string>
         {

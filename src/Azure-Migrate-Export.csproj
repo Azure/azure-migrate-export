@@ -94,6 +94,7 @@
     <Compile Include="Models\Assessment\Datasets\Helpers\BusinessCaseDatasetCostDetails.cs" />
     <Compile Include="Models\Assessment\Excel\CoreReport\Business_Case.cs" />
     <Compile Include="Models\Assessment\Excel\CoreReport\Cash_Flows.cs" />
+    <Compile Include="Models\Assessment\Excel\CoreReport\Financial_Summary.cs" />
     <Compile Include="Models\JSONResponses\Assessment\BusinessCaseCompareSummaryJSON.cs" />
     <Compile Include="Models\JSONResponses\Assessment\BusinessCaseCostDetailsJSON.cs" />
     <Compile Include="Models\JSONResponses\Assessment\BusinessCaseIaaSSummaryJSON.cs" />
