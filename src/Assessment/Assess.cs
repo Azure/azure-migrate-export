@@ -147,7 +147,7 @@ namespace Azure.Migrate.Export.Assessment
                 if (string.IsNullOrEmpty(assessmentSiteMachine.DiscoveryMachineArmId))
                     continue;
 
-                if (!discoveryMachineArmIdSet.Contains(assessmentSiteMachine.DiscoveryMachineArmId))
+                if (!discoveryMachineArmIdSet.Contains(assessmentSiteMachine.DiscoveryMachineArmId) && IsMachineDiscoveredBySelectedSourceAppliance(assessmentSiteMachine.DiscoveryMachineArmId))
                 {
                     if (!DecommissionedMachinesData.ContainsKey(assessmentSiteMachine.DiscoveryMachineArmId))
                         DecommissionedMachinesData.Add(assessmentSiteMachine.DiscoveryMachineArmId, assessmentSiteMachine.DisplayName);
@@ -814,6 +814,7 @@ namespace Azure.Migrate.Export.Assessment
             UserInputObj.LoggerObj.LogInformation(70 - UserInputObj.LoggerObj.GetCurrentProgress(), "Azure VM assessment parsing job completed"); // 70 % Complete
         }
 
+        #region Deletion
         private void DeletePreviousAssessmentReports()
         {
             UserInputObj.LoggerObj.LogInformation("Deleting previous assessment reports, if any");
@@ -866,6 +867,7 @@ namespace Azure.Migrate.Export.Assessment
             UserInputObj.LoggerObj.LogInformation("Clash report found, please ensure the file is closed otherwise deleting it won't be possible and process will terminate");
             Directory.Delete(directory, true);
         }
+        #endregion
 
         #region Utilities
         private List<string> ObtainAssessmentMachineIdList(List<AssessmentSiteMachine> assessmentSiteMachines)
@@ -900,6 +902,29 @@ namespace Azure.Migrate.Export.Assessment
             }
 
             return result;
+        }
+
+        private bool IsMachineDiscoveredBySelectedSourceAppliance(string discoveryArmId)
+        {
+            if (string.IsNullOrEmpty(discoveryArmId))
+                return false;
+            if (UserInputObj.AzureMigrateSourceAppliances == null || UserInputObj.AzureMigrateSourceAppliances.Count <= 0)
+                return false;
+
+            bool getVmware = UserInputObj.AzureMigrateSourceAppliances.Contains("vmware");
+            bool getHyperv = UserInputObj.AzureMigrateSourceAppliances.Contains("hyperv");
+            bool getPhysical = UserInputObj.AzureMigrateSourceAppliances.Contains("physical");
+
+            bool isVmwareSite = discoveryArmId.Contains("vmwaresites");
+            bool isHypervSite = discoveryArmId.Contains("hypervsites");
+            bool isServerSite = discoveryArmId.Contains("serversites");
+
+            if ((getVmware && isVmwareSite) ||
+                (getHyperv && isHypervSite) ||
+                (getPhysical && isServerSite))
+                return true;
+
+            return false;
         }
         #endregion
     }
