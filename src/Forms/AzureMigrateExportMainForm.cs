@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using System.Windows.Forms;
 
 using Azure.Migrate.Export.Authentication;
-using Azure.Migrate.Export.Logger;
 using Azure.Migrate.Export.Models;
 
 namespace Azure.Migrate.Export.Forms
@@ -39,6 +35,9 @@ namespace Azure.Migrate.Export.Forms
 
             // Display the first tab -> Project details
             HandleTabChange(ProjectDetailsFormObj, ProjectDetailsTabButton);
+
+            // Show verison on UI
+            VersionLabel.Text = "v " + FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
 
             BeginAzureAuthentication();
         }

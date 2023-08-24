@@ -357,6 +357,39 @@
   <data name="&gt;&gt;ProjectDetailsTabButton.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
+  <data name="VersionLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="VersionLabel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt</value>
+  </data>
+  <data name="VersionLabel.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="VersionLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>60, 57</value>
+  </data>
+  <data name="VersionLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>73, 13</value>
+  </data>
+  <data name="VersionLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="VersionLabel.Text" xml:space="preserve">
+    <value>v 0.0.00000.0</value>
+  </data>
+  <data name="&gt;&gt;VersionLabel.Name" xml:space="preserve">
+    <value>VersionLabel</value>
+  </data>
+  <data name="&gt;&gt;VersionLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;VersionLabel.Parent" xml:space="preserve">
+    <value>TopLeftDockLogoPanel</value>
+  </data>
+  <data name="&gt;&gt;VersionLabel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="AzureMigrateExportLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -388,7 +421,7 @@
     <value>TopLeftDockLogoPanel</value>
   </data>
   <data name="&gt;&gt;AzureMigrateExportLabel.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="AzureMigrateLogoPictureBox.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -415,7 +448,7 @@
     <value>TopLeftDockLogoPanel</value>
   </data>
   <data name="&gt;&gt;AzureMigrateLogoPictureBox.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="TopLeftDockLogoPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
@@ -464,6 +497,102 @@
   </data>
   <data name="&gt;&gt;LeftDockTabPanel.ZOrder" xml:space="preserve">
     <value>2</value>
+  </data>
+  <data name="&gt;&gt;AssessButton.Name" xml:space="preserve">
+    <value>AssessButton</value>
+  </data>
+  <data name="&gt;&gt;AssessButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;AssessButton.Parent" xml:space="preserve">
+    <value>BottomDockActionButtonsPanel</value>
+  </data>
+  <data name="&gt;&gt;AssessButton.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;RetryButton.Name" xml:space="preserve">
+    <value>RetryButton</value>
+  </data>
+  <data name="&gt;&gt;RetryButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;RetryButton.Parent" xml:space="preserve">
+    <value>BottomDockActionButtonsPanel</value>
+  </data>
+  <data name="&gt;&gt;RetryButton.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;BackButton.Name" xml:space="preserve">
+    <value>BackButton</value>
+  </data>
+  <data name="&gt;&gt;BackButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BackButton.Parent" xml:space="preserve">
+    <value>BottomDockActionButtonsPanel</value>
+  </data>
+  <data name="&gt;&gt;BackButton.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;StopButton.Name" xml:space="preserve">
+    <value>StopButton</value>
+  </data>
+  <data name="&gt;&gt;StopButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;StopButton.Parent" xml:space="preserve">
+    <value>BottomDockActionButtonsPanel</value>
+  </data>
+  <data name="&gt;&gt;StopButton.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;SubmitButton.Name" xml:space="preserve">
+    <value>SubmitButton</value>
+  </data>
+  <data name="&gt;&gt;SubmitButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;SubmitButton.Parent" xml:space="preserve">
+    <value>BottomDockActionButtonsPanel</value>
+  </data>
+  <data name="&gt;&gt;SubmitButton.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;NextButton.Name" xml:space="preserve">
+    <value>NextButton</value>
+  </data>
+  <data name="&gt;&gt;NextButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;NextButton.Parent" xml:space="preserve">
+    <value>BottomDockActionButtonsPanel</value>
+  </data>
+  <data name="&gt;&gt;NextButton.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="BottomDockActionButtonsPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="BottomDockActionButtonsPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>230, 601</value>
+  </data>
+  <data name="BottomDockActionButtonsPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>954, 60</value>
+  </data>
+  <data name="BottomDockActionButtonsPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;BottomDockActionButtonsPanel.Name" xml:space="preserve">
+    <value>BottomDockActionButtonsPanel</value>
+  </data>
+  <data name="&gt;&gt;BottomDockActionButtonsPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BottomDockActionButtonsPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;BottomDockActionButtonsPanel.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="AssessButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Left</value>
@@ -734,30 +863,6 @@
   </data>
   <data name="&gt;&gt;NextButton.ZOrder" xml:space="preserve">
     <value>5</value>
-  </data>
-  <data name="BottomDockActionButtonsPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Bottom</value>
-  </data>
-  <data name="BottomDockActionButtonsPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>230, 601</value>
-  </data>
-  <data name="BottomDockActionButtonsPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>954, 60</value>
-  </data>
-  <data name="BottomDockActionButtonsPanel.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;BottomDockActionButtonsPanel.Name" xml:space="preserve">
-    <value>BottomDockActionButtonsPanel</value>
-  </data>
-  <data name="&gt;&gt;BottomDockActionButtonsPanel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;BottomDockActionButtonsPanel.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;BottomDockActionButtonsPanel.ZOrder" xml:space="preserve">
-    <value>1</value>
   </data>
   <data name="FillDockChildFormPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>

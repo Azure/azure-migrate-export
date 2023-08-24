@@ -46,6 +46,7 @@
             this.SubmitButton = new System.Windows.Forms.Button();
             this.NextButton = new System.Windows.Forms.Button();
             this.FillDockChildFormPanel = new System.Windows.Forms.Panel();
+            this.VersionLabel = new System.Windows.Forms.Label();
             this.LeftDockTabPanel.SuspendLayout();
             this.TopLeftDockLogoPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AzureMigrateLogoPictureBox)).BeginInit();
@@ -120,6 +121,7 @@
             // 
             // TopLeftDockLogoPanel
             // 
+            this.TopLeftDockLogoPanel.Controls.Add(this.VersionLabel);
             this.TopLeftDockLogoPanel.Controls.Add(this.AzureMigrateExportLabel);
             this.TopLeftDockLogoPanel.Controls.Add(this.AzureMigrateLogoPictureBox);
             resources.ApplyResources(this.TopLeftDockLogoPanel, "TopLeftDockLogoPanel");
@@ -228,6 +230,11 @@
             resources.ApplyResources(this.FillDockChildFormPanel, "FillDockChildFormPanel");
             this.FillDockChildFormPanel.Name = "FillDockChildFormPanel";
             // 
+            // VersionLabel
+            // 
+            resources.ApplyResources(this.VersionLabel, "VersionLabel");
+            this.VersionLabel.Name = "VersionLabel";
+            // 
             // AzureMigrateExportMainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -268,6 +275,7 @@
         private System.Windows.Forms.Panel FillDockChildFormPanel;
         private System.Windows.Forms.Button RetryButton;
         private System.Windows.Forms.Button AssessButton;
+        private System.Windows.Forms.Label VersionLabel;
     }
 }
 

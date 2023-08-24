@@ -22,15 +22,18 @@ namespace Azure.Migrate.Export.Excel
         {
             ValidateDiscoveryReportPresence();
 
-            var fileStream = new FileStream(DiscoveryReportConstants.DiscoveryReportPath, FileMode.Open, FileAccess.Read); // only read the data
-            var discoveryWb = new XLWorkbook(fileStream);
+            using (var fileStream = new FileStream(DiscoveryReportConstants.DiscoveryReportPath, FileMode.Open, FileAccess.Read)) // only read the data
+            {
+                using (var discoveryWb = new XLWorkbook(fileStream))
+                {
+                    ValidateDiscoveryReport(discoveryWb);
 
-            ValidateDiscoveryReport(discoveryWb);
+                    if (DiscoveredData == null)
+                        DiscoveredData = new List<DiscoveryData>();
 
-            if (DiscoveredData == null)
-                DiscoveredData = new List<DiscoveryData>();
-
-            LoadExcelData(discoveryWb);
+                    LoadExcelData(discoveryWb);
+                }
+            }
         }
 
         private void ValidateDiscoveryReportPresence()
