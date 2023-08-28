@@ -131,45 +131,53 @@ namespace Azure.Migrate.Export.Excel
             if (Business_Case_Data == null)
                 return;
 
-            dataWs.Cell(2, 2).Value = Business_Case_Data.OnPremisesCost.ComputeCost;
-            dataWs.Cell(3, 2).Value = Business_Case_Data.OnPremisesCost.LicenseCost;
-            dataWs.Cell(4, 2).Value = Business_Case_Data.OnPremisesCost.EsuIaaSLicenseCost;
-            dataWs.Cell(5, 2).Value = Business_Case_Data.OnPremisesCost.EsuPaaSLicenseCost;
-            dataWs.Cell(6, 2).Value = Business_Case_Data.OnPremisesCost.StorageCost;
-            dataWs.Cell(7, 2).Value = Business_Case_Data.OnPremisesCost.NetworkCost;
-            dataWs.Cell(8, 2).Value = Business_Case_Data.OnPremisesCost.SecurityCost;
-            dataWs.Cell(9, 2).Value = Business_Case_Data.OnPremisesCost.ITStaffCost;
-            dataWs.Cell(10, 2).Value = Business_Case_Data.OnPremisesCost.FacilitiesCost;
+            dataWs.Cell(2, 2).Value = Business_Case_Data.OnPremisesIaaSCost.ComputeLicenseCost;
+            dataWs.Cell(3, 2).Value = Business_Case_Data.OnPremisesIaaSCost.EsuLicenseCost;
+            dataWs.Cell(4, 2).Value = Business_Case_Data.OnPremisesIaaSCost.StorageCost;
+            dataWs.Cell(5, 2).Value = Business_Case_Data.OnPremisesIaaSCost.NetworkCost;
+            dataWs.Cell(6, 2).Value = Business_Case_Data.OnPremisesIaaSCost.SecurityCost;
+            dataWs.Cell(7, 2).Value = Business_Case_Data.OnPremisesIaaSCost.ITStaffCost;
+            dataWs.Cell(8, 2).Value = Business_Case_Data.OnPremisesIaaSCost.FacilitiesCost;
 
-            dataWs.Cell(2, 3).Value = Business_Case_Data.AzureIaaSCost.ComputeCost;
-            dataWs.Cell(3, 3).Value = Business_Case_Data.AzureIaaSCost.LicenseCost;
-            dataWs.Cell(4, 3).Value = Business_Case_Data.AzureIaaSCost.EsuIaaSLicenseCost;
-            dataWs.Cell(5, 3).Value = Business_Case_Data.AzureIaaSCost.EsuPaaSLicenseCost;
-            dataWs.Cell(6, 3).Value = Business_Case_Data.AzureIaaSCost.StorageCost;
-            dataWs.Cell(7, 3).Value = Business_Case_Data.AzureIaaSCost.NetworkCost;
-            dataWs.Cell(8, 3).Value = Business_Case_Data.AzureIaaSCost.SecurityCost;
-            dataWs.Cell(9, 3).Value = Business_Case_Data.AzureIaaSCost.ITStaffCost;
-            dataWs.Cell(10, 3).Value = Business_Case_Data.AzureIaaSCost.FacilitiesCost;
+            dataWs.Cell(2, 3).Value = Business_Case_Data.OnPremisesPaaSCost.ComputeLicenseCost;
+            dataWs.Cell(3, 3).Value = Business_Case_Data.OnPremisesPaaSCost.EsuLicenseCost;
+            dataWs.Cell(4, 3).Value = Business_Case_Data.OnPremisesPaaSCost.StorageCost;
+            dataWs.Cell(5, 3).Value = Business_Case_Data.OnPremisesPaaSCost.NetworkCost;
+            dataWs.Cell(6, 3).Value = Business_Case_Data.OnPremisesPaaSCost.SecurityCost;
+            dataWs.Cell(7, 3).Value = Business_Case_Data.OnPremisesPaaSCost.ITStaffCost;
+            dataWs.Cell(8, 3).Value = Business_Case_Data.OnPremisesPaaSCost.FacilitiesCost;
 
-            dataWs.Cell(2, 4).Value = Business_Case_Data.AzurePaaSCost.ComputeCost;
-            dataWs.Cell(3, 4).Value = Business_Case_Data.AzurePaaSCost.LicenseCost;
-            dataWs.Cell(4, 4).Value = Business_Case_Data.AzurePaaSCost.EsuIaaSLicenseCost;
-            dataWs.Cell(5, 4).Value = Business_Case_Data.AzurePaaSCost.EsuPaaSLicenseCost;
-            dataWs.Cell(6, 4).Value = Business_Case_Data.AzurePaaSCost.StorageCost;
-            dataWs.Cell(7, 4).Value = Business_Case_Data.AzurePaaSCost.NetworkCost;
-            dataWs.Cell(8, 4).Value = Business_Case_Data.AzurePaaSCost.SecurityCost;
-            dataWs.Cell(9, 4).Value = Business_Case_Data.AzurePaaSCost.ITStaffCost;
-            dataWs.Cell(10, 4).Value = Business_Case_Data.AzurePaaSCost.FacilitiesCost;
+            dataWs.Cell(2, 4).Value = Business_Case_Data.TotalOnPremisesCost.ComputeLicenseCost;
+            dataWs.Cell(3, 4).Value = Business_Case_Data.TotalOnPremisesCost.EsuLicenseCost;
+            dataWs.Cell(4, 4).Value = Business_Case_Data.TotalOnPremisesCost.StorageCost;
+            dataWs.Cell(5, 4).Value = Business_Case_Data.TotalOnPremisesCost.NetworkCost;
+            dataWs.Cell(6, 4).Value = Business_Case_Data.TotalOnPremisesCost.SecurityCost;
+            dataWs.Cell(7, 4).Value = Business_Case_Data.TotalOnPremisesCost.ITStaffCost;
+            dataWs.Cell(8, 4).Value = Business_Case_Data.TotalOnPremisesCost.FacilitiesCost;
 
-            dataWs.Cell(2, 5).Value = Business_Case_Data.TotalAzureCost.ComputeCost;
-            dataWs.Cell(3, 5).Value = Business_Case_Data.TotalAzureCost.LicenseCost;
-            dataWs.Cell(4, 5).Value = Business_Case_Data.TotalAzureCost.EsuIaaSLicenseCost;
-            dataWs.Cell(5, 5).Value = Business_Case_Data.TotalAzureCost.EsuPaaSLicenseCost;
-            dataWs.Cell(6, 5).Value = Business_Case_Data.TotalAzureCost.StorageCost;
-            dataWs.Cell(7, 5).Value = Business_Case_Data.TotalAzureCost.NetworkCost;
-            dataWs.Cell(8, 5).Value = Business_Case_Data.TotalAzureCost.SecurityCost;
-            dataWs.Cell(9, 5).Value = Business_Case_Data.TotalAzureCost.ITStaffCost;
-            dataWs.Cell(10, 5).Value = Business_Case_Data.TotalAzureCost.FacilitiesCost;
+            dataWs.Cell(2, 5).Value = Business_Case_Data.AzureIaaSCost.ComputeLicenseCost;
+            dataWs.Cell(3, 5).Value = Business_Case_Data.AzureIaaSCost.EsuLicenseCost;
+            dataWs.Cell(4, 5).Value = Business_Case_Data.AzureIaaSCost.StorageCost;
+            dataWs.Cell(5, 5).Value = Business_Case_Data.AzureIaaSCost.NetworkCost;
+            dataWs.Cell(6, 5).Value = Business_Case_Data.AzureIaaSCost.SecurityCost;
+            dataWs.Cell(7, 5).Value = Business_Case_Data.AzureIaaSCost.ITStaffCost;
+            dataWs.Cell(8, 5).Value = Business_Case_Data.AzureIaaSCost.FacilitiesCost;
+
+            dataWs.Cell(2, 6).Value = Business_Case_Data.AzurePaaSCost.ComputeLicenseCost;
+            dataWs.Cell(3, 6).Value = Business_Case_Data.AzurePaaSCost.EsuLicenseCost;
+            dataWs.Cell(4, 6).Value = Business_Case_Data.AzurePaaSCost.StorageCost;
+            dataWs.Cell(5, 6).Value = Business_Case_Data.AzurePaaSCost.NetworkCost;
+            dataWs.Cell(6, 6).Value = Business_Case_Data.AzurePaaSCost.SecurityCost;
+            dataWs.Cell(7, 6).Value = Business_Case_Data.AzurePaaSCost.ITStaffCost;
+            dataWs.Cell(8, 6).Value = Business_Case_Data.AzurePaaSCost.FacilitiesCost;
+
+            dataWs.Cell(2, 7).Value = Business_Case_Data.TotalAzureCost.ComputeLicenseCost;
+            dataWs.Cell(3, 7).Value = Business_Case_Data.TotalAzureCost.EsuLicenseCost;
+            dataWs.Cell(4, 7).Value = Business_Case_Data.TotalAzureCost.StorageCost;
+            dataWs.Cell(5, 7).Value = Business_Case_Data.TotalAzureCost.NetworkCost;
+            dataWs.Cell(6, 7).Value = Business_Case_Data.TotalAzureCost.SecurityCost;
+            dataWs.Cell(7, 7).Value = Business_Case_Data.TotalAzureCost.ITStaffCost;
+            dataWs.Cell(8, 7).Value = Business_Case_Data.TotalAzureCost.FacilitiesCost;
         }
 
         private void Generate_Cash_Flows_Worksheet()
