@@ -67,16 +67,21 @@ namespace Azure.Migrate.Export.Assessment.Parser
                 return;
             }
 
-            BusinessCaseData.OnPremCostDetails.ComputeCost = bizCaseCompareSummaryJsonObj.OnPremisesPaaSCostDetails.ComputeCost + bizCaseCompareSummaryJsonObj.OnPremisesIaaSCostDetails.ComputeCost;
-            BusinessCaseData.OnPremCostDetails.LicenseCost = UtilityFunctions.GetBusinessCaseTotalOsLicensingCost(bizCaseIaaSSummariesJsonObj.OnPremisesIaaSSummary.OSLicensingDetails) +
-                                                             bizCasePaaSSummariesJsonObj.OnPremisesPaaSSummary.OnPremisesPaaSLicensingCost.TotalCost;
-            BusinessCaseData.OnPremCostDetails.EsuIaaSLicenseCost = bizCaseCompareSummaryJsonObj.OnPremisesIaaSCostDetails.ESUSavings;
-            BusinessCaseData.OnPremCostDetails.EsuPaaSLicenseCost = bizCaseCompareSummaryJsonObj.OnPremisesPaaSCostDetails.ESUSavings;
-            BusinessCaseData.OnPremCostDetails.StorageCost = bizCaseCompareSummaryJsonObj.OnPremisesPaaSCostDetails.StorageCost + bizCaseCompareSummaryJsonObj.OnPremisesIaaSCostDetails.StorageCost;
-            BusinessCaseData.OnPremCostDetails.NetworkCost = bizCaseCompareSummaryJsonObj.OnPremisesIaaSCostDetails.NetworkCost + bizCaseCompareSummaryJsonObj.OnPremisesPaaSCostDetails.NetworkCost;
-            BusinessCaseData.OnPremCostDetails.SecurityCost = bizCaseCompareSummaryJsonObj.OnPremisesPaaSCostDetails.SecurityCost + bizCaseCompareSummaryJsonObj.OnPremisesIaaSCostDetails.SecurityCost;
-            BusinessCaseData.OnPremCostDetails.ITStaffCost = bizCaseCompareSummaryJsonObj.OnPremisesIaaSCostDetails.ITLaborCost + bizCaseCompareSummaryJsonObj.OnPremisesPaaSCostDetails.ITLaborCost;
-            BusinessCaseData.OnPremCostDetails.FacilitiesCost = 0.0;
+            BusinessCaseData.OnPremIaaSCostDetails.ComputeLicenseCost = bizCaseCompareSummaryJsonObj.OnPremisesIaaSCostDetails.ComputeCost;
+            BusinessCaseData.OnPremIaaSCostDetails.EsuLicenseCost = bizCaseCompareSummaryJsonObj.OnPremisesIaaSCostDetails.ESUSavings;
+            BusinessCaseData.OnPremIaaSCostDetails.StorageCost = bizCaseCompareSummaryJsonObj.OnPremisesIaaSCostDetails.StorageCost;
+            BusinessCaseData.OnPremIaaSCostDetails.NetworkCost = bizCaseCompareSummaryJsonObj.OnPremisesIaaSCostDetails.NetworkCost;
+            BusinessCaseData.OnPremIaaSCostDetails.SecurityCost = bizCaseCompareSummaryJsonObj.OnPremisesIaaSCostDetails.SecurityCost;
+            BusinessCaseData.OnPremIaaSCostDetails.ITStaffCost = bizCaseCompareSummaryJsonObj.OnPremisesIaaSCostDetails.ITLaborCost;
+            BusinessCaseData.OnPremIaaSCostDetails.FacilitiesCost = 0.0;
+
+            BusinessCaseData.OnPremPaaSCostDetails.ComputeLicenseCost = bizCaseCompareSummaryJsonObj.OnPremisesPaaSCostDetails.ComputeCost;
+            BusinessCaseData.OnPremPaaSCostDetails.EsuLicenseCost = bizCaseCompareSummaryJsonObj.OnPremisesPaaSCostDetails.ESUSavings;
+            BusinessCaseData.OnPremPaaSCostDetails.StorageCost = bizCaseCompareSummaryJsonObj.OnPremisesPaaSCostDetails.StorageCost;
+            BusinessCaseData.OnPremPaaSCostDetails.NetworkCost = bizCaseCompareSummaryJsonObj.OnPremisesPaaSCostDetails.NetworkCost;
+            BusinessCaseData.OnPremPaaSCostDetails.SecurityCost = bizCaseCompareSummaryJsonObj.OnPremisesPaaSCostDetails.SecurityCost;
+            BusinessCaseData.OnPremPaaSCostDetails.ITStaffCost = bizCaseCompareSummaryJsonObj.OnPremisesPaaSCostDetails.ITLaborCost;
+            BusinessCaseData.OnPremPaaSCostDetails.FacilitiesCost = 0.0;
 
             BusinessCaseData.AzureIaaSCostDetails.ITStaffCost = bizCaseCompareSummaryJsonObj.AzureIaaSCostDetails.ITLaborCost;
             BusinessCaseData.AzurePaaSCostDetails.ITStaffCost = bizCaseCompareSummaryJsonObj.AzurePaaSCostDetails.ITLaborCost;

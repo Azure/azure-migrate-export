@@ -2196,15 +2196,29 @@ namespace Azure.Migrate.Export.Assessment.Processor
         {
             UserInputObj.LoggerObj.LogInformation("Creating excel model for Business_Case");
 
-            Business_Case_Data.OnPremisesCost.ComputeCost = BusinessCaseData.OnPremCostDetails.ComputeCost;
-            Business_Case_Data.OnPremisesCost.LicenseCost = BusinessCaseData.OnPremCostDetails.LicenseCost;
-            Business_Case_Data.OnPremisesCost.EsuIaaSLicenseCost = BusinessCaseData.OnPremCostDetails.EsuIaaSLicenseCost;
-            Business_Case_Data.OnPremisesCost.EsuPaaSLicenseCost = BusinessCaseData.OnPremCostDetails.EsuPaaSLicenseCost;
-            Business_Case_Data.OnPremisesCost.StorageCost = BusinessCaseData.OnPremCostDetails.StorageCost;
-            Business_Case_Data.OnPremisesCost.NetworkCost = BusinessCaseData.OnPremCostDetails.NetworkCost;
-            Business_Case_Data.OnPremisesCost.SecurityCost = BusinessCaseData.OnPremCostDetails.SecurityCost;
-            Business_Case_Data.OnPremisesCost.ITStaffCost = BusinessCaseData.OnPremCostDetails.ITStaffCost;
-            Business_Case_Data.OnPremisesCost.FacilitiesCost = BusinessCaseData.OnPremCostDetails.FacilitiesCost;
+            Business_Case_Data.OnPremisesIaaSCost.ComputeLicenseCost = BusinessCaseData.OnPremIaaSCostDetails.ComputeLicenseCost;
+            Business_Case_Data.OnPremisesIaaSCost.EsuLicenseCost = BusinessCaseData.OnPremIaaSCostDetails.EsuLicenseCost;
+            Business_Case_Data.OnPremisesIaaSCost.StorageCost = BusinessCaseData.OnPremIaaSCostDetails.StorageCost;
+            Business_Case_Data.OnPremisesIaaSCost.NetworkCost = BusinessCaseData.OnPremIaaSCostDetails.NetworkCost;
+            Business_Case_Data.OnPremisesIaaSCost.SecurityCost = BusinessCaseData.OnPremIaaSCostDetails.SecurityCost;
+            Business_Case_Data.OnPremisesIaaSCost.ITStaffCost = BusinessCaseData.OnPremIaaSCostDetails.ITStaffCost;
+            Business_Case_Data.OnPremisesIaaSCost.FacilitiesCost = BusinessCaseData.OnPremIaaSCostDetails.FacilitiesCost;
+
+            Business_Case_Data.OnPremisesPaaSCost.ComputeLicenseCost = BusinessCaseData.OnPremPaaSCostDetails.ComputeLicenseCost;
+            Business_Case_Data.OnPremisesPaaSCost.EsuLicenseCost = BusinessCaseData.OnPremPaaSCostDetails.EsuLicenseCost;
+            Business_Case_Data.OnPremisesPaaSCost.StorageCost = BusinessCaseData.OnPremPaaSCostDetails.StorageCost;
+            Business_Case_Data.OnPremisesPaaSCost.NetworkCost = BusinessCaseData.OnPremPaaSCostDetails.NetworkCost;
+            Business_Case_Data.OnPremisesPaaSCost.SecurityCost = BusinessCaseData.OnPremPaaSCostDetails.SecurityCost;
+            Business_Case_Data.OnPremisesPaaSCost.ITStaffCost = BusinessCaseData.OnPremPaaSCostDetails.ITStaffCost;
+            Business_Case_Data.OnPremisesPaaSCost.FacilitiesCost = BusinessCaseData.OnPremPaaSCostDetails.FacilitiesCost;
+
+            Business_Case_Data.TotalOnPremisesCost.ComputeLicenseCost = Business_Case_Data.OnPremisesIaaSCost.ComputeLicenseCost + Business_Case_Data.OnPremisesPaaSCost.ComputeLicenseCost;
+            Business_Case_Data.TotalOnPremisesCost.EsuLicenseCost = Business_Case_Data.OnPremisesIaaSCost.EsuLicenseCost + Business_Case_Data.OnPremisesPaaSCost.EsuLicenseCost;
+            Business_Case_Data.TotalOnPremisesCost.StorageCost = Business_Case_Data.OnPremisesIaaSCost.StorageCost + Business_Case_Data.OnPremisesPaaSCost.StorageCost;
+            Business_Case_Data.TotalOnPremisesCost.NetworkCost = Business_Case_Data.OnPremisesIaaSCost.NetworkCost + Business_Case_Data.OnPremisesPaaSCost.NetworkCost;
+            Business_Case_Data.TotalOnPremisesCost.SecurityCost = Business_Case_Data.OnPremisesIaaSCost.SecurityCost + Business_Case_Data.OnPremisesPaaSCost.SecurityCost;
+            Business_Case_Data.TotalOnPremisesCost.ITStaffCost = Business_Case_Data.OnPremisesIaaSCost.ITStaffCost + Business_Case_Data.OnPremisesPaaSCost.ITStaffCost;
+            Business_Case_Data.TotalOnPremisesCost.FacilitiesCost = Business_Case_Data.OnPremisesIaaSCost.FacilitiesCost + Business_Case_Data.OnPremisesPaaSCost.FacilitiesCost;
 
             if (!AzureIaaSCalculator.IsCalculationComplete())
             {
@@ -2212,12 +2226,10 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 AzureIaaSCalculator.Calculate();
             }
 
-            Business_Case_Data.AzureIaaSCost.ComputeCost = AzureIaaSCalculator.GetTotalComputeCost() * 12.0;
-            Business_Case_Data.AzureIaaSCost.LicenseCost = AzureIaaSCalculator.GetTotalAhubSavings() * 12.0;
-            Business_Case_Data.AzureIaaSCost.EsuIaaSLicenseCost = 0;
-            Business_Case_Data.AzureIaaSCost.EsuPaaSLicenseCost = 0;
+            Business_Case_Data.AzureIaaSCost.ComputeLicenseCost = AzureIaaSCalculator.GetTotalComputeCost() * 12.0;
+            Business_Case_Data.AzureIaaSCost.EsuLicenseCost = 0;
             Business_Case_Data.AzureIaaSCost.StorageCost = AzureIaaSCalculator.GetTotalStorageCost() * 12.0;
-            Business_Case_Data.AzureIaaSCost.NetworkCost = 0.05 * (Business_Case_Data.AzureIaaSCost.ComputeCost + Business_Case_Data.AzureIaaSCost.StorageCost);
+            Business_Case_Data.AzureIaaSCost.NetworkCost = 0.05 * (Business_Case_Data.AzureIaaSCost.ComputeLicenseCost + Business_Case_Data.AzureIaaSCost.StorageCost);
             Business_Case_Data.AzureIaaSCost.SecurityCost = AzureIaaSCalculator.GetTotalSecurityCost() * 12.0;
             Business_Case_Data.AzureIaaSCost.ITStaffCost = BusinessCaseData.AzureIaaSCostDetails.ITStaffCost;
             Business_Case_Data.AzureIaaSCost.FacilitiesCost = 0;
@@ -2228,20 +2240,16 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 AzurePaaSCalculator.Calculate();
             }
 
-            Business_Case_Data.AzurePaaSCost.ComputeCost = AzurePaaSCalculator.GetTotalComputeCost() * 12.0;
-            Business_Case_Data.AzurePaaSCost.LicenseCost = AzurePaaSCalculator.GetTotalAhubSavings() * 12.0;
-            Business_Case_Data.AzurePaaSCost.EsuIaaSLicenseCost = 0;
-            Business_Case_Data.AzurePaaSCost.EsuPaaSLicenseCost = 0;
+            Business_Case_Data.AzurePaaSCost.ComputeLicenseCost = AzurePaaSCalculator.GetTotalComputeCost() * 12.0;
+            Business_Case_Data.AzurePaaSCost.EsuLicenseCost = 0;
             Business_Case_Data.AzurePaaSCost.StorageCost = AzurePaaSCalculator.GetTotalStorageCost() * 12.0;
-            Business_Case_Data.AzurePaaSCost.NetworkCost = 0.05 * (Business_Case_Data.AzurePaaSCost.ComputeCost + Business_Case_Data.AzurePaaSCost.StorageCost);
+            Business_Case_Data.AzurePaaSCost.NetworkCost = 0.05 * (Business_Case_Data.AzurePaaSCost.ComputeLicenseCost + Business_Case_Data.AzurePaaSCost.StorageCost);
             Business_Case_Data.AzurePaaSCost.SecurityCost = AzurePaaSCalculator.GetTotalSecurityCost() * 12.0;
             Business_Case_Data.AzurePaaSCost.ITStaffCost = BusinessCaseData.AzurePaaSCostDetails.ITStaffCost;
             Business_Case_Data.AzurePaaSCost.FacilitiesCost = 0;
 
-            Business_Case_Data.TotalAzureCost.ComputeCost = Business_Case_Data.AzureIaaSCost.ComputeCost + Business_Case_Data.AzurePaaSCost.ComputeCost;
-            Business_Case_Data.TotalAzureCost.LicenseCost = Business_Case_Data.AzureIaaSCost.LicenseCost + Business_Case_Data.AzurePaaSCost.LicenseCost;
-            Business_Case_Data.TotalAzureCost.EsuIaaSLicenseCost = Business_Case_Data.AzureIaaSCost.EsuIaaSLicenseCost + Business_Case_Data.AzurePaaSCost.EsuIaaSLicenseCost;
-            Business_Case_Data.TotalAzureCost.EsuPaaSLicenseCost = Business_Case_Data.AzureIaaSCost.EsuPaaSLicenseCost + Business_Case_Data.AzurePaaSCost.EsuPaaSLicenseCost;
+            Business_Case_Data.TotalAzureCost.ComputeLicenseCost = Business_Case_Data.AzureIaaSCost.ComputeLicenseCost + Business_Case_Data.AzurePaaSCost.ComputeLicenseCost;
+            Business_Case_Data.TotalAzureCost.EsuLicenseCost = Business_Case_Data.AzureIaaSCost.EsuLicenseCost + Business_Case_Data.AzurePaaSCost.EsuLicenseCost;
             Business_Case_Data.TotalAzureCost.StorageCost = Business_Case_Data.AzureIaaSCost.StorageCost + Business_Case_Data.AzurePaaSCost.StorageCost;
             Business_Case_Data.TotalAzureCost.NetworkCost = Business_Case_Data.AzureIaaSCost.NetworkCost + Business_Case_Data.AzurePaaSCost.NetworkCost;
             Business_Case_Data.TotalAzureCost.ITStaffCost = Business_Case_Data.AzureIaaSCost.ITStaffCost + Business_Case_Data.AzurePaaSCost.ITStaffCost;

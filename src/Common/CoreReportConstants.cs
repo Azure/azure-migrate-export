@@ -516,17 +516,17 @@ namespace Azure.Migrate.Export.Common
         public static readonly List<string> Business_Case_Columns = new List<string>
         {
             "Category",
-            "On-Premises Cost",
+            "On-Prem IaaS Cost",
+            "On-Prem PaaS Cost",
+            "Total On-Premises Cost",
             "Azure IaaS Cost",
             "Azure PaaS Cost",
             "Total Azure Cost"
         };
         public static readonly List<string> Business_Case_RowTypes = new List<string>
         {
-            "Compute",
-            "License",
-            "ESU IaaS License",
-            "ESU PaaS License",
+            "Compute & Licensing",
+            "ESU License",
             "Storage",
             "Network",
             "Security",
