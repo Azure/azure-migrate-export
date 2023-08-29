@@ -265,10 +265,7 @@
     <None Include="icons\azure_migrate_icon_logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Azure_Migrate_Export_Detailed.pbit">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Azure_Migrate_Export_HBC-Lite.pbit">
+    <None Include="Azure_Migration_and_Modernization.pbit">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="README.txt">

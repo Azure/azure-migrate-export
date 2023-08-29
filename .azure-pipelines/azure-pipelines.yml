@@ -17,7 +17,7 @@ variables:
   OutputRootDirectory: '$(Build.ArtifactStagingDirectory)'
   CopyTargetFolder: '$(OutputRootDirectory)\AzMigExport'
 
-  major: 2
+  major: 3
   minor: 0
 
 name: $(major).$(minor).$(Year:yy)$(DayOfYear).$(Rev:r)
@@ -61,7 +61,7 @@ stages:
             suppressionsFile: '$(RootDirectory)\.config\CredScanSuppressions.json'
 
         - task: CopyFiles@2
-          displayName: 'Copying DLLs to AzMigExport'
+          displayName: 'Copy DLLs to AzMigExport'
           inputs:
             SourceFolder: '$(CopySourceFolder)'
             TargetFolder: '$(CopyTargetFolder)'
@@ -69,7 +69,7 @@ stages:
             Contents: '**\*.dll'
 
         - task: CopyFiles@2
-          displayName: 'Copying Executable to AzMigExport'
+          displayName: 'Copy Executable to AzMigExport'
           inputs:
             SourceFolder: '$(CopySourceFolder)'
             TargetFolder: '$(CopyTargetFolder)'
@@ -77,7 +77,7 @@ stages:
             Contents: '**\Azure-Migrate-Export.exe'
 
         - task: CopyFiles@2
-          displayName: 'Copying Config to AzMigExport'
+          displayName: 'Copy Config to AzMigExport'
           inputs:
             SourceFolder: '$(CopySourceFolder)'
             TargetFolder: '$(CopyTargetFolder)'
@@ -85,23 +85,15 @@ stages:
             Contents: '**\Azure-Migrate-Export.exe.config'
 
         - task: CopyFiles@2
-          displayName: 'Copying Detailed PBIT to AzMigExport'
+          displayName: 'Copy PBIT to AzMigExport'
           inputs:
             SourceFolder: '$(CopySourceFolder)'
             TargetFolder: '$(CopyTargetFolder)'
             OverWrite: true
-            Contents: '**\Azure_Migrate_Export_Detailed.pbit'
+            Contents: '**\Azure_Migration_and_Modernization.pbit'
 
         - task: CopyFiles@2
-          displayName: 'Copying HBC-Lite PBIT to AzMigExport'
-          inputs:
-            SourceFolder: '$(CopySourceFolder)'
-            TargetFolder: '$(CopyTargetFolder)'
-            OverWrite: true
-            Contents: '**\Azure_Migrate_Export_HBC-Lite.pbit'
-
-        - task: CopyFiles@2
-          displayName: 'Copying README to AzMigExport'
+          displayName: 'Copy README to AzMigExport'
           inputs:
             SourceFolder: '$(CopySourceFolder)'
             TargetFolder: '$(CopyTargetFolder)'
