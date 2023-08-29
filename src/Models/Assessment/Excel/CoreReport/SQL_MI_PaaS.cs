@@ -18,6 +18,7 @@ namespace Azure.Migrate.Export.Models
         public int UserDatabases { get; set; }
         public string SQLEdition { get; set; }
         public string SQLVersion { get; set; }
+        public string SupportStatus { get; set; }
         public double TotalDBSizeInMB { get; set; }
         public double LargestDBSizeInMB { get; set; }
         public int VCoresAllocated { get; set; }

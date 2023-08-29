@@ -32,6 +32,7 @@ namespace Azure.Migrate.Export.Models
         public string BootType { get; set; }
         public string OperatingSystemType { get; set; }
         public string OperatingSystemName { get; set; }
+        public string SupportStatus { get; set; }
         public string OperatingSystemVersion { get; set; }
         public string OperatingSystemArchitecture { get; set; }
         public string CreatedTimestamp { get; set; }

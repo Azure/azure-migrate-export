@@ -184,6 +184,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureSQLInstancesData[key].SQLInstanceSDSArmId = value.Properties.SqlInstanceSDSArmId?.ToLower();
             AzureSQLInstancesData[key].SQLEdition = value.Properties.SqlEdition;
             AzureSQLInstancesData[key].SQLVersion = value.Properties.SqlVersion;
+            AzureSQLInstancesData[key].SupportStatus = new EnumDescriptionHelper().GetEnumDescription(value.Properties.ProductSupportStatus.SupportStatus);
             AzureSQLInstancesData[key].NumberOfCoresAllocated = value.Properties.NumberOfCoresAllocated;
             AzureSQLInstancesData[key].PercentageCoresUtilization = value.Properties.PercentageCoresUtilization;
             AzureSQLInstancesData[key].LogicalDisks = GetAssessedLogicalDiskList(value.Properties.LogicalDisks);
