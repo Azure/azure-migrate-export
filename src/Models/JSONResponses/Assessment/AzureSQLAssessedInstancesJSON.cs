@@ -70,6 +70,9 @@ namespace Azure.Migrate.Export.Models
         [JsonProperty("sqlVersion")]
         public string SqlVersion { get; set; }
 
+        [JsonProperty("productSupportStatus")]
+        public ProductSupportState ProductSupportStatus { get; set; }
+
         [JsonProperty("numberOfCoresAllocated")]
         public int NumberOfCoresAllocated { get; set; }
 

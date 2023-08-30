@@ -13,6 +13,7 @@ namespace Azure.Migrate.Export.Models
         public Suitabilities Suitability { get; set; }
         public string SuitabilityExplanation { get; set; }
         public string OperatingSystem { get; set; }
+        public string SupportStatus { get; set; }
         public string BootType { get; set; }
         public int NumberOfCores { get; set; }
         public double MegabytesOfMemory { get; set; }

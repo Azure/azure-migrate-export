@@ -312,6 +312,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MonthlyStorageCostEstimate = VMPerfDataKvp.Value.StorageMonthlyCost;
                 obj.MonthlySecurityCostEstimate = VMPerfDataKvp.Value.MonthlySecurityCost;
                 obj.OperatingSystem = UtilityFunctions.GetStringValue(VMPerfDataKvp.Value.OperatingSystem);
+                obj.SupportStatus = VMPerfDataKvp.Value.SupportStatus;
                 obj.VMHost = UtilityFunctions.GetStringValue(VMPerfDataKvp.Value.DatacenterManagementServerName);
                 obj.BootType = UtilityFunctions.GetStringValue(VMPerfDataKvp.Value.BootType);
                 obj.Cores = VMPerfDataKvp.Value.NumberOfCores;
@@ -628,6 +629,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.UserDatabases = azureSqlInstance.Value.DatabaseSummaryNumberOfUserDatabases;
                 obj.SQLEdition = azureSqlInstance.Value.SQLEdition;
                 obj.SQLVersion = azureSqlInstance.Value.SQLVersion;
+                obj.SupportStatus = azureSqlInstance.Value.SupportStatus;
                 obj.TotalDBSizeInMB = azureSqlInstance.Value.DatabaseSummaryTotalDatabaseSizeInMB;
                 obj.LargestDBSizeInMB = azureSqlInstance.Value.DatabaseSumaryLargestDatabaseSizeInMB;
                 obj.VCoresAllocated = azureSqlInstance.Value.NumberOfCoresAllocated;
@@ -726,6 +728,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.UserDatabases = azureSqlInstance.Value.DatabaseSummaryNumberOfUserDatabases;
                 obj.SQLEdition = azureSqlInstance.Value.SQLEdition;
                 obj.SQLVersion = azureSqlInstance.Value.SQLVersion;
+                obj.SupportStatus = azureSqlInstance.Value.SupportStatus;
                 obj.TotalDBSizeInMB = azureSqlInstance.Value.DatabaseSummaryTotalDatabaseSizeInMB;
                 obj.LargestDBSizeInMB = azureSqlInstance.Value.DatabaseSumaryLargestDatabaseSizeInMB;
                 obj.VCoresAllocated = azureSqlInstance.Value.NumberOfCoresAllocated;
@@ -838,6 +841,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
 
                 obj.SQLEdition = value.SQLEdition;
                 obj.SQLVersion = value.SQLVersion;
+                obj.SupportStatus = value.SupportStatus;
                 obj.TotalDBSizeInMB = value.DatabaseSummaryTotalDatabaseSizeInMB;
                 obj.LargestDBSizeInMB = value.DatabaseSumaryLargestDatabaseSizeInMB;
                 obj.VCoresAllocated = value.NumberOfCoresAllocated;
@@ -929,6 +933,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MonthlyStorageCostEstimate = value.MonthlyStorageCost;
                 obj.MonthlySecurityCostEstimate = value.MonthlySecurityCost;
                 obj.OperatingSystem = value.OperatingSystemName;
+                obj.SupportStatus = value.SupportStatus;
                 obj.VMHost = UtilityFunctions.GetStringValue(value.DatacenterManagementServerName);
                 obj.BootType = value.BootType;
                 obj.Cores = value.NumberOfCores;
@@ -1029,6 +1034,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MonthlyStorageCostEstimate = value.StorageMonthlyCost;
                 obj.MonthlySecurityCostEstimate = value.MonthlySecurityCost;
                 obj.OperatingSystem = value.OperatingSystem;
+                obj.SupportStatus = value.SupportStatus;
                 obj.VMHost = UtilityFunctions.GetStringValue(value.DatacenterManagementServerName);
                 obj.BootType = UtilityFunctions.GetStringValue(value.BootType);
                 obj.Cores = value.NumberOfCores;
@@ -1127,6 +1133,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.UserDatabases = value.DatabaseSummaryNumberOfUserDatabases;
                 obj.SQLEdition = value.SQLEdition;
                 obj.SQLVersion = value.SQLVersion;
+                obj.SupportStatus = value.SupportStatus;
                 obj.TotalDBSizeInMB = value.DatabaseSummaryTotalDatabaseSizeInMB;
                 obj.LargestDBSizeInMB = value.DatabaseSumaryLargestDatabaseSizeInMB;
                 obj.VCoresAllocated = value.NumberOfCoresAllocated;
@@ -1388,6 +1395,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MonthlyStorageCostEstimate = value.StorageMonthlyCost;
                 obj.MonthlySecurityCostEstimate = value.MonthlySecurityCost;
                 obj.OperatingSystem = UtilityFunctions.GetStringValue(value.OperatingSystem);
+                obj.SupportStatus = value.SupportStatus;
                 obj.VMHost = UtilityFunctions.GetStringValue(value.DatacenterManagementServerName);
                 obj.BootType = UtilityFunctions.GetStringValue(value.BootType);
                 obj.Cores = value.NumberOfCores;
@@ -1490,6 +1498,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MonthlyStorageCostEstimate = value.StorageMonthlyCost;
                 obj.MonthlySecurityCostEstimate = value.MonthlySecurityCost;
                 obj.OperatingSystem = UtilityFunctions.GetStringValue(value.OperatingSystem);
+                obj.SupportStatus = value.SupportStatus;
                 obj.VMHost = UtilityFunctions.GetStringValue(value.DatacenterManagementServerName);
                 obj.BootType = UtilityFunctions.GetStringValue(value.BootType);
                 obj.Cores = value.NumberOfCores;
@@ -1869,6 +1878,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MonthlyStorageCostEstimate = value.StorageMonthlyCost;
                 obj.MonthlySecurityCostEstimate = value.MonthlySecurityCost;
                 obj.OperatingSystem = UtilityFunctions.GetStringValue(value.OperatingSystem);
+                obj.SupportStatus = value.SupportStatus;
                 obj.VMHost = UtilityFunctions.GetStringValue(value.DatacenterManagementServerName);
                 obj.BootType = UtilityFunctions.GetStringValue(value.BootType);
                 obj.Cores = value.NumberOfCores;
@@ -1970,6 +1980,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MonthlyStorageCostEstimate = value.StorageMonthlyCost;
                 obj.MonthlySecurityCostEstimate = value.MonthlySecurityCost;
                 obj.OperatingSystem = UtilityFunctions.GetStringValue(value.OperatingSystem);
+                obj.SupportStaus = value.SupportStatus;
                 obj.VMHost = UtilityFunctions.GetStringValue(value.DatacenterManagementServerName);
                 obj.BootType = UtilityFunctions.GetStringValue(value.BootType);
                 obj.Cores = value.NumberOfCores;
@@ -2062,6 +2073,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MonthlyStorageCostEstimate = value.StorageMonthlyCost;
                 obj.MonthlySecurityCostEstimate = value.MonthlySecurityCost;
                 obj.OperatingSystem = UtilityFunctions.GetStringValue(value.OperatingSystem);
+                obj.SupportStatus = value.SupportStatus;
                 obj.VMHost = UtilityFunctions.GetStringValue(value.DatacenterManagementServerName);
                 obj.BootType = UtilityFunctions.GetStringValue(value.BootType);
                 obj.Cores = value.NumberOfCores;
@@ -2154,6 +2166,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MonthlyStorageCostEstimate = value.StorageMonthlyCost;
                 obj.MonthlySecurityCostEstimate = value.MonthlySecurityCost;
                 obj.OperatingSystem = UtilityFunctions.GetStringValue(value.OperatingSystem);
+                obj.SupportStatus = value.SupportStatus;
                 obj.VMHost = UtilityFunctions.GetStringValue(value.DatacenterManagementServerName);
                 obj.BootType = UtilityFunctions.GetStringValue(value.BootType);
                 obj.Cores = value.NumberOfCores;

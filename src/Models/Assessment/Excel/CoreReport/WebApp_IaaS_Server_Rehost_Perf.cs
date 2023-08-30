@@ -15,6 +15,7 @@ namespace Azure.Migrate.Export.Models
         public double MonthlyStorageCostEstimate { get; set; }
         public double MonthlySecurityCostEstimate { get; set; }
         public string OperatingSystem { get; set; }
+        public string SupportStatus { get; set; }
         public string VMHost { get; set; }
         public string BootType { get; set; }
         public int Cores { get; set; }

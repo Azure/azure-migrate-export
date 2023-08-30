@@ -143,6 +143,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureVMAsOnPremMachinesData[key].Suitability = value.Properties.Suitability;
             AzureVMAsOnPremMachinesData[key].SuitabilityExplanation = value.Properties.SuitabilityExplanation;
             AzureVMAsOnPremMachinesData[key].OperatingSystem = value.Properties.OperatingSystemName;
+            AzureVMAsOnPremMachinesData[key].SupportStatus = new EnumDescriptionHelper().GetEnumDescription(value.Properties.ProductSupportStatus.SupportStatus);
             AzureVMAsOnPremMachinesData[key].BootType = value.Properties.BootType;
             AzureVMAsOnPremMachinesData[key].NumberOfCores = value.Properties.NumberOfCores;
             AzureVMAsOnPremMachinesData[key].MegabytesOfMemory = value.Properties.MegabytesOfMemory;
@@ -175,6 +176,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureVMPerformanceBasedMachinesData[key].Suitability = value.Properties.Suitability;
             AzureVMPerformanceBasedMachinesData[key].SuitabilityExplanation = value.Properties.SuitabilityExplanation;
             AzureVMPerformanceBasedMachinesData[key].OperatingSystem = value.Properties.OperatingSystemName;
+            AzureVMPerformanceBasedMachinesData[key].SupportStatus = new EnumDescriptionHelper().GetEnumDescription(value.Properties.ProductSupportStatus.SupportStatus);
             AzureVMPerformanceBasedMachinesData[key].BootType = value.Properties.BootType;
             AzureVMPerformanceBasedMachinesData[key].NumberOfCores = value.Properties.NumberOfCores;
             AzureVMPerformanceBasedMachinesData[key].MegabytesOfMemory = value.Properties.MegabytesOfMemory;

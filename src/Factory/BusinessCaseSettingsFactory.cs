@@ -21,7 +21,7 @@ namespace Azure.Migrate.Export.Factory
             BusinessCaseSettingsJSON obj = new BusinessCaseSettingsJSON();
             obj.Name = "bizcase-ame-" + sessionId;
             obj.Location = userInputObj.TargetRegion.Key;
-            obj.Properties.Settings.AzureSettings.Currency = "USD"; // userInputObj.Currency.Key;
+            obj.Properties.Settings.AzureSettings.Currency = userInputObj.Currency.Key;
 
             BusinessCaseTypes type = BusinessCaseTypes.OptimizeForPaas;
             if (userInputObj.PreferredOptimizationObj.OptimizationPreference.Key.Equals("MigrateToAllIaaS"))

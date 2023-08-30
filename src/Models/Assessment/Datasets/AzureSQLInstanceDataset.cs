@@ -56,6 +56,7 @@ namespace Azure.Migrate.Export.Models
         public string SQLInstanceSDSArmId { get; set; }
         public string SQLEdition { get; set; }
         public string SQLVersion { get; set; }
+        public string SupportStatus { get; set; }
         public int NumberOfCoresAllocated { get; set; }
         public double PercentageCoresUtilization { get; set; }
         public List<AssessedDisk> LogicalDisks { get; set; }

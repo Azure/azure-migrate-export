@@ -88,6 +88,9 @@ namespace Azure.Migrate.Export.Models
         [JsonProperty("operatingSystemName")]
         public string OperatingSystemName { get; set; }
 
+        [JsonProperty("productSupportStatus")]
+        public ProductSupportState ProductSupportStatus { get; set; }
+
         [JsonProperty("operatingSystemVersion")]
         public string OperatingSystemVersion { get; set; }
 

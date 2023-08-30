@@ -103,6 +103,7 @@
     <Compile Include="Models\JSONResponses\Assessment\BusinessCasePaaSSummaryJSON.cs" />
     <Compile Include="Models\JSONResponses\Assessment\BusinessCaseYOYCostDetailsJSON.cs" />
     <Compile Include="Models\JSONResponses\Assessment\Helpers\AzureAssessmentCostComponent.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\Helpers\ProductSupportState.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Extensions\ExtendActionButtonEnableDisable.cs" />
     <Compile Include="Extensions\ExtendTabButtonEnableDisable.cs" />

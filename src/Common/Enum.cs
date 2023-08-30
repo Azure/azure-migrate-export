@@ -150,6 +150,21 @@ namespace Azure.Migrate.Export.Common
         IaaSOnly
     }
 
+    public enum SupportabilityStatus
+    {
+        [Description("Unknown")]
+        Unknown,
+
+        [Description("Mainstream")]
+        Mainstream,
+
+        [Description("Extended")]
+        Extended,
+
+        [Description("Out of support")]
+        OutOfSupport
+    }
+
     public class EnumDescriptionHelper
     {
         public string GetEnumDescription(Enum value)
