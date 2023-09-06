@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
+
+using Azure.Migrate.Export.Common;
 
 namespace Azure.Migrate.Export.Forms
 {
@@ -67,6 +70,16 @@ namespace Azure.Migrate.Export.Forms
         private void ModuleComboBox_SelectionChangeCommitted(object sender, EventArgs e)
         {
             this.ActiveControl = null;
+
+            string selectedModule = (string)ModuleComboBox.SelectedItem;
+            if (selectedModule.Equals("Assessment"))
+            {
+                if (!IsDiscoveryReportPresent())
+                {
+                    MessageBox.Show("No discovery report found. Please complete discovery before running assessments.", "Azure Migrate Export");
+                    ModuleComboBox.SelectedItem = "Discovery";
+                }
+            }
 
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
             mainFormObj.MakeConfigurationTabButtonEnableDecisions();
@@ -253,6 +266,18 @@ namespace Azure.Migrate.Export.Forms
                 Verb = "open"
             };
             Process.Start(processDescription);
+        }
+        #endregion
+
+        #region Utilities
+        private bool IsDiscoveryReportPresent()
+        {
+            if (!Directory.Exists(DiscoveryReportConstants.DiscoveryReportDirectory))
+                return false;
+            if (!File.Exists(DiscoveryReportConstants.DiscoveryReportPath))
+                return false;
+
+            return true;
         }
         #endregion
     }

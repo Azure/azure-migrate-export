@@ -2209,7 +2209,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
         {
             UserInputObj.LoggerObj.LogInformation("Creating excel model for Business_Case");
 
-            Business_Case_Data.OnPremisesIaaSCost.ComputeLicenseCost = BusinessCaseData.OnPremIaaSCostDetails.ComputeLicenseCost;
+            Business_Case_Data.OnPremisesIaaSCost.ComputeLicenseCost = BusinessCaseData.OnPremIaaSCostDetails.ComputeLicenseCost - BusinessCaseData.OnPremIaaSCostDetails.EsuLicenseCost;
             Business_Case_Data.OnPremisesIaaSCost.EsuLicenseCost = BusinessCaseData.OnPremIaaSCostDetails.EsuLicenseCost;
             Business_Case_Data.OnPremisesIaaSCost.StorageCost = BusinessCaseData.OnPremIaaSCostDetails.StorageCost;
             Business_Case_Data.OnPremisesIaaSCost.NetworkCost = BusinessCaseData.OnPremIaaSCostDetails.NetworkCost;
@@ -2217,7 +2217,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             Business_Case_Data.OnPremisesIaaSCost.ITStaffCost = BusinessCaseData.OnPremIaaSCostDetails.ITStaffCost;
             Business_Case_Data.OnPremisesIaaSCost.FacilitiesCost = BusinessCaseData.OnPremIaaSCostDetails.FacilitiesCost;
 
-            Business_Case_Data.OnPremisesPaaSCost.ComputeLicenseCost = BusinessCaseData.OnPremPaaSCostDetails.ComputeLicenseCost;
+            Business_Case_Data.OnPremisesPaaSCost.ComputeLicenseCost = BusinessCaseData.OnPremPaaSCostDetails.ComputeLicenseCost - BusinessCaseData.OnPremPaaSCostDetails.EsuLicenseCost;
             Business_Case_Data.OnPremisesPaaSCost.EsuLicenseCost = BusinessCaseData.OnPremPaaSCostDetails.EsuLicenseCost;
             Business_Case_Data.OnPremisesPaaSCost.StorageCost = BusinessCaseData.OnPremPaaSCostDetails.StorageCost;
             Business_Case_Data.OnPremisesPaaSCost.NetworkCost = BusinessCaseData.OnPremPaaSCostDetails.NetworkCost;
