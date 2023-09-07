@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
 using System.Reflection;
@@ -175,6 +176,22 @@ namespace Azure.Migrate.Export.Common
             return attribute != null
                 ? attribute.Description
                 : value.ToString();
+        }
+    }
+
+    public class SupportabilityStatusEnumConverter : JsonConverter<SupportabilityStatus>
+    {
+        public override SupportabilityStatus ReadJson(JsonReader reader, Type objectType, SupportabilityStatus existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            if (reader.TokenType == JsonToken.Null)
+                return SupportabilityStatus.Unknown;
+            else
+                return (SupportabilityStatus)Enum.Parse(typeof(SupportabilityStatus), reader.Value.ToString());
+        }
+
+        public override void WriteJson(JsonWriter writer, SupportabilityStatus value, JsonSerializer serializer)
+        {
+            writer.WriteValue(value.ToString());
         }
     }
 }
