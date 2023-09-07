@@ -145,7 +145,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureSQLMachinesData[key].BootType = value.Properties.BootType;
             AzureSQLMachinesData[key].OperatingSystemType = value.Properties.OperatingSystemType;
             AzureSQLMachinesData[key].OperatingSystemName = value.Properties.OperatingSystemName;
-            AzureSQLMachinesData[key].SupportStatus = new EnumDescriptionHelper(). GetEnumDescription(value.Properties.ProductSupportStatus.SupportStatus);
+            AzureSQLMachinesData[key].SupportStatus = value.Properties.ProductSupportStatus == null ? new EnumDescriptionHelper().GetEnumDescription(SupportabilityStatus.Unknown) : new EnumDescriptionHelper().GetEnumDescription(value.Properties.ProductSupportStatus.SupportStatus);
             AzureSQLMachinesData[key].OperatingSystemVersion = value.Properties.OperatingSystemVersion;
             AzureSQLMachinesData[key].OperatingSystemArchitecture = value.Properties.OperatingSystemArchitecture;
             AzureSQLMachinesData[key].CreatedTimestamp = value.Properties.CreatedTimestamp;

@@ -16,8 +16,10 @@ namespace Azure.Migrate.Export.Common
 
         private bool IsCalculated;
 
-        int SqlDevRowCount;
-        int SqlProdRowCount;
+        private int SqlDevRowCount;
+        private int SqlProdRowCount;
+        private int WebAppDevRowCount;
+        private int WebAppProdRowCount;
 
         private double SqlPaaSComputeCost;
         private double SqlPaaSDevComputeCost;
@@ -55,6 +57,8 @@ namespace Azure.Migrate.Export.Common
 
             SqlDevRowCount = 0;
             SqlProdRowCount = 0;
+            WebAppDevRowCount = 0;
+            WebAppProdRowCount = 0;
 
             SqlPaaSComputeCost = 0.0;
             SqlPaaSDevComputeCost = 0.0;
@@ -187,6 +191,17 @@ namespace Azure.Migrate.Export.Common
         {
             return SqlProdRowCount;
         }
+
+        public int GetWebAppDevRowCount()
+        {
+            return WebAppDevRowCount;
+        }
+
+        public int GetWebAppProdRowCount()
+        {
+            return WebAppProdRowCount;
+        }
+
         private void CalculateSqlPaaSCost()
         {
             double nonAhubCost = 0.0;
@@ -230,12 +245,16 @@ namespace Azure.Migrate.Export.Common
                 {
                     WebAppPaaSDevComputeCost += webapp.MonthlyComputeCostEstimate_ASP3year == 0 ? webapp.MonthlyComputeCostEstimate : webapp.MonthlyComputeCostEstimate_ASP3year;
 
+                    WebAppDevRowCount += 1;
+
                     if (!WebappUniqueDevMachines.Contains(webapp.MachineId))
                         WebappUniqueDevMachines.Add(webapp.MachineId);
                 }
                 else
                 {
                     WebAppPaaSProdComputeCost += webapp.MonthlyComputeCostEstimate_ASP3year == 0 ? webapp.MonthlyComputeCostEstimate : webapp.MonthlyComputeCostEstimate_ASP3year;
+
+                    WebAppProdRowCount += 1;
 
                     if (!WebappUniqueProdMachines.Contains(webapp.MachineId))
                         WebappUniqueProdMachines.Add(webapp.MachineId);
