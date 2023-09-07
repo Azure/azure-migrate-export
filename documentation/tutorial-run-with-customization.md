@@ -21,8 +21,8 @@ This article describes the procedure to run Azure Migrate Export with customizat
 To run AME with customization, users need to first generate the discovery report, apply customization, and then run assessment. Follow these steps:
 1. Download the Azure Migrate Export utility package and extract the contents on the package. [Learn More](#how-to-get-azure-migrate-export-utility-package) about how to get Azure Migrate Export Utility Package.
 2. Run Azure Migrate Export application.
-3. On the console, Select Workflow Option as Discovery.
-4. In **Source Appliance**, select the source of servers. By default, all three sources, namely VMware, Hyper-V, and Physical are selected.
+3. On the console, select **Workflow** option as **Discovery**.
+4. In **Azure Migrate source appliance**, select the source of servers. By default, all three sources, namely VMware, Hyper-V, and Physical are selected.
 5. Enter the project identifier details such as Tenant ID, Subscription ID, Resource Group name, and Discovery Site name. [Learn More](#how-to-find-project-discovery-and-assessment-parameters) on where to find the Project Identifier.
 6. Select the Target location where you want to move your resources and select **Submit**.
 7. Users will now be prompted to authenticate for Azure access.
