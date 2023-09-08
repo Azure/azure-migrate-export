@@ -29,6 +29,9 @@ namespace Azure.Migrate.Export.Models
         [JsonProperty("currency")]
         public string Currency { get; set; }
 
+        [JsonProperty("azureSecurityOfferingType")]
+        public string AzureSecurityOfferingType = "MDC";
+
         [JsonProperty("azureOfferCode")]
         public string AzureOfferCode { get; set; } = "MSAZR0003P";
 
@@ -48,7 +51,7 @@ namespace Azure.Migrate.Export.Models
         public int DiscountPercentage { get; set; } = 0;
 
         [JsonProperty("optimizationLogic")]
-        public string OptimizationLogic { get; set; } = "ModernizeToPaaS";
+        public string OptimizationLogic { get; set; } = "ModernizeToAzureSqlMi";
 
         [JsonProperty("osLicense")]
         public string OSLicense { get; set; }

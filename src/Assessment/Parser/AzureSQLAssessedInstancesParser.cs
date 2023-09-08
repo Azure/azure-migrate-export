@@ -98,7 +98,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
                     foreach (var value in assessedInstancesObj.Values)
                     {
                         string key = value.Properties.SqlInstanceSDSArmId?.ToLower();
-                        UpdateAssessedInstancesDataset(AzureSQLInstancesData, key, value, kvp.Key);
+                        UpdateAssessedInstancesDataset(AzureSQLInstancesData, key, value, kvp.Key, userInputObj.Currency.Key);
 
                         double monthlySqlMIComputeCost = value.Properties.AzureSqlMISuitabilityDetails.MonthlyComputeCost;
                         double monthlySqlVMComputeCost = value.Properties.AzureSqlVMSuitabilityDetails.MonthlyComputeCost;
@@ -132,7 +132,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             }
         }
 
-        private void UpdateAssessedInstancesDataset(Dictionary<string, AzureSQLInstanceDataset> AzureSQLInstancesData, string key, AzureSQLAssessedInstanceValue value, AssessmentInformation assessmentInfo)
+        private void UpdateAssessedInstancesDataset(Dictionary<string, AzureSQLInstanceDataset> AzureSQLInstancesData, string key, AzureSQLAssessedInstanceValue value, AssessmentInformation assessmentInfo, string currencySymbol)
         {
             if (AzureSQLInstancesData.ContainsKey(key))
                 return;
@@ -160,6 +160,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureSQLInstancesData[key].AzureSQLMIMonthlyLicenseCost = value.Properties.AzureSqlMISuitabilityDetails.MonthlyLicenseCost;
             AzureSQLInstancesData[key].AzureSQLMIMigrationTargetPlatform = value.Properties.AzureSqlMISuitabilityDetails.MigrationTargetPlatform;
             AzureSQLInstancesData[key].AzureSQLMISuitability = value.Properties.AzureSqlMISuitabilityDetails.Suitability;
+            AzureSQLInstancesData[key].AzureSQLMIMonthlySecurityCost = UtilityFunctions.GetSecurityCost(value.Properties.AzureSqlMISuitabilityDetails.CostComponents);
             AzureSQLInstancesData[key].AzureSQLMIMigrationIssues = GetMigrationIssueList(value.Properties.AzureSqlMISuitabilityDetails.MigrationIssues);
 
             AzureSQLInstancesData[key].AzureSQLVMFamily = value.Properties.AzureSqlVMSuitabilityDetails.AzureSqlSku?.VirtualMachineSize?.AzureVmFamily;
@@ -173,6 +174,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureSQLInstancesData[key].AzureSQLVMMonthlyLicenseCost = value.Properties.AzureSqlVMSuitabilityDetails.MonthlyLicenseCost;
             AzureSQLInstancesData[key].AzureSQLVMMonthlyStorageCost = value.Properties.AzureSqlVMSuitabilityDetails.MonthlyStorageCost;
             AzureSQLInstancesData[key].AzureSQLVMMigrationTargetPlatform = value.Properties.AzureSqlVMSuitabilityDetails.MigrationTargetPlatform;
+            AzureSQLInstancesData[key].AzureSQLVMMonthlySecurityCost = UtilityFunctions.GetSecurityCost(value.Properties.AzureSqlVMSuitabilityDetails.CostComponents);
             AzureSQLInstancesData[key].AzureSQLVMSuitability = value.Properties.AzureSqlVMSuitabilityDetails.Suitability;
             AzureSQLInstancesData[key].AzureSQLVMMigrationIssues = GetMigrationIssueList(value.Properties.AzureSqlVMSuitabilityDetails.MigrationIssues);
 
@@ -182,6 +184,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureSQLInstancesData[key].SQLInstanceSDSArmId = value.Properties.SqlInstanceSDSArmId?.ToLower();
             AzureSQLInstancesData[key].SQLEdition = value.Properties.SqlEdition;
             AzureSQLInstancesData[key].SQLVersion = value.Properties.SqlVersion;
+            AzureSQLInstancesData[key].SupportStatus = value.Properties.ProductSupportStatus == null ? new EnumDescriptionHelper().GetEnumDescription(SupportabilityStatus.Unknown) : new EnumDescriptionHelper().GetEnumDescription(value.Properties.ProductSupportStatus.SupportStatus);
             AzureSQLInstancesData[key].NumberOfCoresAllocated = value.Properties.NumberOfCoresAllocated;
             AzureSQLInstancesData[key].PercentageCoresUtilization = value.Properties.PercentageCoresUtilization;
             AzureSQLInstancesData[key].LogicalDisks = GetAssessedLogicalDiskList(value.Properties.LogicalDisks);
@@ -202,8 +205,8 @@ namespace Azure.Migrate.Export.Assessment.Parser
                 return;
             }
 
-            AzureSQLInstancesData[key].MonthlyAzureSiteRecoveryCostEstimate = 25;
-            AzureSQLInstancesData[key].MonthlyAzureBackupCostEstimate = UtilityFunctions.GetAzureBackupMonthlyCostEstimate(AzureSQLInstancesData[key].LogicalDisks);
+            AzureSQLInstancesData[key].MonthlyAzureSiteRecoveryCostEstimate = UtilityFunctions.GetAzureSiteRecoveryMonthlyCostEstimate(currencySymbol);
+            AzureSQLInstancesData[key].MonthlyAzureBackupCostEstimate = UtilityFunctions.GetAzureBackupMonthlyCostEstimate(AzureSQLInstancesData[key].LogicalDisks, currencySymbol);
         }
 
         #region Utilities

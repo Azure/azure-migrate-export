@@ -50,12 +50,6 @@ namespace Azure.Migrate.Export.Models
         [JsonProperty("customerStorageAccountArmId")]
         public string CusotmerStorageAccountArmId { get; set; }
 
-        [JsonProperty("privateEndpointConnections")]
-        public List<string> PrivateEndpointConnections { get; set; }
-
-        [JsonProperty("nestedSites")]
-        public List<string> NestedSites { get; set; }
-
         [JsonProperty("provisioningState")]
         public string ProvisioningState { get; set; }
     }

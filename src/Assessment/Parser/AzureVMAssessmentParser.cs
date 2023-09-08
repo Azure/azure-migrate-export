@@ -106,7 +106,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
                             continue;
                         }
                         
-                        UpdatePerformanceBasedDataset(AzureVMPerformanceBasedMachinesData, key, value, kvp.Key);
+                        UpdatePerformanceBasedDataset(AzureVMPerformanceBasedMachinesData, key, value, kvp.Key, userInputObj.Currency.Key);
 
                         double monthlyCostEstimate = value.Properties.MonthlyComputeCostForRecommendedSize;
                         if (kvp.Key.AssessmentTag == AssessmentTag.PerformanceBased)
@@ -143,6 +143,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureVMAsOnPremMachinesData[key].Suitability = value.Properties.Suitability;
             AzureVMAsOnPremMachinesData[key].SuitabilityExplanation = value.Properties.SuitabilityExplanation;
             AzureVMAsOnPremMachinesData[key].OperatingSystem = value.Properties.OperatingSystemName;
+            AzureVMAsOnPremMachinesData[key].SupportStatus = value.Properties.ProductSupportStatus == null ? new EnumDescriptionHelper().GetEnumDescription(SupportabilityStatus.Unknown) : new EnumDescriptionHelper().GetEnumDescription(value.Properties.ProductSupportStatus.SupportStatus);
             AzureVMAsOnPremMachinesData[key].BootType = value.Properties.BootType;
             AzureVMAsOnPremMachinesData[key].NumberOfCores = value.Properties.NumberOfCores;
             AzureVMAsOnPremMachinesData[key].MegabytesOfMemory = value.Properties.MegabytesOfMemory;
@@ -152,10 +153,11 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureVMAsOnPremMachinesData[key].Disks = GetAssessedDiskList(value.Properties.Disks);
             AzureVMAsOnPremMachinesData[key].StorageMonthlyCost = value.Properties.MonthlyStorageCost;
             AzureVMAsOnPremMachinesData[key].MonthlyComputeCostEstimate = value.Properties.MonthlyComputeCostForRecommendedSize;
+            AzureVMAsOnPremMachinesData[key].MonthlySecurityCost = UtilityFunctions.GetSecurityCost(value.Properties.CostComponents);
             AzureVMAsOnPremMachinesData[key].GroupName = assessmentInfo.GroupName;
         }
 
-        private void UpdatePerformanceBasedDataset(Dictionary<string, AzureVMPerformanceBasedDataset> AzureVMPerformanceBasedMachinesData, string key, AzureVMAssessedMachineValue value, AssessmentInformation assessmentInfo)
+        private void UpdatePerformanceBasedDataset(Dictionary<string, AzureVMPerformanceBasedDataset> AzureVMPerformanceBasedMachinesData, string key, AzureVMAssessedMachineValue value, AssessmentInformation assessmentInfo, string currencySymbol)
         {
             if (AzureVMPerformanceBasedMachinesData.ContainsKey(key))
                 return;
@@ -174,6 +176,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureVMPerformanceBasedMachinesData[key].Suitability = value.Properties.Suitability;
             AzureVMPerformanceBasedMachinesData[key].SuitabilityExplanation = value.Properties.SuitabilityExplanation;
             AzureVMPerformanceBasedMachinesData[key].OperatingSystem = value.Properties.OperatingSystemName;
+            AzureVMPerformanceBasedMachinesData[key].SupportStatus = value.Properties.ProductSupportStatus == null ? new EnumDescriptionHelper().GetEnumDescription(SupportabilityStatus.Unknown) : new EnumDescriptionHelper().GetEnumDescription(value.Properties.ProductSupportStatus.SupportStatus);
             AzureVMPerformanceBasedMachinesData[key].BootType = value.Properties.BootType;
             AzureVMPerformanceBasedMachinesData[key].NumberOfCores = value.Properties.NumberOfCores;
             AzureVMPerformanceBasedMachinesData[key].MegabytesOfMemory = value.Properties.MegabytesOfMemory;
@@ -184,6 +187,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AzureVMPerformanceBasedMachinesData[key].RecommendedVMSize = value.Properties.RecommendedSize;
             AzureVMPerformanceBasedMachinesData[key].Disks = GetAssessedDiskList(value.Properties.Disks);
             AzureVMPerformanceBasedMachinesData[key].StorageMonthlyCost = value.Properties.MonthlyStorageCost;
+            AzureVMPerformanceBasedMachinesData[key].MonthlySecurityCost = UtilityFunctions.GetSecurityCost(value.Properties.CostComponents);
             AzureVMPerformanceBasedMachinesData[key].GroupName = assessmentInfo.GroupName;
 
             if (AzureVMPerformanceBasedMachinesData[key].Environment.Equals("Dev"))
@@ -193,8 +197,8 @@ namespace Azure.Migrate.Export.Assessment.Parser
                 return;
             }
 
-            AzureVMPerformanceBasedMachinesData[key].AzureSiteRecoveryMonthlyCostEstimate = 25;
-            AzureVMPerformanceBasedMachinesData[key].AzureBackupMonthlyCostEstimate = UtilityFunctions.GetAzureBackupMonthlyCostEstimate(AzureVMPerformanceBasedMachinesData[key].Disks);
+            AzureVMPerformanceBasedMachinesData[key].AzureSiteRecoveryMonthlyCostEstimate = UtilityFunctions.GetAzureSiteRecoveryMonthlyCostEstimate(currencySymbol);
+            AzureVMPerformanceBasedMachinesData[key].AzureBackupMonthlyCostEstimate = UtilityFunctions.GetAzureBackupMonthlyCostEstimate(AzureVMPerformanceBasedMachinesData[key].Disks, currencySymbol);
 
         }
 

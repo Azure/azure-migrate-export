@@ -35,6 +35,9 @@ namespace Azure.Migrate.Export.Models
         [JsonProperty("azureVmFamilies")]
         public List<string> AzureVMFamilies { get; set; } = new List<string>();
 
+        [JsonProperty("azureSecurityOfferingType")]
+        public string AzureSecurityOfferingType = "MDC";
+
         [JsonProperty("discountPercentage")]
         public int DiscountPercentage { get; set; } = 0;
 

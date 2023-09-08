@@ -87,6 +87,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
 
                 AzureAppServiceWebAppPropertiesJSON webAppPropertiesObj = JsonConvert.DeserializeObject<AzureAppServiceWebAppPropertiesJSON>(assessmentPropertiesResponse);
                 double monthlyCostEstimate = webAppPropertiesObj.Properties.MonthlyCost;
+                double monthlySecurityCostEstimate = webAppPropertiesObj.Properties.MonthlySecurityCost;
 
                 url = Routes.ProtocolScheme + Routes.AzureManagementApiHostname + Routes.ForwardSlash +
                       Routes.SubscriptionPath + Routes.ForwardSlash + userInputObj.Subscription.Key + Routes.ForwardSlash +
@@ -143,6 +144,8 @@ namespace Azure.Migrate.Export.Assessment.Parser
                     {
                         string key = value.Properties.DiscoveredWebAppId?.ToLower();
                         UpdateAssessedWebAppDataset(AzureWebAppData, value, key, kvp.Key);
+
+                        AzureWebAppData[key].MonthlySecurityCost = monthlySecurityCostEstimate;
 
                         if (kvp.Key.AssessmentTag == AssessmentTag.PerformanceBased)
                             AzureWebAppData[key].EstimatedComputeCost = monthlyCostEstimate;

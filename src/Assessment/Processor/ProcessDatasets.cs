@@ -10,13 +10,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
     public class ProcessDatasets
     {
         private readonly Dictionary<string, string> AssessmentIdToDiscoveryIdLookup;
-        // TODO: trim if not required
-        // Independent
-        //private readonly Dictionary<string, List<AssessmentSiteMachine>> AzureVM;
-        //private readonly Dictionary<string, List<AssessmentSiteMachine>> AzureSql;
-        //private readonly Dictionary<string, List<AssessmentSiteMachine>> AzureWebApp;
         private HashSet<string> AzureWebApp_IaaS;
-        //List<AssessmentSiteMachine> AzureVMWareSolution;
 
         // Dependent
         private readonly HashSet<string> SqlServicesVM;
@@ -30,6 +24,11 @@ namespace Azure.Migrate.Export.Assessment.Processor
         private readonly Dictionary<string, AzureWebAppDataset> AzureWebAppData;
         private readonly Dictionary<string, AzureSQLInstanceDataset> AzureSQLInstancesData;
         private readonly Dictionary<string, AzureSQLMachineDataset> AzureSQLMachinesData;
+        private readonly BusinessCaseDataset BusinessCaseData;
+        private readonly Dictionary<string, string> DecommissionedMachinesData;
+
+        private AzureIaaSCostCalculator AzureIaaSCalculator;
+        private AzurePaaSCostCalculator AzurePaaSCalculator;
 
         private UserInput UserInputObj;
 
@@ -48,6 +47,8 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 Dictionary<string, AzureWebAppDataset> azureWebAppData,
                 Dictionary<string, AzureSQLInstanceDataset> azureSQLInstancesData,
                 Dictionary<string, AzureSQLMachineDataset> azureSQLMachinesData,
+                BusinessCaseDataset businessCaseData, 
+                Dictionary<string, string> decommissionedMachinesData,
 
                 UserInput userInputObj
             )
@@ -65,6 +66,11 @@ namespace Azure.Migrate.Export.Assessment.Processor
             AzureWebAppData = azureWebAppData;
             AzureSQLInstancesData = azureSQLInstancesData;
             AzureSQLMachinesData = azureSQLMachinesData;
+            BusinessCaseData = businessCaseData;
+            DecommissionedMachinesData = decommissionedMachinesData;
+
+            AzureIaaSCalculator = new AzureIaaSCostCalculator();
+            AzurePaaSCalculator = new AzurePaaSCostCalculator();
 
             UserInputObj = userInputObj;
         }
@@ -91,6 +97,10 @@ namespace Azure.Migrate.Export.Assessment.Processor
             List<VM_SS_IaaS_Server_Rehost_AsOnPrem> VM_SS_IaaS_Server_Rehost_AsOnPrem_List = new List<VM_SS_IaaS_Server_Rehost_AsOnPrem>();
             List<VM_IaaS_Server_Rehost_Perf> VM_IaaS_Server_Rehost_Perf_List = new List<VM_IaaS_Server_Rehost_Perf>();
             List<VM_IaaS_Server_Rehost_AsOnPrem> VM_IaaS_Server_Rehost_AsOnPrem_List = new List<VM_IaaS_Server_Rehost_AsOnPrem>();
+            Business_Case Business_Case_Data = new Business_Case();
+            List<Financial_Summary> Financial_Summary_List = new List<Financial_Summary>();
+            Cash_Flows Cash_Flows_Data = new Cash_Flows();
+            List<Decommissioned_Machines> Decommissioned_Machines_List = new List<Decommissioned_Machines>();
 
             // Opportunity report models
             List<AVS_Summary> AVS_Summary_List = new List<AVS_Summary>();
@@ -117,17 +127,25 @@ namespace Azure.Migrate.Export.Assessment.Processor
             CreateCorePropertiesModel(corePropertiesObj);
             Process_All_VM_IaaS_Server_Rehost_Perf_Model(All_VM_IaaS_Server_Rehost_Perf_List);
             Process_SQL_All_Instances_Model(SQL_All_Instances_List); // should be the first SQL core report model to be processed.
-            Process_SQL_MI_PaaS_Model(SQL_MI_PaaS_List, AzureSQL_IaaS_Instance, AzureSQL_IaaS_Server);
+            Process_SQL_MI_PaaS_Model(SQL_MI_PaaS_List, AzureSQL_IaaS_Instance);
             Process_SQL_IaaS_Instance_Rehost_Perf_Model(SQL_IaaS_Instance_Rehost_Perf_List, AzureSQL_IaaS_Instance, AzureSQL_IaaS_Server);
             Process_SQL_IaaS_Server_Rehost_Perf_Model(SQL_IaaS_Server_Rehost_Perf_List, AzureSQL_IaaS_Server, AzureVM_Opportunity_Perf);
             Process_SQL_IaaS_Server_Rehost_AsOnPrem_Model(SQL_IaaS_Server_Rehost_AsOnPrem_List, AzureSQL_IaaS_Server, AzureVM_Opportunity_AsOnPrem);
-            Process_WebApp_PaaS_Model(WebApp_PaaS_List, AzureWebApp_IaaS, AzureWebApp_Opportunity);
-            Process_WebApp_IaaS_Server_Rehost_Perf_Model(WebApp_IaaS_Server_Rehost_Perf_List, AzureWebApp_IaaS, AzureVM_Opportunity_Perf);
-            Process_WebApp_IaaS_Server_Rehost_AsOnPrem_Model(WebApp_IaaS_Server_Rehost_AsOnPrem_List, AzureWebApp_IaaS, AzureVM_Opportunity_AsOnPrem);
+            Process_WebApp_PaaS_Model(WebApp_PaaS_List, AzureWebApp_Opportunity);
+            Process_WebApp_IaaS_Server_Rehost_Perf_Model(WebApp_IaaS_Server_Rehost_Perf_List, AzureVM_Opportunity_Perf);
+            Process_WebApp_IaaS_Server_Rehost_AsOnPrem_Model(WebApp_IaaS_Server_Rehost_AsOnPrem_List, AzureVM_Opportunity_AsOnPrem);
             Process_VM_SS_IaaS_Server_Rehost_Perf_Model(VM_SS_IaaS_Server_Rehost_Perf_List, AzureVM_Opportunity_Perf, AzureSQL_IaaS_Server);
             Process_VM_SS_IaaS_Server_Rehost_AsOnPrem_Model(VM_SS_IaaS_Server_Rehost_AsOnPrem_List, AzureVM_Opportunity_AsOnPrem, AzureSQL_IaaS_Server);
             Process_VM_IaaS_Server_Rehost_Perf_Model(VM_IaaS_Server_Rehost_Perf_List, AzureVM_Opportunity_Perf);
             Process_VM_IaaS_Server_Rehost_AsOnPrem_Model(VM_IaaS_Server_Rehost_AsOnPrem_List, AzureVM_Opportunity_AsOnPrem);
+            Process_Business_Case_Model(Business_Case_Data, SQL_MI_PaaS_List, SQL_IaaS_Instance_Rehost_Perf_List, SQL_IaaS_Server_Rehost_Perf_List,
+                                        WebApp_PaaS_List, WebApp_IaaS_Server_Rehost_Perf_List,
+                                        VM_IaaS_Server_Rehost_Perf_List);
+            Process_Financial_Summary_Model(Financial_Summary_List, SQL_MI_PaaS_List, SQL_IaaS_Instance_Rehost_Perf_List, SQL_IaaS_Server_Rehost_Perf_List,
+                                        WebApp_PaaS_List, WebApp_IaaS_Server_Rehost_Perf_List,
+                                        VM_IaaS_Server_Rehost_Perf_List);
+            Process_Cash_Flows_Model(Cash_Flows_Data);
+            Process_Decommissioned_Machines_Model(Decommissioned_Machines_List);
 
             // Opportunity report tabs
             Process_AVS_Summary_Model(AVS_Summary_List);
@@ -221,7 +239,11 @@ namespace Azure.Migrate.Export.Assessment.Processor
                     VM_SS_IaaS_Server_Rehost_Perf_List,
                     VM_SS_IaaS_Server_Rehost_AsOnPrem_List,
                     VM_IaaS_Server_Rehost_Perf_List,
-                    VM_IaaS_Server_Rehost_AsOnPrem_List
+                    VM_IaaS_Server_Rehost_AsOnPrem_List,
+                    Business_Case_Data,
+                    Financial_Summary_List,
+                    Cash_Flows_Data,
+                    Decommissioned_Machines_List
                 );
             exportCoreReportObj.GenerateCoreReportExcel();
             UserInputObj.LoggerObj.LogInformation(93 - UserInputObj.LoggerObj.GetCurrentProgress(), "Generated core report excel sheet");
@@ -288,7 +310,9 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.RecommendedVMSize = VMPerfDataKvp.Value.RecommendedVMSize;
                 obj.MonthlyComputeCostEstimate = VMPerfDataKvp.Value.MonthlyComputeCostEstimate;
                 obj.MonthlyStorageCostEstimate = VMPerfDataKvp.Value.StorageMonthlyCost;
+                obj.MonthlySecurityCostEstimate = VMPerfDataKvp.Value.MonthlySecurityCost;
                 obj.OperatingSystem = UtilityFunctions.GetStringValue(VMPerfDataKvp.Value.OperatingSystem);
+                obj.SupportStatus = VMPerfDataKvp.Value.SupportStatus;
                 obj.VMHost = UtilityFunctions.GetStringValue(VMPerfDataKvp.Value.DatacenterManagementServerName);
                 obj.BootType = UtilityFunctions.GetStringValue(VMPerfDataKvp.Value.BootType);
                 obj.Cores = VMPerfDataKvp.Value.NumberOfCores;
@@ -601,9 +625,11 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MonthlyComputeCostEstimate_AHUB = azureSqlInstance.Value.AzureSQLMIMonthlyComputeCost_AHUB;
                 obj.MonthlyComputeCostEstimate_AHUB_RI3year = azureSqlInstance.Value.AzureSQLMIMonthlyComputeCost_AHUB_RI3year;
                 obj.MonthlyStorageCostEstimate = azureSqlInstance.Value.AzureSQLMIMonthlyStorageCost;
+                obj.MonthlySecurityCostEstimate = azureSqlInstance.Value.AzureSQLMIMonthlySecurityCost;
                 obj.UserDatabases = azureSqlInstance.Value.DatabaseSummaryNumberOfUserDatabases;
                 obj.SQLEdition = azureSqlInstance.Value.SQLEdition;
                 obj.SQLVersion = azureSqlInstance.Value.SQLVersion;
+                obj.SupportStatus = azureSqlInstance.Value.SupportStatus;
                 obj.TotalDBSizeInMB = azureSqlInstance.Value.DatabaseSummaryTotalDatabaseSizeInMB;
                 obj.LargestDBSizeInMB = azureSqlInstance.Value.DatabaseSumaryLargestDatabaseSizeInMB;
                 obj.VCoresAllocated = azureSqlInstance.Value.NumberOfCoresAllocated;
@@ -629,7 +655,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             return true;
         }
 
-        private void Process_SQL_MI_PaaS_Model(List<SQL_MI_PaaS> SQL_MI_PaaS_List, HashSet<string> AzureSQL_IaaS_Instance, HashSet<string> AzureSQL_IaaS_Server)
+        private void Process_SQL_MI_PaaS_Model(List<SQL_MI_PaaS> SQL_MI_PaaS_List, HashSet<string> AzureSQL_IaaS_Instance)
         {
             if (AzureSQLInstancesData == null)
                 return;
@@ -638,12 +664,12 @@ namespace Azure.Migrate.Export.Assessment.Processor
             
             if (UserInputObj.PreferredOptimizationObj.OptimizationPreference.Value.Equals("Migrate to all IaaS"))
             {
-                if (AzureSQL_IaaS_Server == null)
-                    AzureSQL_IaaS_Server = new HashSet<string>();
+                if (AzureSQL_IaaS_Instance == null)
+                    AzureSQL_IaaS_Instance = new HashSet<string>();
 
-                foreach (var kvp in AzureSQLMachinesData)
-                    if (!AzureSQL_IaaS_Server.Contains(kvp.Key))
-                        AzureSQL_IaaS_Server.Add(kvp.Key);
+                foreach (var kvp in AzureSQLInstancesData)
+                    if (!AzureSQL_IaaS_Instance.Contains(kvp.Key))
+                        AzureSQL_IaaS_Instance.Add(kvp.Key);
                 
                 return;
             }
@@ -698,9 +724,11 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MonthlyComputeCostEstimate_AHUB = azureSqlInstance.Value.AzureSQLMIMonthlyComputeCost_AHUB;
                 obj.MonthlyComputeCostEstimate_AHUB_RI3year = azureSqlInstance.Value.AzureSQLMIMonthlyComputeCost_AHUB_RI3year;
                 obj.MonthlyStorageCostEstimate = azureSqlInstance.Value.AzureSQLMIMonthlyStorageCost;
+                obj.MonthlySecurityCostEstimate = azureSqlInstance.Value.AzureSQLMIMonthlySecurityCost;
                 obj.UserDatabases = azureSqlInstance.Value.DatabaseSummaryNumberOfUserDatabases;
                 obj.SQLEdition = azureSqlInstance.Value.SQLEdition;
                 obj.SQLVersion = azureSqlInstance.Value.SQLVersion;
+                obj.SupportStatus = azureSqlInstance.Value.SupportStatus;
                 obj.TotalDBSizeInMB = azureSqlInstance.Value.DatabaseSummaryTotalDatabaseSizeInMB;
                 obj.LargestDBSizeInMB = azureSqlInstance.Value.DatabaseSumaryLargestDatabaseSizeInMB;
                 obj.VCoresAllocated = azureSqlInstance.Value.NumberOfCoresAllocated;
@@ -732,8 +760,6 @@ namespace Azure.Migrate.Export.Assessment.Processor
             if (AzureSQL_IaaS_Instance == null)
                 return;
             if (AzureSQL_IaaS_Instance.Count <= 0)
-                return;
-            if (UserInputObj.PreferredOptimizationObj.OptimizationPreference.Value.Equals("Migrate to all IaaS"))
                 return;
             
             bool isSuccessful = false;
@@ -797,6 +823,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MonthlyComputeCostEstimate_AHUB_RI3year = value.AzureSQLVMMonthlyComputeCost_AHUB_RI3year;
                 obj.MonthlyComputeCostEstimate_ASP3year = value.AzureSQLVMMonthlyComputeCost_ASP3year;
                 obj.MonthlyStorageCostEstimate = value.AzureSQLVMMonthlyStorageCost;
+                obj.MonthlySecurityCostEstimate = value.AzureSQLVMMonthlySecurityCost;
                 obj.SQLServerONAzureVMManagedDiskConfiguration = UtilityFunctions.GetRecommendedDiskSKUs(value.AzureSQLVMLogDisks) +
                                                                  UtilityFunctions.GetRecommendedDiskSKUs(value.AzureSQLVMDataDisks);
                 obj.UserDatabases = value.DatabaseSummaryNumberOfUserDatabases;
@@ -814,6 +841,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
 
                 obj.SQLEdition = value.SQLEdition;
                 obj.SQLVersion = value.SQLVersion;
+                obj.SupportStatus = value.SupportStatus;
                 obj.TotalDBSizeInMB = value.DatabaseSummaryTotalDatabaseSizeInMB;
                 obj.LargestDBSizeInMB = value.DatabaseSumaryLargestDatabaseSizeInMB;
                 obj.VCoresAllocated = value.NumberOfCoresAllocated;
@@ -903,7 +931,9 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MonthlyComputeCostEstimate_AHUB_RI3year = value.MonthlyComputeCostEstimate_AHUB_RI3year;
                 obj.MonthlyComputeCostEstimate_ASP3year = value.MonthlyComputeCostEstimate_ASP3year;
                 obj.MonthlyStorageCostEstimate = value.MonthlyStorageCost;
+                obj.MonthlySecurityCostEstimate = value.MonthlySecurityCost;
                 obj.OperatingSystem = value.OperatingSystemName;
+                obj.SupportStatus = value.SupportStatus;
                 obj.VMHost = UtilityFunctions.GetStringValue(value.DatacenterManagementServerName);
                 obj.BootType = value.BootType;
                 obj.Cores = value.NumberOfCores;
@@ -1002,7 +1032,9 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.RecommendedVMSize = value.RecommendedVMSize;
                 obj.MonthlyComputeCostEstimate = value.MonthlyComputeCostEstimate;
                 obj.MonthlyStorageCostEstimate = value.StorageMonthlyCost;
+                obj.MonthlySecurityCostEstimate = value.MonthlySecurityCost;
                 obj.OperatingSystem = value.OperatingSystem;
+                obj.SupportStatus = value.SupportStatus;
                 obj.VMHost = UtilityFunctions.GetStringValue(value.DatacenterManagementServerName);
                 obj.BootType = UtilityFunctions.GetStringValue(value.BootType);
                 obj.Cores = value.NumberOfCores;
@@ -1097,9 +1129,11 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MonthlyComputeCostEstimate_AHUB = value.AzureSQLMIMonthlyComputeCost_AHUB;
                 obj.MonthlyComputeCostEstimate_AHUB_RI3year = value.AzureSQLMIMonthlyComputeCost_AHUB_RI3year;
                 obj.MonthlyStorageCostEstimate = value.AzureSQLMIMonthlyStorageCost;
+                obj.MonthlySecurityCostEstimate = value.AzureSQLMIMonthlySecurityCost;
                 obj.UserDatabases = value.DatabaseSummaryNumberOfUserDatabases;
                 obj.SQLEdition = value.SQLEdition;
                 obj.SQLVersion = value.SQLVersion;
+                obj.SupportStatus = value.SupportStatus;
                 obj.TotalDBSizeInMB = value.DatabaseSummaryTotalDatabaseSizeInMB;
                 obj.LargestDBSizeInMB = value.DatabaseSumaryLargestDatabaseSizeInMB;
                 obj.VCoresAllocated = value.NumberOfCoresAllocated;
@@ -1126,7 +1160,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             return true;
         }
 
-        private void Process_WebApp_PaaS_Model (List<WebApp_PaaS> WebApp_PaaS_List, HashSet<string> AzureWebApp_IaaS, HashSet<string> AzureWebApp_Opportunity)
+        private void Process_WebApp_PaaS_Model (List<WebApp_PaaS> WebApp_PaaS_List, HashSet<string> AzureWebApp_Opportunity)
         {
             if (AzureWebAppData == null)
                 return;
@@ -1136,13 +1170,13 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 return;
             
             bool isSuccessful = false;
-            isSuccessful = Create_WebApp_PaaS_Model(WebApp_PaaS_List, AzureWebApp_IaaS, AzureWebApp_Opportunity);
+            isSuccessful = Create_WebApp_PaaS_Model(WebApp_PaaS_List, AzureWebApp_Opportunity);
 
             if (!isSuccessful)
                 UserInputObj.LoggerObj.LogWarning($"Encountered issue while generating WebApp_PaaS excel model");
         }
 
-        private bool Create_WebApp_PaaS_Model(List<WebApp_PaaS> WebApp_PaaS_List, HashSet<string> AzureWebApp_IaaS, HashSet<string> AzureWebApp_Opportunity)
+        private bool Create_WebApp_PaaS_Model(List<WebApp_PaaS> WebApp_PaaS_List, HashSet<string> AzureWebApp_Opportunity)
         {
             if (AzureWebAppData == null)
             {
@@ -1155,7 +1189,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 return false;
             }
 
-            UserInputObj.LoggerObj.LogInformation("Creating excel model fro WebApp_PaaS");
+            UserInputObj.LoggerObj.LogInformation("Creating excel model for WebApp_PaaS");
 
             if (WebApp_PaaS_List == null)
                 WebApp_PaaS_List = new List<WebApp_PaaS>();
@@ -1189,6 +1223,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MonthlyComputeCostEstimate = webApp.Value.EstimatedComputeCost;
                 obj.MonthlyComputeCostEstimate_RI3year = webApp.Value.EstimatedComputeCost_RI3year;
                 obj.MonthlyComputeCostEstimate_ASP3year = webApp.Value.EstimatedComputeCost_ASP3year;
+                obj.MonthlySecurityCostEstimate = webApp.Value.MonthlySecurityCost;
                 obj.AzureRecommendedTarget = webApp.Value.AzureRecommendedTarget;
                 obj.GroupName = webApp.Value.GroupName;
                 obj.MachineId = webApp.Value.DiscoveredMachineId;
@@ -1196,11 +1231,104 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 WebApp_PaaS_List.Add(obj);
             }
 
+            UpdateIndividualWebAppPaaSCosts(WebApp_PaaS_List);
             UserInputObj.LoggerObj.LogInformation($"Updated WebApp_PaaS excel model with data of {WebApp_PaaS_List.Count} web applications");
             return true;
         }
 
-        private void Process_WebApp_IaaS_Server_Rehost_Perf_Model(List<WebApp_IaaS_Server_Rehost_Perf> WebApp_IaaS_Server_Rehost_Perf_List, HashSet<string> AzureWebApp_IaaS, HashSet<string> AzureVM_Opportunity_Perf)
+        private void UpdateIndividualWebAppPaaSCosts(List<WebApp_PaaS> WebApp_PaaS_List)
+        {
+            Dictionary<string, int> PlanNameToDivisionFactorMap = GetPlanNameToDivisionFactorMap(WebApp_PaaS_List);
+
+            foreach (var webApp in WebApp_PaaS_List)
+            {
+                string planName = GetUniquePlanName(webApp.Environment, webApp.AppServicePlanName);
+
+                int divisionFactor = 1;
+                if (PlanNameToDivisionFactorMap.ContainsKey(planName))
+                    divisionFactor = PlanNameToDivisionFactorMap[planName];
+
+                webApp.MonthlyComputeCostEstimate /= divisionFactor * 1.0;
+                webApp.MonthlyComputeCostEstimate_RI3year /= divisionFactor * 1.0;
+                webApp.MonthlyComputeCostEstimate_ASP3year /= divisionFactor * 1.0;
+                webApp.MonthlySecurityCostEstimate /= divisionFactor * 1.0;
+            }
+        }
+
+        private Dictionary<string, int> GetPlanNameToDivisionFactorMap(List<WebApp_PaaS> WebApp_PaaS_List)
+        {
+            Dictionary<string, int> EnvironmentToPlanCountMap = GetEnvironmentToPlanCountMap(WebApp_PaaS_List);
+            Dictionary<string, int> PlanToAppCountMap = GetPlanToAppCountMap(WebApp_PaaS_List);
+            Dictionary<string, int> PlanNameToDivisionFactorMap = new Dictionary<string, int>();
+
+            foreach (var kvp in PlanToAppCountMap)
+            {
+                int divisionFactor = 1;
+                if (kvp.Key.Contains("Dev"))
+                    divisionFactor = EnvironmentToPlanCountMap["Dev"] * kvp.Value;
+                else
+                    divisionFactor = EnvironmentToPlanCountMap["Prod"] * kvp.Value;
+
+                if (PlanNameToDivisionFactorMap.ContainsKey(kvp.Key))
+                    continue;
+
+                PlanNameToDivisionFactorMap.Add(kvp.Key, divisionFactor);
+            }
+
+            return PlanNameToDivisionFactorMap;
+        }
+
+        private Dictionary<string, int> GetEnvironmentToPlanCountMap(List<WebApp_PaaS> WebApp_PaaS_List)
+        {
+            Dictionary<string, int> EnvironmentToPlanCountMap = new Dictionary<string, int>();
+            HashSet<string> devPlans = new HashSet<string>();
+            HashSet<string> prodPlans = new HashSet<string>();
+
+            foreach (var webApp in WebApp_PaaS_List)
+            {
+                if (webApp.Environment.Equals("Dev"))
+                {
+                    if (!devPlans.Contains(webApp.AppServicePlanName))
+                        devPlans.Add(webApp.AppServicePlanName);
+                }
+                else if (webApp.Environment.Equals("Prod"))
+                {
+                    if (!prodPlans.Contains(webApp.AppServicePlanName))
+                        prodPlans.Add(webApp.AppServicePlanName);
+                }
+            }
+
+            if (devPlans.Count > 0)
+                EnvironmentToPlanCountMap.Add("Dev", devPlans.Count);
+
+            if (prodPlans.Count > 0)
+                EnvironmentToPlanCountMap.Add("Prod", prodPlans.Count);
+
+            return EnvironmentToPlanCountMap;
+        }
+
+        private Dictionary<string, int> GetPlanToAppCountMap(List<WebApp_PaaS> WebApp_PaaS_List)
+        {
+            Dictionary<string, int> PlanToAppCountMap = new Dictionary<string, int>();
+
+            foreach (var webApp in WebApp_PaaS_List)
+            {
+                string key = GetUniquePlanName(webApp.Environment, webApp.AppServicePlanName);
+                if (!PlanToAppCountMap.ContainsKey(key))
+                    PlanToAppCountMap.Add(key, 0);
+
+                PlanToAppCountMap[key] += 1;
+            }
+
+            return PlanToAppCountMap;
+        }
+
+        private string GetUniquePlanName(string environment, string planName)
+        {
+            return environment + "_" + planName;
+        }
+
+        private void Process_WebApp_IaaS_Server_Rehost_Perf_Model(List<WebApp_IaaS_Server_Rehost_Perf> WebApp_IaaS_Server_Rehost_Perf_List, HashSet<string> AzureVM_Opportunity_Perf)
         {
             if (AzureWebApp_IaaS == null)
                 return;
@@ -1208,13 +1336,13 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 return;
             
             bool isSuccessful = false;
-            isSuccessful = Create_WebApp_IaaS_Server_Rehost_Perf_Model(WebApp_IaaS_Server_Rehost_Perf_List, AzureWebApp_IaaS, AzureVM_Opportunity_Perf);
+            isSuccessful = Create_WebApp_IaaS_Server_Rehost_Perf_Model(WebApp_IaaS_Server_Rehost_Perf_List, AzureVM_Opportunity_Perf);
 
             if (!isSuccessful)
                 UserInputObj.LoggerObj.LogWarning("Encountered issue while generating excel model for WebApp_IaaS_Server_Rehost_Perf");
         }
 
-        private bool Create_WebApp_IaaS_Server_Rehost_Perf_Model(List<WebApp_IaaS_Server_Rehost_Perf> WebApp_IaaS_Server_Rehost_Perf_List, HashSet<string> AzureWebApp_IaaS, HashSet<string> AzureVM_Opportunity_Perf)
+        private bool Create_WebApp_IaaS_Server_Rehost_Perf_Model(List<WebApp_IaaS_Server_Rehost_Perf> WebApp_IaaS_Server_Rehost_Perf_List, HashSet<string> AzureVM_Opportunity_Perf)
         {
             if (AzureVMPerformanceBasedMachinesData == null)
             {
@@ -1265,7 +1393,9 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MonthlyComputeCostEstimate_AHUB_RI3year = value.MonthlyComputeCostEstimate_AHUB_RI3year;
                 obj.MonthlyComputeCostEstimate_ASP3year = value.MonthlyComputeCostEstimate_ASP3year;
                 obj.MonthlyStorageCostEstimate = value.StorageMonthlyCost;
+                obj.MonthlySecurityCostEstimate = value.MonthlySecurityCost;
                 obj.OperatingSystem = UtilityFunctions.GetStringValue(value.OperatingSystem);
+                obj.SupportStatus = value.SupportStatus;
                 obj.VMHost = UtilityFunctions.GetStringValue(value.DatacenterManagementServerName);
                 obj.BootType = UtilityFunctions.GetStringValue(value.BootType);
                 obj.Cores = value.NumberOfCores;
@@ -1306,7 +1436,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             return true;
         }
 
-        private void Process_WebApp_IaaS_Server_Rehost_AsOnPrem_Model(List<WebApp_IaaS_Server_Rehost_AsOnPrem> WebApp_IaaS_Server_Rehost_AsOnPrem_List, HashSet<string> AzureWebApp_IaaS, HashSet<string> AzureVM_Opportunity_AsOnPrem)
+        private void Process_WebApp_IaaS_Server_Rehost_AsOnPrem_Model(List<WebApp_IaaS_Server_Rehost_AsOnPrem> WebApp_IaaS_Server_Rehost_AsOnPrem_List, HashSet<string> AzureVM_Opportunity_AsOnPrem)
         {
             if (AzureWebApp_IaaS == null)
                 return;
@@ -1314,13 +1444,13 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 return;
             
             bool isSuccessful = false;
-            isSuccessful = Create_WebApp_IaaS_Server_Rehost_AsOnPrem_Model(WebApp_IaaS_Server_Rehost_AsOnPrem_List, AzureWebApp_IaaS, AzureVM_Opportunity_AsOnPrem);
+            isSuccessful = Create_WebApp_IaaS_Server_Rehost_AsOnPrem_Model(WebApp_IaaS_Server_Rehost_AsOnPrem_List, AzureVM_Opportunity_AsOnPrem);
 
             if (!isSuccessful)
                 UserInputObj.LoggerObj.LogWarning("Encountered issue while generating excel model for WebApp_IaaS_Server_Rehost_AsOnPrem");
         }
 
-        private bool Create_WebApp_IaaS_Server_Rehost_AsOnPrem_Model(List<WebApp_IaaS_Server_Rehost_AsOnPrem> WebApp_IaaS_Server_Rehost_AsOnPrem_List, HashSet<string> AzureWebApp_IaaS, HashSet<string> AzureVM_Opportunity_AsOnPrem)
+        private bool Create_WebApp_IaaS_Server_Rehost_AsOnPrem_Model(List<WebApp_IaaS_Server_Rehost_AsOnPrem> WebApp_IaaS_Server_Rehost_AsOnPrem_List, HashSet<string> AzureVM_Opportunity_AsOnPrem)
         {
             if (AzureVMAsOnPremMachinesData == null)
             {
@@ -1366,7 +1496,9 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.RecommendedVMSize = value.RecommendedVMSize;
                 obj.MonthlyComputeCostEstimate = value.MonthlyComputeCostEstimate;
                 obj.MonthlyStorageCostEstimate = value.StorageMonthlyCost;
+                obj.MonthlySecurityCostEstimate = value.MonthlySecurityCost;
                 obj.OperatingSystem = UtilityFunctions.GetStringValue(value.OperatingSystem);
+                obj.SupportStatus = value.SupportStatus;
                 obj.VMHost = UtilityFunctions.GetStringValue(value.DatacenterManagementServerName);
                 obj.BootType = UtilityFunctions.GetStringValue(value.BootType);
                 obj.Cores = value.NumberOfCores;
@@ -1744,7 +1876,9 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MonthlyComputeCostEstimate_AHUB_RI3year = value.MonthlyComputeCostEstimate_AHUB_RI3year;
                 obj.MonthlyComputeCostEstimate_ASP3year = value.MonthlyComputeCostEstimate_ASP3year;
                 obj.MonthlyStorageCostEstimate = value.StorageMonthlyCost;
+                obj.MonthlySecurityCostEstimate = value.MonthlySecurityCost;
                 obj.OperatingSystem = UtilityFunctions.GetStringValue(value.OperatingSystem);
+                obj.SupportStatus = value.SupportStatus;
                 obj.VMHost = UtilityFunctions.GetStringValue(value.DatacenterManagementServerName);
                 obj.BootType = UtilityFunctions.GetStringValue(value.BootType);
                 obj.Cores = value.NumberOfCores;
@@ -1844,7 +1978,9 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.RecommendedVMSize = value.RecommendedVMSize;
                 obj.MonthlyComputeCostEstimate = value.MonthlyComputeCostEstimate;
                 obj.MonthlyStorageCostEstimate = value.StorageMonthlyCost;
+                obj.MonthlySecurityCostEstimate = value.MonthlySecurityCost;
                 obj.OperatingSystem = UtilityFunctions.GetStringValue(value.OperatingSystem);
+                obj.SupportStaus = value.SupportStatus;
                 obj.VMHost = UtilityFunctions.GetStringValue(value.DatacenterManagementServerName);
                 obj.BootType = UtilityFunctions.GetStringValue(value.BootType);
                 obj.Cores = value.NumberOfCores;
@@ -1935,7 +2071,9 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MonthlyComputeCostEstimate_AHUB_RI3year = value.MonthlyComputeCostEstimate_AHUB_RI3year;
                 obj.MonthlyComputeCostEstimate_ASP3year = value.MonthlyComputeCostEstimate_ASP3year;
                 obj.MonthlyStorageCostEstimate = value.StorageMonthlyCost;
+                obj.MonthlySecurityCostEstimate = value.MonthlySecurityCost;
                 obj.OperatingSystem = UtilityFunctions.GetStringValue(value.OperatingSystem);
+                obj.SupportStatus = value.SupportStatus;
                 obj.VMHost = UtilityFunctions.GetStringValue(value.DatacenterManagementServerName);
                 obj.BootType = UtilityFunctions.GetStringValue(value.BootType);
                 obj.Cores = value.NumberOfCores;
@@ -2026,7 +2164,9 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.RecommendedVMSize = value.RecommendedVMSize;
                 obj.MonthlyComputeCostEstimate = value.MonthlyComputeCostEstimate;
                 obj.MonthlyStorageCostEstimate = value.StorageMonthlyCost;
+                obj.MonthlySecurityCostEstimate = value.MonthlySecurityCost;
                 obj.OperatingSystem = UtilityFunctions.GetStringValue(value.OperatingSystem);
+                obj.SupportStatus = value.SupportStatus;
                 obj.VMHost = UtilityFunctions.GetStringValue(value.DatacenterManagementServerName);
                 obj.BootType = UtilityFunctions.GetStringValue(value.BootType);
                 obj.Cores = value.NumberOfCores;
@@ -2059,6 +2199,288 @@ namespace Azure.Migrate.Export.Assessment.Processor
             }
 
             UserInputObj.LoggerObj.LogInformation($"Updated VM_Opportunity_AsOnPrem excel model with data of {VM_Opportunity_AsOnPrem_List.Count} machines");
+            return true;
+        }
+
+        private void Process_Business_Case_Model(Business_Case Business_Case_Data,
+                                                 List<SQL_MI_PaaS> SQL_MI_PaaS_List, List<SQL_IaaS_Instance_Rehost_Perf> SQL_IaaS_Instance_Rehost_Perf_List, List<SQL_IaaS_Server_Rehost_Perf> SQL_IaaS_Server_Rehost_Perf_List,
+                                                 List<WebApp_PaaS> WebApp_PaaS_List, List<WebApp_IaaS_Server_Rehost_Perf>WebApp_IaaS_Server_Rehost_Perf_List,
+                                                 List<VM_IaaS_Server_Rehost_Perf> VM_IaaS_Server_Rehost_Perf_List)
+        {
+            UserInputObj.LoggerObj.LogInformation("Creating excel model for Business_Case");
+
+            Business_Case_Data.OnPremisesIaaSCost.ComputeLicenseCost = BusinessCaseData.OnPremIaaSCostDetails.ComputeLicenseCost - BusinessCaseData.OnPremIaaSCostDetails.EsuLicenseCost;
+            Business_Case_Data.OnPremisesIaaSCost.EsuLicenseCost = BusinessCaseData.OnPremIaaSCostDetails.EsuLicenseCost;
+            Business_Case_Data.OnPremisesIaaSCost.StorageCost = BusinessCaseData.OnPremIaaSCostDetails.StorageCost;
+            Business_Case_Data.OnPremisesIaaSCost.NetworkCost = BusinessCaseData.OnPremIaaSCostDetails.NetworkCost;
+            Business_Case_Data.OnPremisesIaaSCost.SecurityCost = BusinessCaseData.OnPremIaaSCostDetails.SecurityCost;
+            Business_Case_Data.OnPremisesIaaSCost.ITStaffCost = BusinessCaseData.OnPremIaaSCostDetails.ITStaffCost;
+            Business_Case_Data.OnPremisesIaaSCost.FacilitiesCost = BusinessCaseData.OnPremIaaSCostDetails.FacilitiesCost;
+
+            Business_Case_Data.OnPremisesPaaSCost.ComputeLicenseCost = BusinessCaseData.OnPremPaaSCostDetails.ComputeLicenseCost - BusinessCaseData.OnPremPaaSCostDetails.EsuLicenseCost;
+            Business_Case_Data.OnPremisesPaaSCost.EsuLicenseCost = BusinessCaseData.OnPremPaaSCostDetails.EsuLicenseCost;
+            Business_Case_Data.OnPremisesPaaSCost.StorageCost = BusinessCaseData.OnPremPaaSCostDetails.StorageCost;
+            Business_Case_Data.OnPremisesPaaSCost.NetworkCost = BusinessCaseData.OnPremPaaSCostDetails.NetworkCost;
+            Business_Case_Data.OnPremisesPaaSCost.SecurityCost = BusinessCaseData.OnPremPaaSCostDetails.SecurityCost;
+            Business_Case_Data.OnPremisesPaaSCost.ITStaffCost = BusinessCaseData.OnPremPaaSCostDetails.ITStaffCost;
+            Business_Case_Data.OnPremisesPaaSCost.FacilitiesCost = BusinessCaseData.OnPremPaaSCostDetails.FacilitiesCost;
+
+            Business_Case_Data.TotalOnPremisesCost.ComputeLicenseCost = Business_Case_Data.OnPremisesIaaSCost.ComputeLicenseCost + Business_Case_Data.OnPremisesPaaSCost.ComputeLicenseCost;
+            Business_Case_Data.TotalOnPremisesCost.EsuLicenseCost = Business_Case_Data.OnPremisesIaaSCost.EsuLicenseCost + Business_Case_Data.OnPremisesPaaSCost.EsuLicenseCost;
+            Business_Case_Data.TotalOnPremisesCost.StorageCost = Business_Case_Data.OnPremisesIaaSCost.StorageCost + Business_Case_Data.OnPremisesPaaSCost.StorageCost;
+            Business_Case_Data.TotalOnPremisesCost.NetworkCost = Business_Case_Data.OnPremisesIaaSCost.NetworkCost + Business_Case_Data.OnPremisesPaaSCost.NetworkCost;
+            Business_Case_Data.TotalOnPremisesCost.SecurityCost = Business_Case_Data.OnPremisesIaaSCost.SecurityCost + Business_Case_Data.OnPremisesPaaSCost.SecurityCost;
+            Business_Case_Data.TotalOnPremisesCost.ITStaffCost = Business_Case_Data.OnPremisesIaaSCost.ITStaffCost + Business_Case_Data.OnPremisesPaaSCost.ITStaffCost;
+            Business_Case_Data.TotalOnPremisesCost.FacilitiesCost = Business_Case_Data.OnPremisesIaaSCost.FacilitiesCost + Business_Case_Data.OnPremisesPaaSCost.FacilitiesCost;
+
+            if (!AzureIaaSCalculator.IsCalculationComplete())
+            {
+                AzureIaaSCalculator.SetParameters(SQL_IaaS_Instance_Rehost_Perf_List, SQL_IaaS_Server_Rehost_Perf_List, WebApp_IaaS_Server_Rehost_Perf_List, VM_IaaS_Server_Rehost_Perf_List);
+                AzureIaaSCalculator.Calculate();
+            }
+
+            Business_Case_Data.AzureIaaSCost.ComputeLicenseCost = AzureIaaSCalculator.GetTotalComputeCost() * 12.0;
+            Business_Case_Data.AzureIaaSCost.EsuLicenseCost = 0;
+            Business_Case_Data.AzureIaaSCost.StorageCost = AzureIaaSCalculator.GetTotalStorageCost() * 12.0;
+            Business_Case_Data.AzureIaaSCost.NetworkCost = 0.05 * (Business_Case_Data.AzureIaaSCost.ComputeLicenseCost + Business_Case_Data.AzureIaaSCost.StorageCost);
+            Business_Case_Data.AzureIaaSCost.SecurityCost = AzureIaaSCalculator.GetTotalSecurityCost() * 12.0;
+            Business_Case_Data.AzureIaaSCost.ITStaffCost = BusinessCaseData.AzureIaaSCostDetails.ITStaffCost;
+            Business_Case_Data.AzureIaaSCost.FacilitiesCost = 0;
+
+            if (!AzurePaaSCalculator.IsCalculationComplete())
+            {
+                AzurePaaSCalculator.SetParameters(SQL_MI_PaaS_List, WebApp_PaaS_List);
+                AzurePaaSCalculator.Calculate();
+            }
+
+            Business_Case_Data.AzurePaaSCost.ComputeLicenseCost = AzurePaaSCalculator.GetTotalComputeCost() * 12.0;
+            Business_Case_Data.AzurePaaSCost.EsuLicenseCost = 0;
+            Business_Case_Data.AzurePaaSCost.StorageCost = AzurePaaSCalculator.GetTotalStorageCost() * 12.0;
+            Business_Case_Data.AzurePaaSCost.NetworkCost = 0.05 * (Business_Case_Data.AzurePaaSCost.ComputeLicenseCost + Business_Case_Data.AzurePaaSCost.StorageCost);
+            Business_Case_Data.AzurePaaSCost.SecurityCost = AzurePaaSCalculator.GetTotalSecurityCost() * 12.0;
+            Business_Case_Data.AzurePaaSCost.ITStaffCost = BusinessCaseData.AzurePaaSCostDetails.ITStaffCost;
+            Business_Case_Data.AzurePaaSCost.FacilitiesCost = 0;
+
+            Business_Case_Data.TotalAzureCost.ComputeLicenseCost = Business_Case_Data.AzureIaaSCost.ComputeLicenseCost + Business_Case_Data.AzurePaaSCost.ComputeLicenseCost;
+            Business_Case_Data.TotalAzureCost.EsuLicenseCost = Business_Case_Data.AzureIaaSCost.EsuLicenseCost + Business_Case_Data.AzurePaaSCost.EsuLicenseCost;
+            Business_Case_Data.TotalAzureCost.StorageCost = Business_Case_Data.AzureIaaSCost.StorageCost + Business_Case_Data.AzurePaaSCost.StorageCost;
+            Business_Case_Data.TotalAzureCost.NetworkCost = Business_Case_Data.AzureIaaSCost.NetworkCost + Business_Case_Data.AzurePaaSCost.NetworkCost;
+            Business_Case_Data.TotalAzureCost.ITStaffCost = Business_Case_Data.AzureIaaSCost.ITStaffCost + Business_Case_Data.AzurePaaSCost.ITStaffCost;
+            Business_Case_Data.TotalAzureCost.SecurityCost = Business_Case_Data.AzureIaaSCost.SecurityCost + Business_Case_Data.AzurePaaSCost.SecurityCost;
+            Business_Case_Data.TotalAzureCost.FacilitiesCost = Business_Case_Data.AzureIaaSCost.FacilitiesCost + Business_Case_Data.AzurePaaSCost.FacilitiesCost;
+
+            UserInputObj.LoggerObj.LogInformation("Updated Business_Case excel model");
+        }
+
+        private void Process_Financial_Summary_Model(List<Financial_Summary> Financial_Summary_List, List<SQL_MI_PaaS> SQL_MI_PaaS_List, List<SQL_IaaS_Instance_Rehost_Perf> SQL_IaaS_Instance_Rehost_Perf_List, List<SQL_IaaS_Server_Rehost_Perf> SQL_IaaS_Server_Rehost_Perf_List,
+                                          List<WebApp_PaaS> WebApp_PaaS_List, List<WebApp_IaaS_Server_Rehost_Perf> WebApp_IaaS_Server_Rehost_Perf_List,
+                                          List<VM_IaaS_Server_Rehost_Perf> VM_IaaS_Server_Rehost_Perf_List)
+        {
+            UserInputObj.LoggerObj.LogInformation("Creating excel model for Financial_Summary");
+            if (!AzurePaaSCalculator.IsCalculationComplete())
+            {
+                AzurePaaSCalculator.SetParameters(SQL_MI_PaaS_List, WebApp_PaaS_List);
+                AzurePaaSCalculator.Calculate();
+            }
+
+            if (!AzureIaaSCalculator.IsCalculationComplete())
+            {
+                AzureIaaSCalculator.SetParameters(SQL_IaaS_Instance_Rehost_Perf_List, SQL_IaaS_Server_Rehost_Perf_List, WebApp_IaaS_Server_Rehost_Perf_List, VM_IaaS_Server_Rehost_Perf_List);
+                AzureIaaSCalculator.Calculate();
+            }
+
+            Dictionary<string, int> WebPaaSEnvironmentToPlanCountMap = GetEnvironmentToPlanCountMap(WebApp_PaaS_List);
+
+            Financial_Summary PaaSWebAppDev = new Financial_Summary();
+            PaaSWebAppDev.MigrationStrategy = "Modernize/Re-Platform(PaaS)";
+            PaaSWebAppDev.Workload = "ASP.NET WebApps on IIS - Dev/Test";
+            PaaSWebAppDev.SourceCount = AzurePaaSCalculator.GetWebAppDevRowCount();
+            if (WebPaaSEnvironmentToPlanCountMap.ContainsKey("Dev")) 
+                PaaSWebAppDev.TargetCount = WebPaaSEnvironmentToPlanCountMap["Dev"];
+            else 
+                PaaSWebAppDev.TargetCount = 0;
+            PaaSWebAppDev.StorageCost = AzurePaaSCalculator.GetWebAppPaaSDevStorageCost() * 12.0;
+            PaaSWebAppDev.ComputeCost = AzurePaaSCalculator.GetWebAppPaaSDevComputeCost() * 12.0;
+            PaaSWebAppDev.TotalAnnualCost = (AzurePaaSCalculator.GetWebAppPaaSDevStorageCost() + AzurePaaSCalculator.GetWebAppPaaSDevComputeCost()) * 12.0;
+            Financial_Summary_List.Add(PaaSWebAppDev);
+
+            Financial_Summary PaaSWebAppProd = new Financial_Summary();
+            PaaSWebAppProd.MigrationStrategy = "Modernize/Re-Platform(PaaS)";
+            PaaSWebAppProd.Workload = "ASP.NET WebApps on IIS - Prod";
+            PaaSWebAppProd.SourceCount = AzurePaaSCalculator.GetWebAppProdRowCount();
+            if (WebPaaSEnvironmentToPlanCountMap.ContainsKey("Prod")) 
+                PaaSWebAppProd.TargetCount = WebPaaSEnvironmentToPlanCountMap["Prod"];
+            else 
+                PaaSWebAppProd.TargetCount = 0;
+            PaaSWebAppProd.StorageCost = AzurePaaSCalculator.GetWebAppPaaSProdStorageCost() * 12.0;
+            PaaSWebAppProd.ComputeCost = AzurePaaSCalculator.GetWebAppPaaSProdComputeCost() * 12.0;
+            PaaSWebAppProd.TotalAnnualCost = (AzurePaaSCalculator.GetWebAppPaaSProdStorageCost() + AzurePaaSCalculator.GetWebAppPaaSProdComputeCost()) * 12.0;
+            Financial_Summary_List.Add(PaaSWebAppProd);
+
+            Financial_Summary PaaSSQLDev = new Financial_Summary();
+            PaaSSQLDev.MigrationStrategy = "Modernize/Re-Platform(PaaS)";
+            PaaSSQLDev.Workload = "SQL Server Database Engine - Dev/Test";
+            PaaSSQLDev.SourceCount = AzurePaaSCalculator.GetSqlPaaSDevMachinesCountTarget();
+            PaaSSQLDev.TargetCount = AzurePaaSCalculator.GetSqlPaaSDevMachinesCountTarget();
+            PaaSSQLDev.StorageCost = AzurePaaSCalculator.GetSqlPaaSDevStorageCost() * 12.0;
+            PaaSSQLDev.ComputeCost = AzurePaaSCalculator.GetSqlPaaSDevComputeCost() * 12.0;
+            PaaSSQLDev.TotalAnnualCost = (AzurePaaSCalculator.GetSqlPaaSDevStorageCost() + AzurePaaSCalculator.GetSqlPaaSDevComputeCost()) * 12.0;
+            Financial_Summary_List.Add(PaaSSQLDev);
+
+            Financial_Summary PaaSSQLProd = new Financial_Summary();
+            PaaSSQLProd.MigrationStrategy = "Modernize/Re-Platform(PaaS)";
+            PaaSSQLProd.Workload = "SQL Server Database Engine - Prod";
+            PaaSSQLProd.SourceCount = AzurePaaSCalculator.GetSqlPaaSProdMachinesCountTarget();
+            PaaSSQLProd.TargetCount = AzurePaaSCalculator.GetSqlPaaSProdMachinesCountTarget();
+            PaaSSQLProd.StorageCost = AzurePaaSCalculator.GetSqlPaaSProdStorageCost() * 12.0;
+            PaaSSQLProd.ComputeCost = AzurePaaSCalculator.GetSqlPaaSProdComputeCost() * 12.0;
+            PaaSSQLProd.TotalAnnualCost = (AzurePaaSCalculator.GetSqlPaaSProdStorageCost() + AzurePaaSCalculator.GetSqlPaaSProdComputeCost()) * 12.0;
+            Financial_Summary_List.Add(PaaSSQLProd);
+
+            Financial_Summary IaaSWebAppDev = new Financial_Summary();
+            IaaSWebAppDev.MigrationStrategy = "Migrate/Rehost to Azure (IaaS)";
+            IaaSWebAppDev.Workload = "ASP.NET WebApps on IIS - Dev/Test";
+            IaaSWebAppDev.SourceCount = AzureIaaSCalculator.GetwebappIaaSDevMachinesCount();
+            IaaSWebAppDev.TargetCount = AzureIaaSCalculator.GetwebappIaaSDevMachinesCount();
+            IaaSWebAppDev.StorageCost = AzureIaaSCalculator.GetWebAppIaaSDevStorageCost() * 12.0;
+            IaaSWebAppDev.ComputeCost = AzureIaaSCalculator.GetWebAppIaaSDevComputeCost() * 12.0;
+            IaaSWebAppDev.TotalAnnualCost = (AzureIaaSCalculator.GetWebAppIaaSDevStorageCost() + AzureIaaSCalculator.GetWebAppIaaSDevComputeCost()) * 12.0;
+            Financial_Summary_List.Add(IaaSWebAppDev);
+
+            Financial_Summary IaaSWebAppProd = new Financial_Summary();
+            IaaSWebAppProd.MigrationStrategy = "Migrate/Rehost to Azure (IaaS)";
+            IaaSWebAppProd.Workload = "ASP.NET WebApps on IIS - Prod";
+            IaaSWebAppProd.SourceCount = AzureIaaSCalculator.GetwebappIaaSProdMachinesCount();
+            IaaSWebAppProd.TargetCount = AzureIaaSCalculator.GetwebappIaaSProdMachinesCount();
+            IaaSWebAppProd.StorageCost = AzureIaaSCalculator.GetWebAppIaaSProdStorageCost() * 12.0;
+            IaaSWebAppProd.ComputeCost = AzureIaaSCalculator.GetWebAppIaaSProdComputeCost() * 12.0;
+            IaaSWebAppProd.TotalAnnualCost = (AzureIaaSCalculator.GetWebAppIaaSProdStorageCost() + AzureIaaSCalculator.GetWebAppIaaSProdComputeCost()) * 12.0;
+            Financial_Summary_List.Add(IaaSWebAppProd);
+
+            Financial_Summary IaaSServerDev = new Financial_Summary();
+            IaaSServerDev.MigrationStrategy = "Migrate/Rehost to Azure (IaaS)";
+            IaaSServerDev.Workload = "Servers - Dev/Test";
+            IaaSServerDev.SourceCount = AzureIaaSCalculator.GetvmserverIaaSDevMachinesCount();
+            IaaSServerDev.TargetCount = AzureIaaSCalculator.GetvmserverIaaSDevMachinesCount();
+            IaaSServerDev.StorageCost = AzureIaaSCalculator.GetVmIaaSDevStorageCost() * 12.0;
+            IaaSServerDev.ComputeCost = AzureIaaSCalculator.GetVmIaaSDevComputeCost() * 12.0;
+            IaaSServerDev.TotalAnnualCost = (AzureIaaSCalculator.GetVmIaaSDevStorageCost() + AzureIaaSCalculator.GetVmIaaSDevComputeCost()) * 12.0;
+            Financial_Summary_List.Add(IaaSServerDev);
+
+            Financial_Summary IaaSServerProd = new Financial_Summary();
+            IaaSServerProd.MigrationStrategy = "Migrate/Rehost to Azure (IaaS)";
+            IaaSServerProd.Workload = "Servers - Prod";
+            IaaSServerProd.SourceCount = AzureIaaSCalculator.GetvmserverIaaSProdMachinesCount();
+            IaaSServerProd.TargetCount = AzureIaaSCalculator.GetvmserverIaaSProdMachinesCount();
+            IaaSServerProd.StorageCost = AzureIaaSCalculator.GetVmIaaSProdStorageCost() * 12.0;
+            IaaSServerProd.ComputeCost = AzureIaaSCalculator.GetVmIaaSProdComputeCost() * 12.0;
+            IaaSServerProd.TotalAnnualCost = (AzureIaaSCalculator.GetVmIaaSProdStorageCost() + AzureIaaSCalculator.GetVmIaaSProdComputeCost()) * 12.0;
+            Financial_Summary_List.Add(IaaSServerProd);
+
+            Financial_Summary IaaSSQLDev = new Financial_Summary();
+            IaaSSQLDev.MigrationStrategy = "Migrate/Rehost to Azure (IaaS)";
+            IaaSSQLDev.Workload = "SQL Server Database Engine - Dev/Test";
+            IaaSSQLDev.SourceCount = AzureIaaSCalculator.GetsqlIaaSDevMachineIdCount();
+            IaaSSQLDev.TargetCount = AzureIaaSCalculator.GetsqlIaaSDevMachinesCountTarget();
+            IaaSSQLDev.StorageCost = AzureIaaSCalculator.GetSqlIaaSDevStorageCost() * 12.0;
+            IaaSSQLDev.ComputeCost = AzureIaaSCalculator.GetSqlIaaSDevComputeCost() * 12.0;
+            IaaSSQLDev.TotalAnnualCost = (AzureIaaSCalculator.GetSqlIaaSDevStorageCost() + AzureIaaSCalculator.GetSqlIaaSDevComputeCost()) * 12.0;
+            Financial_Summary_List.Add(IaaSSQLDev);
+
+            Financial_Summary IaaSSQLProd = new Financial_Summary();
+            IaaSSQLProd.MigrationStrategy = "Migrate/Rehost to Azure (IaaS)";
+            IaaSSQLProd.Workload = "SQL Server Database Engine - Prod";
+            IaaSSQLProd.SourceCount = AzureIaaSCalculator.GetsqlIaaSProdMachineIdCount();
+            IaaSSQLProd.TargetCount = AzureIaaSCalculator.GetsqlIaaSProdMachinesCountTarget();
+            IaaSSQLProd.StorageCost = AzureIaaSCalculator.GetSqlIaaSProdStorageCost() * 12.0;
+            IaaSSQLProd.ComputeCost = AzureIaaSCalculator.GetSqlIaaSProdComputeCost() * 12.0;
+            IaaSSQLProd.TotalAnnualCost = (AzureIaaSCalculator.GetSqlIaaSProdStorageCost() + AzureIaaSCalculator.GetSqlIaaSProdComputeCost()) * 12.0;
+            Financial_Summary_List.Add(IaaSSQLProd);
+
+            Financial_Summary ManagementBackup = new Financial_Summary();
+            ManagementBackup.MigrationStrategy = "Management";
+            ManagementBackup.Workload = "Backup Servers";
+            ManagementBackup.SourceCount = AzureIaaSCalculator.GetManagementSourceMachinesCount();
+            ManagementBackup.TargetCount = AzureIaaSCalculator.GetManagementTargetMachinesCount();
+            ManagementBackup.StorageCost = 0;
+            ManagementBackup.ComputeCost = AzureIaaSCalculator.GetTotalBackupComputeCost() * 12.0;
+            ManagementBackup.TotalAnnualCost = AzureIaaSCalculator.GetTotalBackupComputeCost() * 12.0;
+            Financial_Summary_List.Add(ManagementBackup);
+
+            Financial_Summary ManagementRecovery = new Financial_Summary();
+            ManagementRecovery.MigrationStrategy = "Management";
+            ManagementRecovery.Workload = "Disaster Recovery";
+            ManagementRecovery.SourceCount = AzureIaaSCalculator.GetManagementSourceMachinesCount();
+            ManagementRecovery.TargetCount = AzureIaaSCalculator.GetManagementTargetMachinesCount();
+            ManagementRecovery.StorageCost = 0;
+            ManagementRecovery.ComputeCost = AzureIaaSCalculator.GetTotalRecoveryComputeCost() * 12.0;
+            ManagementRecovery.TotalAnnualCost = AzureIaaSCalculator.GetTotalRecoveryComputeCost() * 12.0;
+            Financial_Summary_List.Add(ManagementRecovery);
+
+            UserInputObj.LoggerObj.LogInformation("Updated excel model for Financial Summary");
+        }
+
+        private void Process_Cash_Flows_Model(Cash_Flows Cash_Flows_Data)
+        {
+            UserInputObj.LoggerObj.LogInformation("Creating excel model for Cash_Flows");
+
+            Cash_Flows_Data.IaaSYOYCosts = BusinessCaseData.IaaSYOYCashFlows;
+            Cash_Flows_Data.TotalYOYCosts = BusinessCaseData.TotalYOYCashFlows;
+
+            Cash_Flows_Data.PaaSYOYCosts.OnPremisesCostYOY.Year0 = Cash_Flows_Data.TotalYOYCosts.OnPremisesCostYOY.Year0 - Cash_Flows_Data.IaaSYOYCosts.OnPremisesCostYOY.Year0;
+            Cash_Flows_Data.PaaSYOYCosts.OnPremisesCostYOY.Year1 = Cash_Flows_Data.TotalYOYCosts.OnPremisesCostYOY.Year1 - Cash_Flows_Data.IaaSYOYCosts.OnPremisesCostYOY.Year1;
+            Cash_Flows_Data.PaaSYOYCosts.OnPremisesCostYOY.Year2 = Cash_Flows_Data.TotalYOYCosts.OnPremisesCostYOY.Year2 - Cash_Flows_Data.IaaSYOYCosts.OnPremisesCostYOY.Year2;
+            Cash_Flows_Data.PaaSYOYCosts.OnPremisesCostYOY.Year3 = Cash_Flows_Data.TotalYOYCosts.OnPremisesCostYOY.Year3 - Cash_Flows_Data.IaaSYOYCosts.OnPremisesCostYOY.Year3;
+
+            Cash_Flows_Data.PaaSYOYCosts.AzureCostYOY.Year0 = Cash_Flows_Data.TotalYOYCosts.AzureCostYOY.Year0 - Cash_Flows_Data.IaaSYOYCosts.AzureCostYOY.Year0;
+            Cash_Flows_Data.PaaSYOYCosts.AzureCostYOY.Year1 = Cash_Flows_Data.TotalYOYCosts.AzureCostYOY.Year1 - Cash_Flows_Data.IaaSYOYCosts.AzureCostYOY.Year1;
+            Cash_Flows_Data.PaaSYOYCosts.AzureCostYOY.Year2 = Cash_Flows_Data.TotalYOYCosts.AzureCostYOY.Year2 - Cash_Flows_Data.IaaSYOYCosts.AzureCostYOY.Year2;
+            Cash_Flows_Data.PaaSYOYCosts.AzureCostYOY.Year3 = Cash_Flows_Data.TotalYOYCosts.AzureCostYOY.Year3 - Cash_Flows_Data.IaaSYOYCosts.AzureCostYOY.Year3;
+
+            Cash_Flows_Data.PaaSYOYCosts.SavingsYOY.Year0 = Cash_Flows_Data.TotalYOYCosts.SavingsYOY.Year0 - Cash_Flows_Data.IaaSYOYCosts.SavingsYOY.Year0;
+            Cash_Flows_Data.PaaSYOYCosts.SavingsYOY.Year1 = Cash_Flows_Data.TotalYOYCosts.SavingsYOY.Year1 - Cash_Flows_Data.IaaSYOYCosts.SavingsYOY.Year1;
+            Cash_Flows_Data.PaaSYOYCosts.SavingsYOY.Year2 = Cash_Flows_Data.TotalYOYCosts.SavingsYOY.Year2 - Cash_Flows_Data.IaaSYOYCosts.SavingsYOY.Year2;
+            Cash_Flows_Data.PaaSYOYCosts.SavingsYOY.Year3 = Cash_Flows_Data.TotalYOYCosts.SavingsYOY.Year3 - Cash_Flows_Data.IaaSYOYCosts.SavingsYOY.Year3;
+
+            UserInputObj.LoggerObj.LogInformation("Updated excel model for Cash_Flows");
+        }
+
+        private void Process_Decommissioned_Machines_Model(List<Decommissioned_Machines> Decommissioned_Machines_List)
+        {
+            if (DecommissionedMachinesData == null)
+                return;
+            if (DecommissionedMachinesData.Count <= 0)
+                return;
+
+            bool isSuccessful = false;
+            isSuccessful = Create_Decommissioned_Machines_Model(Decommissioned_Machines_List);
+
+            if (!isSuccessful)
+                UserInputObj.LoggerObj.LogWarning("Encountered issue while generating excel model for Decommissioned_Machines");
+        }
+
+        private bool Create_Decommissioned_Machines_Model(List<Decommissioned_Machines> Decommissioned_Machines_List)
+        {
+            if (DecommissionedMachinesData == null || DecommissionedMachinesData.Count <= 0)
+            {
+                UserInputObj.LoggerObj.LogWarning("Empty decommissioned machines data");
+                return false;
+            }
+
+            if (Decommissioned_Machines_List == null)
+                Decommissioned_Machines_List = new List<Decommissioned_Machines>();
+
+            foreach (var kvp in DecommissionedMachinesData)
+            {
+                Decommissioned_Machines obj = new Decommissioned_Machines();
+
+                obj.MachineName = kvp.Value;
+                obj.MachineId = kvp.Key;
+
+                Decommissioned_Machines_List.Add(obj);
+            }
+
+            UserInputObj.LoggerObj.LogInformation($"Updated Decommissioned_Machines excel model with data of {Decommissioned_Machines_List.Count} machines");
             return true;
         }
     }

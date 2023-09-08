@@ -107,6 +107,7 @@ namespace Azure.Migrate.Export.Assessment
                 {
                     AssessmentSiteMachine obj = new AssessmentSiteMachine
                     {
+                        DisplayName = value.Properties.DisplayName,
                         AssessmentId = value.Id?.ToLower(),
                         DiscoveryMachineArmId = value.Properties.DiscoveryMachineArmId?.ToLower(),
                         SqlInstancesCount = value.Properties.SqlInstances.Count,
@@ -135,6 +136,9 @@ namespace Azure.Migrate.Export.Assessment
             Dictionary<string, List<string>> GroupMachinesMap = new Dictionary<string, List<string>>();
             List<string> CreatedGroups = new List<string>();
 
+            HashSet<string> discoveryMachineArmIdSet = GetDiscoveredMachineIDsSet();
+            Dictionary<string, string> DecommissionedMachinesData = new Dictionary<string, string>();
+
             foreach (var assessmentSiteMachine in assessmentSiteMachines)
             {
                 if (string.IsNullOrEmpty(assessmentSiteMachine.AssessmentId))
@@ -142,6 +146,12 @@ namespace Azure.Migrate.Export.Assessment
 
                 if (string.IsNullOrEmpty(assessmentSiteMachine.DiscoveryMachineArmId))
                     continue;
+
+                if (!discoveryMachineArmIdSet.Contains(assessmentSiteMachine.DiscoveryMachineArmId) && IsMachineDiscoveredBySelectedSourceAppliance(assessmentSiteMachine.DiscoveryMachineArmId))
+                {
+                    if (!DecommissionedMachinesData.ContainsKey(assessmentSiteMachine.DiscoveryMachineArmId))
+                        DecommissionedMachinesData.Add(assessmentSiteMachine.DiscoveryMachineArmId, assessmentSiteMachine.DisplayName);
+                }
 
                 foreach (var discoverySiteMachine in DiscoveredData)
                 {
@@ -210,6 +220,37 @@ namespace Azure.Migrate.Export.Assessment
 
             string RandomSessionId = new Random().Next(0, 100000).ToString("D5");
             UserInputObj.LoggerObj.LogInformation($"ID for this session: {RandomSessionId}");
+
+            BusinessCaseInformation bizCaseObj = new BusinessCaseSettingsFactory().GetBusinessCaseSettings(UserInputObj, RandomSessionId);
+            KeyValuePair<BusinessCaseInformation, AssessmentPollResponse> bizCaseCompletionResultKvp = new KeyValuePair<BusinessCaseInformation, AssessmentPollResponse>(bizCaseObj, AssessmentPollResponse.NotCreated);
+            try
+            {
+                bizCaseCompletionResultKvp = new BusinessCaseBuilder(bizCaseObj).BuildBusinessCase(UserInputObj);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (AggregateException aeBuildBizCase)
+            {
+                string errorMessage = "";
+                foreach (var e in aeBuildBizCase.Flatten().InnerExceptions)
+                {
+                    if (e is OperationCanceledException)
+                        throw e;
+                    else
+                    {
+                        errorMessage = errorMessage + e.Message + " ";
+                    }
+                }
+                throw new Exception(errorMessage);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            UserInputObj.LoggerObj.LogInformation($"Business case {bizCaseCompletionResultKvp.Key.BusinessCaseName} is in {bizCaseCompletionResultKvp.Value.ToString()} state");
 
             foreach (var kvp in AzureVM)
             {
@@ -473,7 +514,7 @@ namespace Azure.Migrate.Export.Assessment
             if (invalidAssessmentsCount > 0)
                 UserInputObj.LoggerObj.LogError($"Invalid assessments: {invalidAssessmentsCount}");
             
-            UserInputObj.LoggerObj.LogInformation(65 - UserInputObj.LoggerObj.GetCurrentProgress(), $"Completed assessment creation job"); // 75 % complete
+            UserInputObj.LoggerObj.LogInformation(65 - UserInputObj.LoggerObj.GetCurrentProgress(), $"Completed assessment creation job"); // 65 % complete
 
             Dictionary<AssessmentInformation, AssessmentPollResponse> AzureVMAssessmentStatusMap = new Dictionary<AssessmentInformation, AssessmentPollResponse>();
             Dictionary<AssessmentInformation, AssessmentPollResponse> AzureSQLAssessmentStatusMap = new Dictionary<AssessmentInformation, AssessmentPollResponse>();
@@ -546,6 +587,12 @@ namespace Azure.Migrate.Export.Assessment
                 ParseAzureSQLAssessedMachines(AzureSQLMachinesData, AzureSQLAssessmentStatusMap);
             }
 
+            BusinessCaseDataset BusinessCaseData = new BusinessCaseDataset();
+            if (bizCaseCompletionResultKvp.Value == AssessmentPollResponse.Completed)
+            {
+                ParseBusinessCase(bizCaseCompletionResultKvp, BusinessCaseData);
+            }
+
             ProcessDatasets processorObj = new ProcessDatasets
                 (
                     AssessmentIdToDiscoveryIdLookup,
@@ -559,11 +606,46 @@ namespace Azure.Migrate.Export.Assessment
                     AzureWebAppData,
                     AzureSQLInstancesData,
                     AzureSQLMachinesData,
+                    BusinessCaseData,
+                    DecommissionedMachinesData,
                     UserInputObj
                 );
             processorObj.InititateProcessing();
 
             return true;
+        }
+
+        private void ParseBusinessCase(KeyValuePair<BusinessCaseInformation, AssessmentPollResponse> bizCaseCompletionResultKvp, BusinessCaseDataset BusinessCaseData)
+        {
+            UserInputObj.LoggerObj.LogInformation("Initiating parsing for business case");
+            try
+            {
+                new BusinessCaseParser(bizCaseCompletionResultKvp).ParseBusinessCase(UserInputObj, BusinessCaseData);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (AggregateException aeBizCaseParse)
+            {
+                string errorMessage = "";
+                foreach (var e in aeBizCaseParse.Flatten().InnerExceptions)
+                {
+                    if (e is OperationCanceledException)
+                        throw e;
+                    else
+                    {
+                        errorMessage = errorMessage + e.Message + " ";
+                    }
+                }
+                UserInputObj.LoggerObj.LogError($"Business case parsing error : {errorMessage}");
+            }
+            catch (Exception exBizCaseParse)
+            {
+                UserInputObj.LoggerObj.LogError($"Business case parsing error {exBizCaseParse.Message}");
+            }
+
+            UserInputObj.LoggerObj.LogInformation("Business case parsing job completed");
         }
 
         private void ParseAzureSQLAssessedMachines(Dictionary<string, AzureSQLMachineDataset> AzureSQLMachinesData, Dictionary<AssessmentInformation, AssessmentPollResponse> AzureSQLAssessmentStatusMap)
@@ -732,6 +814,7 @@ namespace Azure.Migrate.Export.Assessment
             UserInputObj.LoggerObj.LogInformation(70 - UserInputObj.LoggerObj.GetCurrentProgress(), "Azure VM assessment parsing job completed"); // 70 % Complete
         }
 
+        #region Deletion
         private void DeletePreviousAssessmentReports()
         {
             UserInputObj.LoggerObj.LogInformation("Deleting previous assessment reports, if any");
@@ -784,6 +867,7 @@ namespace Azure.Migrate.Export.Assessment
             UserInputObj.LoggerObj.LogInformation("Clash report found, please ensure the file is closed otherwise deleting it won't be possible and process will terminate");
             Directory.Delete(directory, true);
         }
+        #endregion
 
         #region Utilities
         private List<string> ObtainAssessmentMachineIdList(List<AssessmentSiteMachine> assessmentSiteMachines)
@@ -805,6 +889,42 @@ namespace Azure.Migrate.Export.Assessment
                 return 1;
 
             return a.AssessmentCreationPriority.CompareTo(b.AssessmentCreationPriority);
+        }
+
+        private HashSet<string> GetDiscoveredMachineIDsSet()
+        {
+            HashSet<string> result = new HashSet<string>();
+
+            foreach (var discoveredMachine in DiscoveredData)
+            {
+                if (!result.Contains(discoveredMachine.MachineId))
+                    result.Add(discoveredMachine.MachineId);
+            }
+
+            return result;
+        }
+
+        private bool IsMachineDiscoveredBySelectedSourceAppliance(string discoveryArmId)
+        {
+            if (string.IsNullOrEmpty(discoveryArmId))
+                return false;
+            if (UserInputObj.AzureMigrateSourceAppliances == null || UserInputObj.AzureMigrateSourceAppliances.Count <= 0)
+                return false;
+
+            bool getVmware = UserInputObj.AzureMigrateSourceAppliances.Contains("vmware");
+            bool getHyperv = UserInputObj.AzureMigrateSourceAppliances.Contains("hyperv");
+            bool getPhysical = UserInputObj.AzureMigrateSourceAppliances.Contains("physical");
+
+            bool isVmwareSite = discoveryArmId.Contains("vmwaresites");
+            bool isHypervSite = discoveryArmId.Contains("hypervsites");
+            bool isServerSite = discoveryArmId.Contains("serversites");
+
+            if ((getVmware && isVmwareSite) ||
+                (getHyperv && isHypervSite) ||
+                (getPhysical && isServerSite))
+                return true;
+
+            return false;
         }
         #endregion
     }

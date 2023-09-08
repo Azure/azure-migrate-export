@@ -116,7 +116,7 @@ namespace Azure.Migrate.Export.Forms
             OptimizationPreferenceComboBox.DisplayMember = "Value";
             OptimizationPreferenceComboBox.SelectedItem = new KeyValuePair<string, string>("ModernizeToPaaS", "Modernize to PaaS (PaaS preferred)");
 
-            AssessSqlServicesSeparatelyGroupBox.Visible = true;
+            AssessSqlServicesSeparatelyGroupBox.Visible = false;
         }
         #endregion
 
@@ -163,12 +163,14 @@ namespace Azure.Migrate.Export.Forms
             if (OptimizationPreferenceComboBox.SelectedItem == null)
                 return false;
 
+            /*
             else if (((KeyValuePair<string, string>)OptimizationPreferenceComboBox.SelectedItem).Key == "ModernizeToPaaS" &&
                      ((KeyValuePair<string, string>)OptimizationPreferenceComboBox.SelectedItem).Value == "Modernize to PaaS (PaaS preferred)" &&
                      AssessSqlServicesSeparatelyGroupBox.Visible == false)
             {
                 return false;
             }
+            */
 
             return true;
         }
@@ -202,7 +204,7 @@ namespace Azure.Migrate.Export.Forms
             KeyValuePair<string, string> selectedOptimizationPreference = GetSelectedOptimizationPreference();
             if (!string.IsNullOrEmpty(selectedOptimizationPreference.Value) && !string.IsNullOrEmpty(selectedOptimizationPreference.Key) 
                 && selectedOptimizationPreference.Value == "Modernize to PaaS (PaaS preferred)")
-                AssessSqlServicesSeparatelyGroupBox.Visible = true;
+                AssessSqlServicesSeparatelyGroupBox.Visible = false; //AssessSqlServicesSeparatelyGroupBox.Visible = true;
             else
                 AssessSqlServicesSeparatelyGroupBox.Visible = false;
 

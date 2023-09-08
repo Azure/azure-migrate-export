@@ -23,6 +23,7 @@ namespace Azure.Migrate.Export.Models
         public double AzureSQLMIMonthlyComputeCost_RI3year { get; set; }
         public double AzureSQLMIMonthlyComputeCost_AHUB { get; set; }
         public double AzureSQLMIMonthlyComputeCost_AHUB_RI3year { get; set; }
+        public double AzureSQLMIMonthlySecurityCost { get; set; }
         public double AzureSQLMIMonthlyStorageCost { get; set; }
         public double AzureSQLMIMonthlyLicenseCost { get; set; }
         public AzureSQLTargetType AzureSQLMIMigrationTargetPlatform { get; set; }
@@ -42,6 +43,7 @@ namespace Azure.Migrate.Export.Models
         public double AzureSQLVMMonthlyComputeCost_AHUB { get; set; }
         public double AzureSQLVMMonthlyComputeCost_AHUB_RI3year { get; set; }
         public double AzureSQLVMMonthlyComputeCost_ASP3year { get; set; }
+        public double AzureSQLVMMonthlySecurityCost { get; set; }
         public double AzureSQLVMMonthlyLicenseCost { get; set; }
         public double AzureSQLVMMonthlyStorageCost { get; set; }
         public AzureSQLTargetType AzureSQLVMMigrationTargetPlatform { get; set; }
@@ -54,6 +56,7 @@ namespace Azure.Migrate.Export.Models
         public string SQLInstanceSDSArmId { get; set; }
         public string SQLEdition { get; set; }
         public string SQLVersion { get; set; }
+        public string SupportStatus { get; set; }
         public int NumberOfCoresAllocated { get; set; }
         public double PercentageCoresUtilization { get; set; }
         public List<AssessedDisk> LogicalDisks { get; set; }

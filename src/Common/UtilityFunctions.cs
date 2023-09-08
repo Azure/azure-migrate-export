@@ -2,6 +2,7 @@ using ClosedXML.Excel;
 using System;
 using System.Collections.Generic;
 
+using Azure.Migrate.Export.Forex;
 using Azure.Migrate.Export.Models;
 
 namespace Azure.Migrate.Export.Common
@@ -66,31 +67,30 @@ namespace Azure.Migrate.Export.Common
                     assessmentInfo.Value == AssessmentPollResponse.OutDated);
         }
 
-        public static double GetAzureBackupMonthlyCostEstimate(List<AssessedDisk> disks)
+        public static double GetAzureBackupMonthlyCostEstimate(List<AssessedDisk> disks, string currencySymbol)
         {
+            double exRate = ForexConstants.Instance.GetExchangeRate(currencySymbol);
             double totalDiskStorage = 0;
+
             foreach (var disk in disks)
                 totalDiskStorage += disk.GigabytesProvisioned;
 
-            double totalBackupCost = 0;
+            double storageCost = totalDiskStorage * 3.38 * 0.0224 * exRate;
+            double backupCost = exRate;
 
             if (totalDiskStorage <= 50)
-            {
-                int backupCost = 5;
-                totalBackupCost = backupCost + totalDiskStorage * 3.38 * 0.0224;
-            }
+                backupCost *= 5;
             else if (totalDiskStorage > 50 && totalDiskStorage <= 500)
-            {
-                int backupCost = 10;
-                totalBackupCost = backupCost + totalDiskStorage * 3.38 * 0.0224;
-            }
+                backupCost *= 10;
             else if (totalDiskStorage > 500)
-            {
-                double backupCost = Math.Ceiling(totalDiskStorage / 500) * 10;
-                totalBackupCost = backupCost + totalDiskStorage * 3.38 * 0.0224;
-            }
+                backupCost *= Math.Ceiling(totalDiskStorage / 500) * 10;
 
-            return totalBackupCost;
+            return backupCost + storageCost;
+        }
+
+        public static double GetAzureSiteRecoveryMonthlyCostEstimate(string currencySymbol)
+        {
+            return 25.0 * ForexConstants.Instance.GetExchangeRate(currencySymbol);
         }
 
         public static string GetConfidenceRatingInStars(double confidenceRatingInPercentage)
@@ -269,6 +269,24 @@ namespace Azure.Migrate.Export.Common
             return value;
         }
 
+        public static double GetBusinessCaseTotalOsLicensingCost(List<BusinessCaseOsLicensingDetail> details)
+        {
+            double total = 0;
+            foreach (var detail in details)
+                total += detail.TotalCost;
+
+            return total;
+        }
+
+        public static double GetBusinessCaseTotalPaaSLicensingCost(List<BusinessCaseOnPremisesPaaSLicensingCost> details)
+        {
+            double total = 0;
+            foreach (var detail in details)
+                total += detail.TotalCost;
+
+            return total;
+        }
+
         public static string GetSQLMIConfiguration(AzureSQLInstanceDataset azureSqlInstance)
         {
             string value = "";
@@ -292,6 +310,15 @@ namespace Azure.Migrate.Export.Common
         {
             for (int i = 0; i < columns.Count; i++)
                 sheet.Cell(1, i + 1).Value = columns[i];
+        }
+
+        public static double GetSecurityCost(List<AzureAssessmentCostComponent> costComponents)
+        {
+            foreach (var component in costComponents)
+                if (component.Name.Equals("MonthlySecurityCost"))
+                    return component.Value;
+
+            return 0;
         }
     }
 }

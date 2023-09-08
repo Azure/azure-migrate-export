@@ -17,7 +17,7 @@ namespace Azure.Migrate.Export.Models
     public class AzureSQLAssessedMachineValue
     {
         [JsonProperty("id")]
-        public string id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -45,6 +45,9 @@ namespace Azure.Migrate.Export.Models
 
         [JsonProperty("recommendedVmFamily")]
         public string RecommendedVmFamily { get; set; }
+
+        [JsonProperty("costComponents")]
+        public List<AzureAssessmentCostComponent> CostComponents { get; set; }
 
         [JsonProperty("recommendedVmSizeNumberOfCores")]
         public int RecommendedVmSizeNumberOfCores { get; set; }
@@ -78,6 +81,9 @@ namespace Azure.Migrate.Export.Models
 
         [JsonProperty("operatingSystemName")]
         public string OperatingSystemName { get; set; }
+
+        [JsonProperty("productSupportStatus")]
+        public ProductSupportState ProductSupportStatus { get; set; }
 
         [JsonProperty("operatingSystemVersion")]
         public string OperatingSystemVersion { get; set; }

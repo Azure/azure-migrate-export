@@ -16,8 +16,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>embedded</DebugType>
-    <Optimize>true</Optimize>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -57,6 +57,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assessment\Parser\BusinessCaseParser.cs" />
+    <Compile Include="Common\AzureIaaSCostCalculator.cs" />
+    <Compile Include="Common\AzurePaaSCostCalculator.cs" />
     <Compile Include="Forms\AssessmentSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,6 +90,20 @@
     <Compile Include="Forms\TrackProgressForm.Designer.cs">
       <DependentUpon>TrackProgressForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Assessment\Datasets\BusinessCaseDataset.cs" />
+    <Compile Include="Models\Assessment\Datasets\Helpers\BusinessCaseDatasetCostDetails.cs" />
+    <Compile Include="Models\Assessment\Excel\CoreReport\Business_Case.cs" />
+    <Compile Include="Models\Assessment\Excel\CoreReport\Cash_Flows.cs" />
+    <Compile Include="Models\Assessment\Excel\CoreReport\Financial_Summary.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\BusinessCaseCompareSummaryJSON.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\BusinessCaseCostDetailsJSON.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\BusinessCaseIaaSSummaryJSON.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\BusinessCaseInformationJSON.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\BusinessCaseOverviewSummaryJSON.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\BusinessCasePaaSSummaryJSON.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\BusinessCaseYOYCostDetailsJSON.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\Helpers\AzureAssessmentCostComponent.cs" />
+    <Compile Include="Models\JSONResponses\Assessment\Helpers\ProductSupportState.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Extensions\ExtendActionButtonEnableDisable.cs" />
     <Compile Include="Extensions\ExtendTabButtonEnableDisable.cs" />
@@ -107,11 +124,13 @@
     <Compile Include="Factory\AzureVMWareSolutionAssessmentSettingsFactory.cs" />
     <Compile Include="Factory\AzureSQLAssessmentSettingsFactory.cs" />
     <Compile Include="Factory\AzureWebAppAssessmentSettingsFactory.cs" />
+    <Compile Include="Factory\BusinessCaseSettingsFactory.cs" />
     <Compile Include="Models\UserInput.cs" />
     <Compile Include="Models\Discovery\DiscoveryData.cs" />
     <Compile Include="Models\Discovery\DiscoveryProperties.cs" />
     <Compile Include="Models\Assessment\AssessmentSiteMachine.cs" />
     <Compile Include="Models\Assessment\AssessmentInformation.cs" />
+    <Compile Include="Models\Assessment\BusinessCaseInformation.cs" />
     <Compile Include="Models\Assessment\Datasets\AzureVMAsOnPremDataset.cs" />
     <Compile Include="Models\Assessment\Datasets\AzureVMPerformanceBasedDataset.cs" />
     <Compile Include="Models\Assessment\Datasets\AVSAssessmentPropertiesDataset.cs" />
@@ -136,6 +155,7 @@
     <Compile Include="Models\Assessment\Excel\CoreReport\SQL_MI_PaaS.cs" />
     <Compile Include="Models\Assessment\Excel\CoreReport\SQL_All_Instances.cs" />
     <Compile Include="Models\Assessment\Excel\CoreReport\WebApp_PaaS.cs" />
+    <Compile Include="Models\Assessment\Excel\CoreReport\Decommissioned_Machines.cs" />
     <Compile Include="Models\Assessment\Excel\OpportunityReport\AVS_Summary.cs" />
     <Compile Include="Models\Assessment\Excel\OpportunityReport\AVS_IaaS_Rehost_Perf.cs" />
     <Compile Include="Models\Assessment\Excel\OpportunityReport\VM_Opportunity_Perf.cs" />
@@ -165,10 +185,12 @@
     <Compile Include="Models\JSONRequests\Assessment\AzureVMWareSolutionAssessmentSettingsJSON.cs" />
     <Compile Include="Models\JSONRequests\Assessment\AzureSQLAssessmentSettingsJSON.cs" />
     <Compile Include="Models\JSONRequests\Assessment\AzureWebAppAssessmentSettingsJSON.cs" />
+    <Compile Include="Models\JSONRequests\Assessment\BusinessCaseSettingsJSON.cs" />
     <Compile Include="Logger\Interfaces\ILogHandler.cs" />
     <Compile Include="Logger\LogHandler.cs" />
     <Compile Include="Logger\LogParameters.cs" />
     <Compile Include="Logger\LogEventHandler.cs" />
+    <Compile Include="Forex\ForexConstants.cs" />
     <Compile Include="Processor\Process.cs" />
     <Compile Include="Processor\ValidateUserInput.cs" />
     <Compile Include="Discovery\Discover.cs" />
@@ -177,6 +199,7 @@
     <Compile Include="Assessment\Assess.cs" />
     <Compile Include="Assessment\DiscoveryDataValidation.cs" />
     <Compile Include="Assessment\BatchAssessments.cs" />
+    <Compile Include="Assessment\BusinessCaseBuilder.cs" />
     <Compile Include="Assessment\Parser\AzureVMAssessmentParser.cs" />
     <Compile Include="Assessment\Parser\AVSAssessmentParser.cs" />
     <Compile Include="Assessment\Parser\AzureWebAppParser.cs" />
@@ -243,10 +266,7 @@
     <None Include="icons\azure_migrate_icon_logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Azure_Migrate_Export_Detailed.pbit">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Azure_Migrate_Export_HBC-Lite.pbit">
+    <None Include="Azure_Migration_and_Modernization.pbit">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="README.txt">

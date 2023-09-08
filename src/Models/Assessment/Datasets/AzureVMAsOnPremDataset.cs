@@ -13,6 +13,7 @@ namespace Azure.Migrate.Export.Models
         public Suitabilities Suitability { get; set; }
         public string SuitabilityExplanation { get; set; }
         public string OperatingSystem { get; set; }
+        public string SupportStatus { get; set; }
         public string BootType { get; set; }
         public int NumberOfCores { get; set; }
         public double MegabytesOfMemory { get; set; }
@@ -21,6 +22,7 @@ namespace Azure.Migrate.Export.Models
         public string RecommendedVMSize { get; set; }
         public List<AssessedDisk> Disks { get; set; }
         public double StorageMonthlyCost { get; set; }
+        public double MonthlySecurityCost { get; set; }
         public double MonthlyComputeCostEstimate { get; set; }
         public string GroupName { get; set; }
     }

@@ -167,7 +167,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AVSAssessedMachinesData[key].MegabytesOfMemory = value.Properties.MegabytesOfMemory;
             AVSAssessedMachinesData[key].Disks = GetAssessedDiskList(value.Properties.Disks);
             AVSAssessedMachinesData[key].StorageInUseGB = value.Properties.StorageInUseGB;
-            AVSAssessedMachinesData[key].NetworkAdapters = value.Properties.NetworkAdapters.Count; // TODO: handle null object reference
+            AVSAssessedMachinesData[key].NetworkAdapters = value.Properties.NetworkAdapters == null ? 0 : value.Properties.NetworkAdapters.Count;
             AVSAssessedMachinesData[key].NetworkAdapterList = GetAssessedNetworkAdapterList(value.Properties.NetworkAdapters);
             AVSAssessedMachinesData[key].GroupName = assessmentInfo.GroupName;
         }

@@ -18,5 +18,8 @@ namespace Azure.Migrate.Export.Models
     {
         [JsonProperty("monthlyCost")]
         public double MonthlyCost { get; set; }
+
+        [JsonProperty("monthlySecurityCost")]
+        public double MonthlySecurityCost { get; set; }
     }
 }

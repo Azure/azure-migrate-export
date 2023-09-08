@@ -70,6 +70,9 @@ namespace Azure.Migrate.Export.Models
         [JsonProperty("sqlVersion")]
         public string SqlVersion { get; set; }
 
+        [JsonProperty("productSupportStatus")]
+        public ProductSupportState ProductSupportStatus { get; set; }
+
         [JsonProperty("numberOfCoresAllocated")]
         public int NumberOfCoresAllocated { get; set; }
 
@@ -166,6 +169,9 @@ namespace Azure.Migrate.Export.Models
         [JsonProperty("migrationTargetPlatform")]
         public AzureSQLTargetType MigrationTargetPlatform { get; set; }
 
+        [JsonProperty("costComponents")]
+        public List<AzureAssessmentCostComponent> CostComponents { get; set; }
+
         [JsonProperty("suitability")]
         public Suitabilities Suitability { get; set; }
 
@@ -189,6 +195,9 @@ namespace Azure.Migrate.Export.Models
 
         [JsonProperty("migrationTargetPlatform")]
         public AzureSQLTargetType MigrationTargetPlatform { get; set; }
+
+        [JsonProperty("costComponents")]
+        public List<AzureAssessmentCostComponent> CostComponents { get; set; }
 
         [JsonProperty("suitability")]
         public Suitabilities Suitability { get; set; }

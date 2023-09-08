@@ -35,7 +35,9 @@ namespace Azure.Migrate.Export.Common
             "Recommended VM Size",
             "Monthly Compute Cost Estimate (Pay as you go)",
             "Monthly Storage Cost Estimate",
+            "Monthly Security Cost Estimate",
             "Operating System",
+            "Support Status",
             "VM Host",
             "Boot Type",
             "Cores",
@@ -78,9 +80,11 @@ namespace Azure.Migrate.Export.Common
             "Monthly Compute Cost Estimate (Pay as you go + AHUB)",
             "Monthly Compute Cost Estimate (Pay as you go + AHUB + RI)",
             "Monthly Storage Cost Estimate",
+            "Monthly Security Cost Estimate",
             "User Databases",
             "SQL Edition",
             "SQL Version",
+            "Support Status",
             "Total DB Size (in MB)",
             "Largest DB Size (in MB)",
             "vCores Allocated",
@@ -115,6 +119,7 @@ namespace Azure.Migrate.Export.Common
             "Monthly Compute Cost Estimate (Pay as you go + AHUB + RI)",
             "Monthly Compute Cost Estimate (Pay as you go + ASP)",
             "Monthly Storage Cost Estimate",
+            "Monthly Security Cost Estimate",
             "SQL Server on Azure VM - Managed Disk Configuration",
             "User Databases",
             "Recommended Deployment Type",
@@ -128,6 +133,7 @@ namespace Azure.Migrate.Export.Common
             "Monthly Storage Cost for Ultra Disks",
             "SQL Edition",
             "SQL Version",
+            "Support Status",
             "Total DB Size (in MB)",
             "Largest DB Size (in MB)",
             "vCores Allocated",
@@ -155,7 +161,9 @@ namespace Azure.Migrate.Export.Common
             "Recommended VM Size",
             "Monthly Compute Cost Estimate",
             "Monthly Storage Cost Estimate",
+            "Monthly Security Cost Estimate",
             "Operating System",
+            "Support Status",
             "VM Host",
             "Boot Type",
             "Cores",
@@ -193,7 +201,9 @@ namespace Azure.Migrate.Export.Common
             "Monthly Compute Cost Estimate (Pay as you go + AHUB + RI)",
             "Monthly Compute Cost Estimate (Pay as you go + ASP)",
             "Monthly Storage Cost Estimate",
+            "Monthly Security Cost Estimate",
             "Operating System",
+            "Support Status",
             "VM Host",
             "Boot Type",
             "Cores",
@@ -236,9 +246,11 @@ namespace Azure.Migrate.Export.Common
             "Monthly Compute Cost Estimate (Pay as you go + AHUB)",
             "Monthly Compute Cost Estimate (Pay as you go + AHUB + RI)",
             "Monthly Storage Cost Estimate",
+            "Monthly Security Cost Estimate",
             "User Databases",
             "SQL Edition",
             "SQL Version",
+            "Support Status",
             "Total DB Size (in MB)",
             "Largest DB Size (in MB)",
             "vCores Allocated",
@@ -267,7 +279,9 @@ namespace Azure.Migrate.Export.Common
             "Recommended VM Size",
             "Monthly Compute Cost Estimate",
             "Monthly Storage Cost Estimate",
+            "Monthly Security Cost Estimate",
             "Operating System",
+            "Support Status",
             "VM Host",
             "Boot Type",
             "Cores",
@@ -305,7 +319,9 @@ namespace Azure.Migrate.Export.Common
             "Monthly Compute Cost Estimate (Pay as you go + AHUB + RI)",
             "Monthly Compute Cost Estimate (Pay as you go + ASP)",
             "Monthly Storage Cost Estimate",
+            "Monthly Security Cost Estimate",
             "Operating System",
+            "Support Status",
             "VM Host",
             "Boot Type",
             "Cores",
@@ -417,7 +433,9 @@ namespace Azure.Migrate.Export.Common
             "Recommended VM Size",
             "Monthly Compute Cost Estimate",
             "Monthly Storage Cost Estimate",
+            "Monthly Security Cost Estimate",
             "Operating System",
+            "Support Status",
             "VM Host",
             "Boot Type",
             "Cores",
@@ -455,7 +473,9 @@ namespace Azure.Migrate.Export.Common
             "Monthly Compute Cost Estimate (Pay as you go + AHUB + RI)",
             "Monthly Compute Cost Estimate (Pay as you go + ASP)",
             "Monthly Storage Cost Estimate",
+            "Monthly Security Cost Estimate",
             "Operating System",
+            "Support Status",
             "VM Host",
             "Boot Type",
             "Cores",
@@ -496,8 +516,71 @@ namespace Azure.Migrate.Export.Common
             "Monthly Compute Cost Estimate (Pay as you go)",
             "Monthly Compute Cost Estimate (Pay as you go + RI)",
             "Monthly Compute Cost Estimate (Pay as you go + ASP)",
+            "Monthly Security Cost Estimate",
             "Azure Recommended Target",
             "Group Name",
+            "Machine ID"
+        };
+
+        public const string Business_Case_TabName = "Business_Case";
+        public static readonly List<string> Business_Case_Columns = new List<string>
+        {
+            "Category",
+            "On-Prem IaaS Cost",
+            "On-Prem PaaS Cost",
+            "Total On-Premises Cost",
+            "Azure IaaS Cost",
+            "Azure PaaS Cost",
+            "Total Azure Cost"
+        };
+        public static readonly List<string> Business_Case_RowTypes = new List<string>
+        {
+            "Compute & Licensing",
+            "ESU License",
+            "Storage",
+            "Network",
+            "Security",
+            "IT Staff",
+            "Facilities"
+        };
+
+        public const string Cash_Flows_TabName = "Cash_Flows";
+        public static readonly List<string> Cash_Flows_Years = new List<string>
+        {
+            "Year 0",
+            "Year 1",
+            "Year 2",
+            "Year 3"
+        };
+        public static readonly List<string> Cash_Flows_CloudComputingServiceTypes = new List<string>
+        {
+            "Total",
+            "IaaS",
+            "PaaS"
+        };
+        public static readonly List<string> Cash_Flows_Types = new List<string>
+        {
+            "Current state Cash Flow",
+            "Future state Cash Flow",
+            "Savings"
+        };
+
+        public const string Financial_Summary_TabName = "Financial_Summary";
+        public static readonly List<string> Financial_Summary_Columns = new List<string>
+        {
+            "Migration Strategy",
+            "Workload",
+            "Source Count",
+            "Target Count",
+            "Storage Cost",
+            "Compute Cost",
+            "Total Annual Cost"
+        };
+
+        public const string Decommissioned_Machines_TabName = "Decommissioned_Machines";
+        public static readonly List<string> Decommissioned_Machines_Columns = new List<string>
+        {
+            "Machine Name",
             "Machine ID"
         };
     }
