@@ -28,7 +28,7 @@ To run AME with customization, users need to first generate the discovery report
 7. Users will now be prompted to authenticate for Azure access.
 8. Once the user is authenticated in Azure, the discovery runs to generate the “Discovery_VMs” report which provides details of all servers discovered in your environment from the selected source type.
 9. Apply the required customizations on the Discovery report and save the file. [Learn More](#how-to-customize-discovery-report) on how to customize discovery file.
-10. On the console, select Workflow option as Assessment.
+10. On the console, select **Workflow** option as **Assessment**.
 11. Enter the project identifiers such as Tenant ID, Subscription ID, Resource Group name, and Assessment project name. [Learn More](#how-to-find-project-discovery-and-assessment-parameters) on where to find the project identifiers.
 12. Select the Assessment duration for which you want to run assessment and click **Submit**.
 13. Users will now be prompted to authenticate Azure access.
