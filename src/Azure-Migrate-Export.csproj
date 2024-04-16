@@ -283,7 +283,7 @@
       <Version>0.100.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Identity.Client">
-      <Version>4.49.1</Version>
+      <Version>4.59.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.IdentityModel.Abstractions">
       <Version>6.25.1</Version>
