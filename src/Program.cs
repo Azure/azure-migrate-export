@@ -1,5 +1,6 @@
 ﻿using Microsoft.Identity.Client;
 using System;
+using System.Threading;
 using System.Windows.Forms;
 
 using Azure.Migrate.Export.Authentication;
@@ -20,10 +21,21 @@ namespace Azure.Migrate.Export
         [STAThread]
         static void Main()
         {
+            string appGuid = Application.StartupPath.Replace('\\', '_').Replace(':', '_');
+            string mutexId = $"Global\\{appGuid}";
+            using (Mutex mutex = new Mutex(false, mutexId))
+            {
+                if (!mutex.WaitOne(0, false))
+                {
+                    MessageBox.Show("Another instance of the application is already running.", "Azure Migrate Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
             InitializeCommonAuthentication();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new AzureMigrateExportMainForm());
+            }
         }
 
         public static IPublicClientApplication PublicClientApp { get { return clientApp; } }
