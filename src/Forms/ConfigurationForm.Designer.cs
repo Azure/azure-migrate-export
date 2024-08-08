@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigurationForm));
             this.AzureMigrateSourceApplianceGroupBox = new System.Windows.Forms.GroupBox();
+            this.ImportCheckBox = new System.Windows.Forms.CheckBox();
             this.PhysicalCheckBox = new System.Windows.Forms.CheckBox();
             this.HyperVCheckBox = new System.Windows.Forms.CheckBox();
             this.VMwareCheckBox = new System.Windows.Forms.CheckBox();
@@ -50,6 +51,7 @@
             // 
             // AzureMigrateSourceApplianceGroupBox
             // 
+            this.AzureMigrateSourceApplianceGroupBox.Controls.Add(this.ImportCheckBox);
             this.AzureMigrateSourceApplianceGroupBox.Controls.Add(this.PhysicalCheckBox);
             this.AzureMigrateSourceApplianceGroupBox.Controls.Add(this.HyperVCheckBox);
             this.AzureMigrateSourceApplianceGroupBox.Controls.Add(this.VMwareCheckBox);
@@ -57,6 +59,13 @@
             this.AzureMigrateSourceApplianceGroupBox.Name = "AzureMigrateSourceApplianceGroupBox";
             this.AzureMigrateSourceApplianceGroupBox.TabStop = false;
             this.AzureMigrateSourceApplianceGroupBox.MouseHover += new System.EventHandler(this.AzureMigrateSourceApplianceGroupBox_MouseHover);
+            // 
+            // ImportCheckBox
+            // 
+            resources.ApplyResources(this.ImportCheckBox, "ImportCheckBox");
+            this.ImportCheckBox.Name = "ImportCheckBox";
+            this.ImportCheckBox.UseVisualStyleBackColor = true;
+            this.ImportCheckBox.CheckedChanged += new System.EventHandler(this.ImportCheckBox_CheckedChanged);
             // 
             // PhysicalCheckBox
             // 
@@ -193,5 +202,6 @@
         private System.Windows.Forms.RichTextBox ConfigurationDescriptionRichTextBox;
         private System.Windows.Forms.PictureBox CustomWorkflowInfoPictureBox;
         private System.Windows.Forms.PictureBox ExpressWorkflowInfoPictureBox;
+        private System.Windows.Forms.CheckBox ImportCheckBox;
     }
 }

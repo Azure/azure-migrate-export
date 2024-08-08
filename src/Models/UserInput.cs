@@ -7,14 +7,22 @@ namespace Azure.Migrate.Export.Models
 {
     public class UserInput
     {
-        public UserInput
-            (
-                string tenantId, KeyValuePair<string, string> subscription, KeyValuePair<string, string> resourceGroupName, KeyValuePair<string, string> azureMigrateProjectName,
-                string discoverySiteName, string assessmentProjectName,
-                List<string> azureMigrateSourceAppliances, bool isExpressWorkflow, string module,
-                KeyValuePair<string, string> targetRegion, KeyValuePair<string, string> currency, KeyValuePair<string, string> assessmentDuration,
-                KeyValuePair<string, string> optimizationPreference, bool assessSqlServicesSeparately
-            )
+        public UserInput(
+            string tenantId,
+            KeyValuePair<string, string> subscription,
+            KeyValuePair<string, string> resourceGroupName,
+            KeyValuePair<string, string> azureMigrateProjectName,
+            string discoverySiteName,
+            string assessmentProjectName,
+            List<string> azureMigrateSourceAppliances,
+            bool isExpressWorkflow,
+            string module,
+            KeyValuePair<string, string> targetRegion,
+            KeyValuePair<string, string> currency,
+            KeyValuePair<string, string> assessmentDuration,
+            KeyValuePair<string, string> optimizationPreference,
+            bool assessSqlServicesSeparately
+        )
         {
             TenantId = tenantId;
             Subscription = subscription;

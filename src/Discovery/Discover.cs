@@ -74,107 +74,11 @@ namespace Azure.Migrate.Export.Discovery
             if (UserInputObj.CancellationContext.IsCancellationRequested)
                 UtilityFunctions.InitiateCancellation(UserInputObj);
 
-            List<string> vmwareSites = new List<string>();
-            List<string> hypervSites = new List<string>();
-            List<string> serverSites = new List<string>();
-
-            foreach (string site in masterSitesObj.Properties.Sites)
-            {
-                if (site.Contains("vmwaresites"))
-                    vmwareSites.Add(site);
-                else if (site.Contains("hypervsites"))
-                    hypervSites.Add(site);
-                else if (site.Contains("serversites"))
-                    serverSites.Add(site);
-            }
-
-            UserInputObj.LoggerObj.LogInformation(2, "Finished parsing discovery sites"); // 10 % complete
-
-            int discoveryDataPerSitePercentProgress = UserInputObj.WorkflowObj.IsExpressWorkflow ? 3 : 25;
-            int excelCreationPercentProgress = UserInputObj.WorkflowObj.IsExpressWorkflow ? 1 : 15;
-
-            if (UserInputObj.AzureMigrateSourceAppliances.Count == 2)
-            {
-                discoveryDataPerSitePercentProgress = UserInputObj.WorkflowObj.IsExpressWorkflow ? 4 : 40;
-                excelCreationPercentProgress = UserInputObj.WorkflowObj.IsExpressWorkflow ? 2 : 10;
-            }
-            else if (UserInputObj.AzureMigrateSourceAppliances.Count == 1)
-            {
-                discoveryDataPerSitePercentProgress = UserInputObj.WorkflowObj.IsExpressWorkflow ? 7 : 70;
-                excelCreationPercentProgress = UserInputObj.WorkflowObj.IsExpressWorkflow ? 3 : 20;
-            }
-            
-            List<DiscoveryData> vmwareMachinesDiscovery = new List<DiscoveryData>();
-            List<DiscoveryData> hypervMachinesDiscovery = new List<DiscoveryData>();
-            List<DiscoveryData> physicalMachinesDiscovery = new List<DiscoveryData>();
-
-            try
-            {
-                Parallel.For(0, UserInputObj.AzureMigrateSourceAppliances.Count, i =>
-                {
-                    if (UserInputObj.AzureMigrateSourceAppliances[i].Equals("vmware"))
-                    {
-                        UserInputObj.LoggerObj.LogInformation("Retrieving discovery data from VMWare sites");
-                        vmwareMachinesDiscovery = new RetrieveDiscoveryData().BeginRetrieval(UserInputObj, vmwareSites, DiscoverySites.VMWare);
-                        UserInputObj.LoggerObj.LogInformation(discoveryDataPerSitePercentProgress, $"Retrieved discovery data for {vmwareMachinesDiscovery.Count.ToString()} machines from VMWare sites");
-                    }
-                    else if (UserInputObj.AzureMigrateSourceAppliances[i].Equals("hyperv"))
-                    {
-                        UserInputObj.LoggerObj.LogInformation("Retrieving discovery data from HyperV sites");
-                        hypervMachinesDiscovery = new RetrieveDiscoveryData().BeginRetrieval(UserInputObj, hypervSites, DiscoverySites.HyperV);
-                        UserInputObj.LoggerObj.LogInformation(discoveryDataPerSitePercentProgress, $"Retrieved discovery data for {hypervMachinesDiscovery.Count.ToString()} machines from HyperV sites");
-                    }
-                    else if (UserInputObj.AzureMigrateSourceAppliances[i].Equals("physical"))
-                    {
-                        UserInputObj.LoggerObj.LogInformation("Retrieving discovery data from Physical sites");
-                        physicalMachinesDiscovery = new RetrieveDiscoveryData().BeginRetrieval(UserInputObj, serverSites, DiscoverySites.Physical);
-                        UserInputObj.LoggerObj.LogInformation(discoveryDataPerSitePercentProgress, $"Retrieved discovery data for {physicalMachinesDiscovery.Count.ToString()} machines from Physical sites");
-                    }
-                });
-            }
-            catch (AggregateException ae)
-            {
-                string errorMessage = "";
-                foreach (var e in ae.Flatten().InnerExceptions)
-                {
-                    if (e is OperationCanceledException)
-                        throw e;
-                    else
-                    {
-                        errorMessage = errorMessage + e.Message + " ";
-                    }
-                }
-                throw new Exception (errorMessage);
-            }
-            catch (Exception exDiscover)
-            {
-                throw exDiscover;
-            }
-
-            try
-            { 
-                DiscoveredData.AddRange(vmwareMachinesDiscovery);
-            }
-            catch (Exception exConsolidateVmware)
-            {
-                UserInputObj.LoggerObj.LogWarning($"Failed data consolidation from VMWare sites: {exConsolidateVmware.Message}");
-            }
-            try
-            {
-                DiscoveredData.AddRange(hypervMachinesDiscovery);
-            }
-            catch (Exception exConsolidateHyperv)
-            {
-                UserInputObj.LoggerObj.LogWarning($"Failed data consolidation from HyperV sites: {exConsolidateHyperv.Message}");
-            }
-            try
-            {
-                DiscoveredData.AddRange(physicalMachinesDiscovery);
-            }
-            catch (Exception exConsolidatePhysical)
-            {
-                UserInputObj.LoggerObj.LogWarning($"Failed data consolidation from Physical sites: {exConsolidatePhysical.Message}");
-            }
+            int excelCreationPercentProgress = 0;
+            if (UserInputObj.AzureMigrateSourceAppliances.Contains("import"))
+                excelCreationPercentProgress = PerformImportDiscovery(masterSitesObj);
+            else
+                excelCreationPercentProgress = PerformApplianceDiscovery(masterSitesObj);
 
             if (DiscoveredData.Count == 0)
             {
@@ -220,6 +124,166 @@ namespace Azure.Migrate.Export.Discovery
             discoveryProperites.DiscoverySiteName = UserInputObj.DiscoverySiteName;
             discoveryProperites.Workflow = UserInputObj.WorkflowObj.IsExpressWorkflow ? "Express" : "Custom - Discovery";
             discoveryProperites.SourceAppliances = string.Join(",", UserInputObj.AzureMigrateSourceAppliances);
+        }
+
+        private int PerformApplianceDiscovery(MasterSitesJSON masterSitesObj)
+        {
+            List<string> vmwareSites = new List<string>();
+            List<string> hypervSites = new List<string>();
+            List<string> serverSites = new List<string>();
+
+            foreach (string site in masterSitesObj.Properties.Sites)
+            {
+                if (site.Contains("vmwaresites"))
+                    vmwareSites.Add(site);
+                else if (site.Contains("hypervsites"))
+                    hypervSites.Add(site);
+                else if (site.Contains("serversites"))
+                    serverSites.Add(site);
+            }
+
+            UserInputObj.LoggerObj.LogInformation(2, "Finished parsing discovery sites"); // 10 % complete
+
+            int discoveryDataPerSitePercentProgress = UserInputObj.WorkflowObj.IsExpressWorkflow ? 3 : 25;
+            int excelCreationPercentProgress = UserInputObj.WorkflowObj.IsExpressWorkflow ? 1 : 15;
+
+            if (UserInputObj.AzureMigrateSourceAppliances.Count == 2)
+            {
+                discoveryDataPerSitePercentProgress = UserInputObj.WorkflowObj.IsExpressWorkflow ? 4 : 40;
+                excelCreationPercentProgress = UserInputObj.WorkflowObj.IsExpressWorkflow ? 2 : 10;
+            }
+            else if (UserInputObj.AzureMigrateSourceAppliances.Count == 1)
+            {
+                discoveryDataPerSitePercentProgress = UserInputObj.WorkflowObj.IsExpressWorkflow ? 7 : 70;
+                excelCreationPercentProgress = UserInputObj.WorkflowObj.IsExpressWorkflow ? 3 : 20;
+            }
+
+            List<DiscoveryData> vmwareMachinesDiscovery = new List<DiscoveryData>();
+            List<DiscoveryData> hypervMachinesDiscovery = new List<DiscoveryData>();
+            List<DiscoveryData> physicalMachinesDiscovery = new List<DiscoveryData>();
+
+            try
+            {
+                Parallel.For(0, UserInputObj.AzureMigrateSourceAppliances.Count, i =>
+                {
+                    if (UserInputObj.AzureMigrateSourceAppliances[i].Equals("vmware"))
+                    {
+                        UserInputObj.LoggerObj.LogInformation("Retrieving discovery data from VMWare sites");
+                        vmwareMachinesDiscovery = new RetrieveDiscoveryData().BeginRetrieval(UserInputObj, vmwareSites, DiscoverySites.VMWare);
+                        UserInputObj.LoggerObj.LogInformation(discoveryDataPerSitePercentProgress, $"Retrieved discovery data for {vmwareMachinesDiscovery.Count.ToString()} machines from VMWare sites");
+                    }
+                    else if (UserInputObj.AzureMigrateSourceAppliances[i].Equals("hyperv"))
+                    {
+                        UserInputObj.LoggerObj.LogInformation("Retrieving discovery data from HyperV sites");
+                        hypervMachinesDiscovery = new RetrieveDiscoveryData().BeginRetrieval(UserInputObj, hypervSites, DiscoverySites.HyperV);
+                        UserInputObj.LoggerObj.LogInformation(discoveryDataPerSitePercentProgress, $"Retrieved discovery data for {hypervMachinesDiscovery.Count.ToString()} machines from HyperV sites");
+                    }
+                    else if (UserInputObj.AzureMigrateSourceAppliances[i].Equals("physical"))
+                    {
+                        UserInputObj.LoggerObj.LogInformation("Retrieving discovery data from Physical sites");
+                        physicalMachinesDiscovery = new RetrieveDiscoveryData().BeginRetrieval(UserInputObj, serverSites, DiscoverySites.Physical);
+                        UserInputObj.LoggerObj.LogInformation(discoveryDataPerSitePercentProgress, $"Retrieved discovery data for {physicalMachinesDiscovery.Count.ToString()} machines from Physical sites");
+                    }
+                });
+            }
+            catch (AggregateException ae)
+            {
+                string errorMessage = "";
+                foreach (var e in ae.Flatten().InnerExceptions)
+                {
+                    if (e is OperationCanceledException)
+                        throw e;
+                    else
+                    {
+                        errorMessage = errorMessage + e.Message + " ";
+                    }
+                }
+                throw new Exception(errorMessage);
+            }
+            catch (Exception exDiscover)
+            {
+                throw exDiscover;
+            }
+
+            try
+            {
+                DiscoveredData.AddRange(vmwareMachinesDiscovery);
+            }
+            catch (Exception exConsolidateVmware)
+            {
+                UserInputObj.LoggerObj.LogWarning($"Failed data consolidation from VMWare sites: {exConsolidateVmware.Message}");
+            }
+            try
+            {
+                DiscoveredData.AddRange(hypervMachinesDiscovery);
+            }
+            catch (Exception exConsolidateHyperv)
+            {
+                UserInputObj.LoggerObj.LogWarning($"Failed data consolidation from HyperV sites: {exConsolidateHyperv.Message}");
+            }
+            try
+            {
+                DiscoveredData.AddRange(physicalMachinesDiscovery);
+            }
+            catch (Exception exConsolidatePhysical)
+            {
+                UserInputObj.LoggerObj.LogWarning($"Failed data consolidation from Physical sites: {exConsolidatePhysical.Message}");
+            }
+
+            return excelCreationPercentProgress;
+        }
+
+        private int PerformImportDiscovery(MasterSitesJSON masterSitesObj)
+        {
+            List<string> importSites = new List<string>();
+
+            foreach (string site in masterSitesObj.Properties.Sites)
+            {
+                if (site.Contains("importsites"))
+                    importSites.Add(site);
+            }
+
+            UserInputObj.LoggerObj.LogInformation(2, "Finished parsing discovery sites"); // 10 % complete
+
+            int discoveryDataPerSitePercentProgress = UserInputObj.WorkflowObj.IsExpressWorkflow ? 7 : 70;
+            int excelCreationPercentProgress = UserInputObj.WorkflowObj.IsExpressWorkflow ? 3 : 20;
+            List<DiscoveryData> importMachinesDiscovery = new List<DiscoveryData>();
+
+            try
+            {                
+                UserInputObj.LoggerObj.LogInformation("Retrieving discovery data from Import sites");
+                importMachinesDiscovery = new RetrieveDiscoveryData().BeginRetrieval(UserInputObj, importSites, DiscoverySites.Import);
+                UserInputObj.LoggerObj.LogInformation(discoveryDataPerSitePercentProgress, $"Retrieved discovery data for {importMachinesDiscovery.Count.ToString()} machines from Import sites");                                   
+            }
+            catch (AggregateException ae)
+            {
+                string errorMessage = "";
+                foreach (var e in ae.Flatten().InnerExceptions)
+                {
+                    if (e is OperationCanceledException)
+                        throw e;
+                    else
+                    {
+                        errorMessage = errorMessage + e.Message + " ";
+                    }
+                }
+                throw new Exception(errorMessage);
+            }
+            catch (Exception exDiscover)
+            {
+                throw exDiscover;
+            }
+
+            try
+            {
+                DiscoveredData.AddRange(importMachinesDiscovery);
+            }
+            catch (Exception exConsolidateImport)
+            {
+                UserInputObj.LoggerObj.LogWarning($"Failed data consolidation from Import sites: {exConsolidateImport.Message}");
+            }            
+
+            return excelCreationPercentProgress;
         }
     }
 }

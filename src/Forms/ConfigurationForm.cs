@@ -16,6 +16,9 @@ namespace Azure.Migrate.Export.Forms
         {
             InitializeComponent();
             mainFormObj = obj;
+
+            // Set the DropDownStyle to DropDownList to disable text entry
+            ModuleComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
         }
 
         #region Set Default Values
@@ -24,6 +27,7 @@ namespace Azure.Migrate.Export.Forms
             HyperVCheckBox.Checked = true;
             VMwareCheckBox.Checked = true;
             PhysicalCheckBox.Checked = true;
+            ImportCheckBox.Checked = false;
 
             ExpressWorkflowRadioButton.Checked = true;
         }
@@ -64,6 +68,12 @@ namespace Azure.Migrate.Export.Forms
             mainFormObj.MakeConfigurationTabButtonEnableDecisions();
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
         }
+
+        private void ImportCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            mainFormObj.MakeConfigurationTabButtonEnableDecisions();
+            mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
+        }
         #endregion
 
         #region ComboBox Selection Change Committed
@@ -100,10 +110,31 @@ namespace Azure.Migrate.Export.Forms
 
         private bool ValidateAzureMigrateSourceAppliance()
         {
-            if (VMwareCheckBox.Checked == true || HyperVCheckBox.Checked == true || PhysicalCheckBox.Checked == true)
-                return true;
+            if (!(VMwareCheckBox.Checked ||
+                  HyperVCheckBox.Checked ||
+                  PhysicalCheckBox.Checked ||
+                  ImportCheckBox.Checked))
+            {
+                return false;
+            }
 
-            return false;
+            if ((VMwareCheckBox.Checked ||
+                 HyperVCheckBox.Checked ||
+                 PhysicalCheckBox.Checked) &&
+                 ImportCheckBox.Checked)
+            {
+                return false;
+            }
+
+            if (ImportCheckBox.Checked &&
+               (VMwareCheckBox.Checked ||
+                HyperVCheckBox.Checked ||
+                PhysicalCheckBox.Checked))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private bool ValidateWorkflow()
@@ -222,6 +253,8 @@ namespace Azure.Migrate.Export.Forms
                 azureMigrateSourceAppliances.Add("hyperv");
             if (PhysicalCheckBox.Checked == true)
                 azureMigrateSourceAppliances.Add("physical");
+            if (ImportCheckBox.Checked == true)
+                azureMigrateSourceAppliances.Add("import");
 
             return azureMigrateSourceAppliances;
         }

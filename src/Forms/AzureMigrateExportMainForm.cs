@@ -60,7 +60,6 @@ namespace Azure.Migrate.Export.Forms
         {
             if (CurrentButtonTab == ProjectDetailsTabButton)
                 HandleTabChange(ConfigurationFormObj, ConfigurationTabButton);
-
             else if (CurrentButtonTab == ConfigurationTabButton)
                 HandleTabChange(AssessmentSettingsFormObj, AssessmentSettingsTabButton);
         }
@@ -69,7 +68,6 @@ namespace Azure.Migrate.Export.Forms
         {
             if (CurrentButtonTab == ConfigurationTabButton)
                 HandleTabChange(ProjectDetailsFormObj, ProjectDetailsTabButton);
-
             else if (CurrentButtonTab == AssessmentSettingsTabButton)
                 HandleTabChange(ConfigurationFormObj, ConfigurationTabButton);
         }
@@ -97,13 +95,22 @@ namespace Azure.Migrate.Export.Forms
             bool assessSqlServicesSeparately = AssessmentSettingsFormObj.IsAssessSqlServicesSeparatelyChecked();
 
             UserInput userInputObj = new UserInput(
-                                                    tenantId, subscription, resourceGroup, azureMigrateProject, discoverySiteName, assessmentProjectName,
-                                                    azureMigrateSourceAppliances, isExpressWorkflow, module,
-                                                    targetRegion, currency, assessmentDuration, optimizationPreference, assessSqlServicesSeparately
-                                                  );
-
+                tenantId,
+                subscription,
+                resourceGroup,
+                azureMigrateProject,
+                discoverySiteName,
+                assessmentProjectName,
+                azureMigrateSourceAppliances,
+                isExpressWorkflow,
+                module,
+                targetRegion,
+                currency,
+                assessmentDuration,
+                optimizationPreference,
+                assessSqlServicesSeparately
+            );
             HandleTabChange(TrackProgressFormObj, TrackProgressTabButton);
-
             TrackProgressFormObj.BeginProcess(userInputObj);
         }
 
