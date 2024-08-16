@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,12 +15,17 @@ namespace Azure.Migrate.Export.Discovery
         public List<DiscoveryData> BeginRetrieval(UserInput userInputObj ,List<string> siteUrls, DiscoverySites site)
         {
             List<DiscoveryData> discoveredData = new List<DiscoveryData>();
+            string discoverySitesApiVersion = Routes.DiscoverySitesApiVersion;
+            if (site == DiscoverySites.Import)
+            {
+                discoverySitesApiVersion = Routes.ImportSitesApiVersion;
+            }
 
             foreach (string siteUrl in siteUrls)
             {
                 string url = Routes.ProtocolScheme + Routes.AzureManagementApiHostname + siteUrl + Routes.ForwardSlash +
                              Routes.MachinesPath +
-                             Routes.QueryStringQuestionMark + Routes.QueryParameterApiVersion + Routes.QueryStringEquals + Routes.DiscoverySitesApiVersion +
+                             Routes.QueryStringQuestionMark + Routes.QueryParameterApiVersion + Routes.QueryStringEquals + discoverySitesApiVersion +
                              Routes.QueryStringAmpersand +
                              Routes.AzureMigrateQueryStringDollar + Routes.AzureMigrateQueryParameterFilter + Routes.QueryStringEquals +
                              Routes.AzureMigrateQueryStringOpenBracket +
@@ -85,22 +91,32 @@ namespace Azure.Migrate.Export.Discovery
                         url = jsonObj.NextLink;
                         discoveredData.AddRange(partialDiscoveryData);
                     }
+                    else if (site == DiscoverySites.Import)
+                    {
+                        MachinesImportJSON jsonObj = JsonConvert.DeserializeObject<MachinesImportJSON>(jsonResponse);
+                        partialDiscoveryData = ParseImportDiscoveryData(userInputObj, jsonObj);
+                        url = jsonObj.NextLink;
+                        discoveredData.AddRange(partialDiscoveryData);
+                    }
                 }
             }
 
             if (userInputObj.CancellationContext.IsCancellationRequested)
                 UtilityFunctions.InitiateCancellation(userInputObj);
 
-            // Update devices, if they have sql services present
-            ParallelOptions parallelOptions = new ParallelOptions
+            if (site != DiscoverySites.Import)
             {
-                MaxDegreeOfParallelism = 15
-            };
+                // Update devices, if they have sql services present
+                ParallelOptions parallelOptions = new ParallelOptions
+                {
+                    MaxDegreeOfParallelism = 15
+                };
 
-            Parallel.For(0, discoveredData.Count, parallelOptions, i =>
-            {
-                discoveredData[i].IsSqlServicePresent = new IdentifySqlServices().IdentifyPresenceOfSqlServices(discoveredData[i].MachineId, discoveredData[i].MachineName, userInputObj);
-            });
+                Parallel.For(0, discoveredData.Count, parallelOptions, i =>
+                {
+                    discoveredData[i].IsSqlServicePresent = new IdentifySqlServices().IdentifyPresenceOfSqlServices(discoveredData[i].MachineId, discoveredData[i].MachineName, userInputObj);
+                });
+            }
 
             return discoveredData;
         }
@@ -234,6 +250,44 @@ namespace Azure.Migrate.Export.Discovery
                 discoveryDataObj.BootType = string.IsNullOrEmpty(value.Properties.Firmware) ? "" : value.Properties.Firmware.ToUpper();
                 discoveryDataObj.PowerStatus = string.IsNullOrEmpty(value.Properties.PowerStatus) ? "" : value.Properties.PowerStatus;
                 discoveryDataObj.FirstDiscoveryTime = value.Properties.CreatedTimeStamp;
+                discoveryDataObj.LastUpdatedTime = value.Properties.UpdatedTimestamp;
+
+                discoveryDataObj.MachineId = value.Id?.ToLower();
+
+                data.Add(discoveryDataObj);
+            }
+
+            return data;
+        }
+
+        private List<DiscoveryData> ParseImportDiscoveryData(UserInput userInputObj, MachinesImportJSON jsonObj)
+        {
+            List<DiscoveryData> data = new List<DiscoveryData>();
+
+            foreach (var value in jsonObj.Values)
+            {
+                DiscoveryData discoveryDataObj = new DiscoveryData();
+
+                // Assign values
+                discoveryDataObj.MachineName = value.Properties.DisplayName;
+                discoveryDataObj.EnvironmentType = ""; // only 'Dev' is treated as 'Dev' environment
+
+                discoveryDataObj.SoftwareInventory = 0;
+                discoveryDataObj.SqlDiscoveryServerCount = 0;
+                discoveryDataObj.IsSqlServicePresent = false;
+                discoveryDataObj.WebAppCount = 0;
+
+                discoveryDataObj.OperatingSystem = value.Properties.OperatingSystemDetails?.OSName;
+                discoveryDataObj.Cores = value.Properties.NumberOfProcessorCore ?? 0;
+                discoveryDataObj.MemoryInMB = value.Properties.AllocatedMemoryInMB ?? 0.0;
+                discoveryDataObj.TotalDisks = value.Properties.Disks?.Count?? 0;                
+                discoveryDataObj.IpAddress = value.Properties.IPAddresses != null ? string.Join(",", value.Properties.IPAddresses.Select(ip => $"[{ip}]")) + ";" : "";
+                discoveryDataObj.MacAddress = value.Properties.MacAddress;
+                discoveryDataObj.TotalNetworkAdapters = value.Properties.NumberOfNetworkAdapters ?? 0;
+
+                discoveryDataObj.BootType = string.IsNullOrEmpty(value.Properties.Firmware) ? "" : value.Properties.Firmware.ToUpper();
+                discoveryDataObj.PowerStatus = "";
+                discoveryDataObj.FirstDiscoveryTime = value.Properties.CreatedTimestamp;
                 discoveryDataObj.LastUpdatedTime = value.Properties.UpdatedTimestamp;
 
                 discoveryDataObj.MachineId = value.Id?.ToLower();

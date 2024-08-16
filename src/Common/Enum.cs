@@ -50,7 +50,8 @@ namespace Azure.Migrate.Export.Common
     {
         VMWare,
         Physical,
-        HyperV
+        HyperV,
+        Import
     }
 
     public enum AssessmentType
