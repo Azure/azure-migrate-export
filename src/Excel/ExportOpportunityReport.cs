@@ -7,9 +7,7 @@ using Azure.Migrate.Export.Common;
 namespace Azure.Migrate.Export.Excel
 {
     public class ExportOpportunityReport
-    {
-        private readonly List<AVS_Summary> AVS_Summary_List;
-        private readonly List<AVS_IaaS_Rehost_Perf> AVS_IaaS_Rehost_Perf_List;
+    {       
         private readonly List<SQL_MI_Issues_and_Warnings> SQL_MI_Issues_and_Warnings_List;
         private readonly List<SQL_MI_Opportunity> SQL_MI_Opportunity_List;
         private readonly List<WebApp_Opportunity> WebApp_Opportunity_List;
@@ -19,18 +17,14 @@ namespace Azure.Migrate.Export.Excel
         XLWorkbook OpportunityWb;
 
         public ExportOpportunityReport
-            (
-                List<AVS_Summary> avs_Summary_List,
-                List<AVS_IaaS_Rehost_Perf> avs_IaaS_Rehost_Perf_List,
+            (                
                 List<SQL_MI_Issues_and_Warnings> sql_MI_Issues_and_Warnings_List,
                 List<SQL_MI_Opportunity> sql_MI_Opportunity_List,
                 List<WebApp_Opportunity> webApp_Opportunity_List,
                 List<VM_Opportunity_Perf> vm_Opportunity_Perf_List,
                 List<VM_Opportunity_AsOnPrem> vm_Opportunity_AsOnPrem_List
             )
-        {
-            AVS_Summary_List = avs_Summary_List;
-            AVS_IaaS_Rehost_Perf_List = avs_IaaS_Rehost_Perf_List;
+        {            
             SQL_MI_Issues_and_Warnings_List = sql_MI_Issues_and_Warnings_List;
             SQL_MI_Opportunity_List = sql_MI_Opportunity_List;
             WebApp_Opportunity_List = webApp_Opportunity_List;
@@ -46,9 +40,7 @@ namespace Azure.Migrate.Export.Excel
             Generate_SQL_MI_Issues_and_Warnings_Worksheet();
             Generate_WebApp_Opportunity_Worksheet();
             Generate_VM_Opportunity_Perf_Worksheet();
-            Generate_VM_Opportunity_AsOnPrem_Worksheet();
-            Generate_AVS_Summary_Worksheet();
-            Generate_AVS_IaaS_Server_Rehost_Perf_Worksheet();
+            Generate_VM_Opportunity_AsOnPrem_Worksheet();            
 
             OpportunityWb.SaveAs(OpportunityReportConstants.OpportunityReportPath);
         }
@@ -101,26 +93,6 @@ namespace Azure.Migrate.Export.Excel
 
             if (VM_Opportunity_Perf_List != null && VM_Opportunity_AsOnPrem_List.Count > 0)
                 dataWs.Cell(2, 1).InsertData(VM_Opportunity_AsOnPrem_List);
-        }
-
-        private void Generate_AVS_Summary_Worksheet()
-        {
-            var dataWs = OpportunityWb.Worksheets.Add(OpportunityReportConstants.AVS_Summary_TabName, 6);
-
-            UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, OpportunityReportConstants.AVS_Summary_Columns);
-
-            if (AVS_Summary_List != null && AVS_Summary_List.Count > 0)
-                dataWs.Cell(2, 1).InsertData(AVS_Summary_List);
-        }
-
-        private void Generate_AVS_IaaS_Server_Rehost_Perf_Worksheet()
-        {
-            var dataWs = OpportunityWb.Worksheets.Add(OpportunityReportConstants.AVS_IaaS_Rehost_Perf_TabName, 7);
-
-            UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, OpportunityReportConstants.AVS_IaaS_Rehost_Perf_Columns);
-
-            if (AVS_IaaS_Rehost_Perf_List != null && AVS_IaaS_Rehost_Perf_List.Count > 0)
-                dataWs.Cell(2, 1).InsertData(AVS_IaaS_Rehost_Perf_List);
-        }
+        }        
     }
 }

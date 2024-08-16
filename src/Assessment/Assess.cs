@@ -61,6 +61,9 @@ namespace Azure.Migrate.Export.Assessment
                                                   Routes.AssessmentProjectsPath + Routes.ForwardSlash + UserInputObj.AssessmentProjectName + Routes.ForwardSlash +
                                                   Routes.MachinesPath +
                                                   Routes.QueryStringQuestionMark + Routes.QueryParameterApiVersion + Routes.QueryStringEquals + Routes.AssessmentMachineListApiVersion;
+            
+            if (UserInputObj.AzureMigrateSourceAppliances.Contains("import"))
+                assessmentSiteMachineListUrl += Routes.AssessmentProjectImportFilterPath;
 
             List<AssessmentSiteMachine> assessmentSiteMachines = new List<AssessmentSiteMachine>();
 
@@ -165,10 +168,13 @@ namespace Azure.Migrate.Export.Assessment
 
                     if (!AssessmentIdToDiscoveryIdLookup.ContainsKey(assessmentSiteMachine.AssessmentId))
                         AssessmentIdToDiscoveryIdLookup.Add(assessmentSiteMachine.AssessmentId, discoverySiteMachine.MachineId);
-                    
-                    if (!AzureVM.ContainsKey(discoverySiteMachine.EnvironmentType))
-                        AzureVM.Add(discoverySiteMachine.EnvironmentType, new List<AssessmentSiteMachine>());
-                    AzureVM[discoverySiteMachine.EnvironmentType].Add(assessmentSiteMachine);
+
+                    if (!UserInputObj.AzureMigrateSourceAppliances.Contains("import"))
+                    {
+                        if (!AzureVM.ContainsKey(discoverySiteMachine.EnvironmentType))
+                            AzureVM.Add(discoverySiteMachine.EnvironmentType, new List<AssessmentSiteMachine>());
+                        AzureVM[discoverySiteMachine.EnvironmentType].Add(assessmentSiteMachine);
+                    }                    
                     
                     if (assessmentSiteMachine.SqlInstancesCount > 0 && discoverySiteMachine.SqlDiscoveryServerCount > 0)
                     {
@@ -204,10 +210,11 @@ namespace Azure.Migrate.Export.Assessment
                             SqlServicesVM.Add(discoverySiteMachine.MachineId);
                     }
 
-                    if (discoverySiteMachine.MachineId.Contains("vmwaresites"))
+                    if (discoverySiteMachine.MachineId.Contains("vmwaresites") || (UserInputObj.AzureMigrateSourceAppliances.Contains("import") && discoverySiteMachine.MachineId.Contains("importsites")))
                         AzureVMWareSolution.Add(assessmentSiteMachine);
 
-                    if (addMachineToGeneralVM)
+                    // TO DO: Handle IaaS based assessments for import based discovery in future
+                    if (!UserInputObj.AzureMigrateSourceAppliances.Contains("import") && addMachineToGeneralVM)
                     {
                         if (!GeneralVM.Contains(discoverySiteMachine.MachineId))
                             GeneralVM.Add(discoverySiteMachine.MachineId);
@@ -914,14 +921,17 @@ namespace Azure.Migrate.Export.Assessment
             bool getVmware = UserInputObj.AzureMigrateSourceAppliances.Contains("vmware");
             bool getHyperv = UserInputObj.AzureMigrateSourceAppliances.Contains("hyperv");
             bool getPhysical = UserInputObj.AzureMigrateSourceAppliances.Contains("physical");
+            bool getImport = UserInputObj.AzureMigrateSourceAppliances.Contains("import");
 
             bool isVmwareSite = discoveryArmId.Contains("vmwaresites");
             bool isHypervSite = discoveryArmId.Contains("hypervsites");
             bool isServerSite = discoveryArmId.Contains("serversites");
+            bool isImportSite = discoveryArmId.Contains("importsites");
 
             if ((getVmware && isVmwareSite) ||
                 (getHyperv && isHypervSite) ||
-                (getPhysical && isServerSite))
+                (getPhysical && isServerSite) ||
+                (getImport && isImportSite))
                 return true;
 
             return false;

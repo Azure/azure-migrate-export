@@ -7,69 +7,7 @@ namespace Azure.Migrate.Export.Common
         public const string OpportunityReportDirectory = @".\Opportunity-Report";
         public const string OpportunityReportName = @"AzureMigrate_Assessment_Opportunity_Report.xlsx";
         public const string BackSlash = @"\";
-        public const string OpportunityReportPath = OpportunityReportDirectory + BackSlash + OpportunityReportName;
-
-        public const string AVS_IaaS_Rehost_Perf_TabName = "AVS_IaaS_Rehost_Perf";
-        public static readonly List<string> AVS_IaaS_Rehost_Perf_Columns = new List<string>
-        {
-            "Machine Name",
-            "Azure VMWare Solution Readiness",
-            "Azure VMWare Solution Readiness - Warnings",
-            "Operating System",
-            "Operating System Version",
-            "Operating System Architecture",
-            "Boot Type",
-            "Cores",
-            "Memory (in MB)",
-            "Storage (in GB)",
-            "Storage Utilization (in GB)",
-            "Disk Read (in OPS)",
-            "Disk Write (in OPS)",
-            "Disk Read (in MBPS)",
-            "Disk Write (in MBPS)",
-            "Network Adapters",
-            "IP Addresses",
-            "MAC Addresses",
-            "Network in (in MBPS)",
-            "Network out (in MBPS)",
-            "Disk Names",
-            "Group Name",
-            "Machine ID"
-        };
-
-        public const string AVS_Summary_TabName = "AVS_Summary";
-        public static readonly List<string> AVS_Summary_Columns = new List<string>
-        {
-            "Subscription ID",
-            "Resource Group",
-            "Project Name",
-            "Group Name",
-            "Assessment Name",
-            "Sizing Criterion",
-            "Assessment Type",
-            "Created on",
-            "Total Machines Assessed",
-            "Machines Ready",
-            "Machines Ready with Conditions",
-            "Machines not Ready",
-            "Machines Readiness Unknown",
-            "Recommended Number of Nodes",
-            "Node Type",
-            "Monthly Total Cost Estimate",
-            "Predicted CPU Utilization (in %)",
-            "Predicted Memory Utilization (in %)",
-            "Predicted Storage Utilization (in %)",
-            "Number of CPU Cores - Available",
-            "Memory - Available (in TB)",
-            "Storage - Available (in TB)",
-            "Number of CPU Cores - Used",
-            "Memory - Used (in TB)",
-            "Storage - Used (in TB)",
-            "Number of CPU Cores - Free",
-            "Memory - Free (in TB)",
-            "Storage - Free (in TB)",
-            "Confidence Rating"
-        };
+        public const string OpportunityReportPath = OpportunityReportDirectory + BackSlash + OpportunityReportName;        
 
         public const string SQL_MI_Issues_and_Warnings_TabName = "SQL_MI_Issues_and_Warnings";
         public static readonly List<string> SQL_MI_Issues_and_Warnings_Columns = new List<string>

@@ -186,27 +186,27 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AVSAssessmentsData[assessmentInfo].AssessmentName = avsPropertiesObj.Name;
             AVSAssessmentsData[assessmentInfo].SizingCriterion = new EnumDescriptionHelper().GetEnumDescription(assessmentInfo.AssessmentTag);
             AVSAssessmentsData[assessmentInfo].CreatedOn = avsPropertiesObj.Properties.CreatedTimestamp;
-            AVSAssessmentsData[assessmentInfo].TotalMachinesAssessd = avsPropertiesObj.Properties.NumberOfMachines;
-            AVSAssessmentsData[assessmentInfo].MachinesReady = avsPropertiesObj.Properties.SuitabilitySummary.Suitable;
-            AVSAssessmentsData[assessmentInfo].MachinesReadyWithConditions = avsPropertiesObj.Properties.SuitabilitySummary.ConditionallySuitable;
-            AVSAssessmentsData[assessmentInfo].MachinesReadinessUnknown = avsPropertiesObj.Properties.SuitabilitySummary.ReadinessUnknown;
-            AVSAssessmentsData[assessmentInfo].MachinesNotReady = avsPropertiesObj.Properties.SuitabilitySummary.NotSuitable;
-            AVSAssessmentsData[assessmentInfo].RecommendedNumberOfNodes = avsPropertiesObj.Properties.NumberOfNodes;
+            AVSAssessmentsData[assessmentInfo].TotalMachinesAssessd = avsPropertiesObj.Properties.NumberOfMachines ?? 0;
+            AVSAssessmentsData[assessmentInfo].MachinesReady = avsPropertiesObj.Properties.SuitabilitySummary?.Suitable ?? 0;
+            AVSAssessmentsData[assessmentInfo].MachinesReadyWithConditions = avsPropertiesObj.Properties.SuitabilitySummary?.ConditionallySuitable ?? 0;
+            AVSAssessmentsData[assessmentInfo].MachinesReadinessUnknown = avsPropertiesObj.Properties.SuitabilitySummary?.ReadinessUnknown ?? 0;
+            AVSAssessmentsData[assessmentInfo].MachinesNotReady = avsPropertiesObj.Properties.SuitabilitySummary?.NotSuitable ?? 0;
+            AVSAssessmentsData[assessmentInfo].RecommendedNumberOfNodes = avsPropertiesObj.Properties.NumberOfNodes ?? 0;
             AVSAssessmentsData[assessmentInfo].NodeType = avsPropertiesObj.Properties.NodeType;
-            AVSAssessmentsData[assessmentInfo].TotalMonthlyCostEstimate = avsPropertiesObj.Properties.TotalMonthlyCost;
-            AVSAssessmentsData[assessmentInfo].PredictedCpuUtilizationPercentage = avsPropertiesObj.Properties.CpuUtilization;
-            AVSAssessmentsData[assessmentInfo].PredictedMemoryUtilizationPercentage = avsPropertiesObj.Properties.RamUtilization;
-            AVSAssessmentsData[assessmentInfo].PredictedStorageUtilizationPercentage = avsPropertiesObj.Properties.StorageUtilization;
-            AVSAssessmentsData[assessmentInfo].NumberOfCpuCoresAvailable = avsPropertiesObj.Properties.TotalCpuCores;
-            AVSAssessmentsData[assessmentInfo].MemoryInTBAvailable = avsPropertiesObj.Properties.TotalRamInGB / 1024.0;
-            AVSAssessmentsData[assessmentInfo].StorageInTBAvailable = avsPropertiesObj.Properties.TotalStorageInGB / 1024.0;
+            AVSAssessmentsData[assessmentInfo].TotalMonthlyCostEstimate = avsPropertiesObj.Properties.TotalMonthlyCost ?? 0.00;
+            AVSAssessmentsData[assessmentInfo].PredictedCpuUtilizationPercentage = avsPropertiesObj.Properties.CpuUtilization ?? 0.00;
+            AVSAssessmentsData[assessmentInfo].PredictedMemoryUtilizationPercentage = avsPropertiesObj.Properties.RamUtilization ?? 0.00;
+            AVSAssessmentsData[assessmentInfo].PredictedStorageUtilizationPercentage = avsPropertiesObj.Properties.StorageUtilization ?? 0.00;
+            AVSAssessmentsData[assessmentInfo].NumberOfCpuCoresAvailable = avsPropertiesObj.Properties.TotalCpuCores ?? 0.00;
+            AVSAssessmentsData[assessmentInfo].MemoryInTBAvailable = avsPropertiesObj.Properties.TotalRamInGB / 1024.0 ?? 0.00;
+            AVSAssessmentsData[assessmentInfo].StorageInTBAvailable = avsPropertiesObj.Properties.TotalStorageInGB / 1024.0 ?? 0.00;
             AVSAssessmentsData[assessmentInfo].NumberOfCpuCoresUsed = Math.Ceiling(AVSAssessmentsData[assessmentInfo].NumberOfCpuCoresAvailable * AVSAssessmentsData[assessmentInfo].PredictedCpuUtilizationPercentage / 100.0);
             AVSAssessmentsData[assessmentInfo].MemoryInTBUsed = AVSAssessmentsData[assessmentInfo].MemoryInTBAvailable * AVSAssessmentsData[assessmentInfo].PredictedMemoryUtilizationPercentage / 100.0;
             AVSAssessmentsData[assessmentInfo].StorageInTBUsed = AVSAssessmentsData[assessmentInfo].StorageInTBAvailable * AVSAssessmentsData[assessmentInfo].PredictedStorageUtilizationPercentage / 100.0;
             AVSAssessmentsData[assessmentInfo].NumberOfCpuCoresFree = AVSAssessmentsData[assessmentInfo].NumberOfCpuCoresAvailable - AVSAssessmentsData[assessmentInfo].NumberOfCpuCoresUsed;
             AVSAssessmentsData[assessmentInfo].MemoryInTBFree = AVSAssessmentsData[assessmentInfo].MemoryInTBAvailable - AVSAssessmentsData[assessmentInfo].MemoryInTBUsed;
             AVSAssessmentsData[assessmentInfo].StorageInTBFree = AVSAssessmentsData[assessmentInfo].StorageInTBAvailable - AVSAssessmentsData[assessmentInfo].StorageInTBUsed;
-            AVSAssessmentsData[assessmentInfo].ConfidenceRating = UtilityFunctions.GetConfidenceRatingInStars(avsPropertiesObj.Properties.ConfidenceRatingInPercentage);
+            AVSAssessmentsData[assessmentInfo].ConfidenceRating = UtilityFunctions.GetConfidenceRatingInStars(avsPropertiesObj.Properties.ConfidenceRatingInPercentage?? 0);
         }
 
         #region Utilities

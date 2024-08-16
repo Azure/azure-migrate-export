@@ -275,6 +275,10 @@ namespace Azure.Migrate.Export.HttpRequestHelper
                 httpClient.DefaultRequestHeaders.Add("x-ms-client-request-id", clientRequestId + "-" + workflow + "-azmigexp");
 
                 CreateGroupBodyJSON createGroupJsonObj = new CreateGroupBodyJSON();
+
+                if (userInputObj.AzureMigrateSourceAppliances.Contains("import"))
+                    createGroupJsonObj.Properties.GroupType = "Import";
+                
                 string createGroupJsonBody = JsonConvert.SerializeObject(createGroupJsonObj);
                 byte[] buffer = Encoding.UTF8.GetBytes(createGroupJsonBody);
                 ByteArrayContent byteContent = new ByteArrayContent(buffer);
@@ -520,6 +524,10 @@ namespace Azure.Migrate.Export.HttpRequestHelper
                     Timeout = TimeSpan.FromSeconds(60),
                 };
 
+                string apiVersion = Routes.AssessmentMachineListApiVersion;
+                if (userInputObj.AzureMigrateSourceAppliances.Contains("import"))
+                    apiVersion = Routes.CreateAssessmentImportApiVersion;
+
                 string url = Routes.ProtocolScheme + Routes.AzureManagementApiHostname + Routes.ForwardSlash +
                              Routes.SubscriptionPath + Routes.ForwardSlash + userInputObj.Subscription.Key + Routes.ForwardSlash +
                              Routes.ResourceGroupPath + Routes.ForwardSlash + userInputObj.ResourceGroupName.Value + Routes.ForwardSlash +
@@ -528,7 +536,7 @@ namespace Azure.Migrate.Export.HttpRequestHelper
                              Routes.GroupsPath + Routes.ForwardSlash + assessmentInfo.GroupName + Routes.ForwardSlash +
                              new EnumDescriptionHelper().GetEnumDescription(assessmentInfo.AssessmentType) + Routes.ForwardSlash + assessmentInfo.AssessmentName +
                              Routes.QueryStringQuestionMark +
-                             Routes.QueryParameterApiVersion + Routes.QueryStringEquals + Routes.AssessmentMachineListApiVersion;
+                             Routes.QueryParameterApiVersion + Routes.QueryStringEquals + apiVersion;
                 Uri baseAddress = new Uri(url);
                 string clientRequestId = Guid.NewGuid().ToString();
                 httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + authResult.AccessToken);

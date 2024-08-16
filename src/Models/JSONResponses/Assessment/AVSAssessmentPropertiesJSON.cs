@@ -25,7 +25,7 @@ namespace Azure.Migrate.Export.Models
         public string NodeType { get; set; }
 
         [JsonProperty("totalMonthlyCost")]
-        public double TotalMonthlyCost { get; set; }
+        public double? TotalMonthlyCost { get; set; }
 
         [JsonProperty("suitability")]
         public Suitabilities Suitability { get; set; }
@@ -34,28 +34,28 @@ namespace Azure.Migrate.Export.Models
         public string SuitabilityExplanation { get; set; }
 
         [JsonProperty("numberOfNodes")]
-        public int NumberOfNodes { get; set; }
+        public int? NumberOfNodes { get; set; }
 
         [JsonProperty("cpuUtilization")]
-        public double CpuUtilization { get; set; }
+        public double? CpuUtilization { get; set; }
 
         [JsonProperty("ramUtilization")]
-        public double RamUtilization { get; set; }
+        public double? RamUtilization { get; set; }
 
         [JsonProperty("storageUtilization")]
-        public double StorageUtilization { get; set; }
+        public double? StorageUtilization { get; set; }
 
         [JsonProperty("totalCpuCores")]
-        public double TotalCpuCores { get; set; }
+        public double? TotalCpuCores { get; set; }
 
         [JsonProperty("totalRamInGB")]
-        public double TotalRamInGB { get; set; }
+        public double? TotalRamInGB { get; set; }
 
         [JsonProperty("totalStorageInGB")]
-        public double TotalStorageInGB { get; set; }
+        public double? TotalStorageInGB { get; set; }
 
         [JsonProperty("numberOfMachines")]
-        public int NumberOfMachines { get; set; }
+        public int? NumberOfMachines { get; set; }
 
         [JsonProperty("suitabilitySummary")]
         public AVSSuitabilitySummary SuitabilitySummary { get; set; }
@@ -64,21 +64,21 @@ namespace Azure.Migrate.Export.Models
         public string CreatedTimestamp { get; set; }
 
         [JsonProperty("confidenceRatingInPercentage")]
-        public double ConfidenceRatingInPercentage { get; set; }
+        public double? ConfidenceRatingInPercentage { get; set; }
     }
 
     public class AVSSuitabilitySummary
     {
         [JsonProperty("suitable")]
-        public int Suitable { get; set; }
+        public int? Suitable { get; set; }
 
         [JsonProperty("conditionallySuitable")]
-        public int ConditionallySuitable { get; set; }
+        public int? ConditionallySuitable { get; set; }
 
         [JsonProperty("notSuitable")]
-        public int NotSuitable { get; set; }
+        public int? NotSuitable { get; set; }
 
         [JsonProperty("readinessUnknown")]
-        public int ReadinessUnknown { get; set; }
+        public int? ReadinessUnknown { get; set; }
     }
 }
