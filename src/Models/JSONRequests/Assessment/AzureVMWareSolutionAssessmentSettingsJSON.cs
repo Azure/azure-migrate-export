@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Azure.Migrate.Export.Models
@@ -19,8 +20,8 @@ namespace Azure.Migrate.Export.Models
         [JsonProperty("reservedInstance")]
         public string ReservedInstance { get; set; }
 
-        [JsonProperty("nodeType")]
-        public string NodeType { get; set; } = "AV36";
+        [JsonProperty("nodeTypes")]
+        public List<string> NodeTypes { get; set; }
 
         [JsonProperty("failuresToTolerateAndRaidLevel")]
         public string FailuresToTolerateAndRaidLevel { get; set; } = "Ftt1Raid1";

@@ -100,11 +100,11 @@ namespace Azure.Migrate.Export.Assessment.Processor
             Business_Case Business_Case_Data = new Business_Case();
             List<Financial_Summary> Financial_Summary_List = new List<Financial_Summary>();
             Cash_Flows Cash_Flows_Data = new Cash_Flows();
+            List<AVS_Summary> AVS_Summary_List = new List<AVS_Summary>();
+            List<AVS_IaaS_Rehost_Perf> AVS_IaaS_Rehost_Perf_List = new List<AVS_IaaS_Rehost_Perf>();
             List<Decommissioned_Machines> Decommissioned_Machines_List = new List<Decommissioned_Machines>();
 
             // Opportunity report models
-            List<AVS_Summary> AVS_Summary_List = new List<AVS_Summary>();
-            List<AVS_IaaS_Rehost_Perf> AVS_IaaS_Rehost_Perf_List = new List<AVS_IaaS_Rehost_Perf>();
             List<SQL_MI_Issues_and_Warnings> SQL_MI_Issues_and_Warnings_List = new List<SQL_MI_Issues_and_Warnings>();
             List<SQL_MI_Opportunity> SQL_MI_Opportunity_List = new List<SQL_MI_Opportunity>();
             List<WebApp_Opportunity> WebApp_Opportunity_List = new List<WebApp_Opportunity>();
@@ -145,11 +145,11 @@ namespace Azure.Migrate.Export.Assessment.Processor
                                         WebApp_PaaS_List, WebApp_IaaS_Server_Rehost_Perf_List,
                                         VM_IaaS_Server_Rehost_Perf_List);
             Process_Cash_Flows_Model(Cash_Flows_Data);
+            Process_AVS_Summary_Model(AVS_Summary_List);
+            Process_AVS_IaaS_Rehost_Perf_Model(AVS_IaaS_Rehost_Perf_List);
             Process_Decommissioned_Machines_Model(Decommissioned_Machines_List);
 
             // Opportunity report tabs
-            Process_AVS_Summary_Model(AVS_Summary_List);
-            Process_AVS_IaaS_Rehost_Perf_Model(AVS_IaaS_Rehost_Perf_List);
             Process_SQL_MI_Issues_and_Warnings_Model(SQL_MI_Issues_and_Warnings_List);
             Process_SQL_MI_Opportunity_Model(SQL_MI_Opportunity_List, AzureSQL_IaaS_Instance);
             Process_WebApp_Opportunity_Model(WebApp_Opportunity_List, AzureWebApp_Opportunity);
@@ -243,6 +243,8 @@ namespace Azure.Migrate.Export.Assessment.Processor
                     Business_Case_Data,
                     Financial_Summary_List,
                     Cash_Flows_Data,
+                    AVS_Summary_List,
+                    AVS_IaaS_Rehost_Perf_List,
                     Decommissioned_Machines_List
                 );
             exportCoreReportObj.GenerateCoreReportExcel();
@@ -251,8 +253,6 @@ namespace Azure.Migrate.Export.Assessment.Processor
             UserInputObj.LoggerObj.LogInformation("Generating opportunity report excel sheet");
             ExportOpportunityReport exportOpportunityReportObj = new ExportOpportunityReport
                 (
-                    AVS_Summary_List,
-                    AVS_IaaS_Rehost_Perf_List,
                     SQL_MI_Issues_and_Warnings_List,
                     SQL_MI_Opportunity_List,
                     WebApp_Opportunity_List,

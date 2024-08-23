@@ -25,6 +25,8 @@ namespace Azure.Migrate.Export.Excel
         private readonly Business_Case Business_Case_Data;
         private readonly List<Financial_Summary> Financial_Summary_List;
         private readonly Cash_Flows Cash_Flows_Data;
+        private readonly List<AVS_Summary> AVS_Summary_List;
+        private readonly List<AVS_IaaS_Rehost_Perf> AVS_IaaS_Rehost_Perf_List;
         private readonly List<Decommissioned_Machines> Decommissioned_Machines_List;
 
         XLWorkbook CoreWb;
@@ -48,6 +50,8 @@ namespace Azure.Migrate.Export.Excel
                 Business_Case business_Case_Data,
                 List<Financial_Summary> financial_Summary_List,
                 Cash_Flows cash_Flows_Data,
+                List<AVS_Summary> avs_Summary_List,
+                List<AVS_IaaS_Rehost_Perf> avs_IaaS_Rehost_Perf_List,
                 List<Decommissioned_Machines> decommissioned_Machines_List
             )
         {
@@ -68,6 +72,8 @@ namespace Azure.Migrate.Export.Excel
             Business_Case_Data = business_Case_Data;
             Financial_Summary_List = financial_Summary_List;
             Cash_Flows_Data = cash_Flows_Data;
+            AVS_Summary_List = avs_Summary_List;
+            AVS_IaaS_Rehost_Perf_List = avs_IaaS_Rehost_Perf_List;
             Decommissioned_Machines_List = decommissioned_Machines_List;
 
             CoreWb = new XLWorkbook();
@@ -92,6 +98,8 @@ namespace Azure.Migrate.Export.Excel
             //Generate_VM_SS_IaaS_Server_Rehost_AsOnPrem_Worksheet();
             Generate_SQL_All_Instances_Worksheet();
             Generate_All_VM_IaaS_Server_Rehost_Perf_Worksheet();
+            Generate_AVS_Summary_Worksheet();
+            Generate_AVS_IaaS_Server_Rehost_Perf_Worksheet();
             Generate_Decommissioned_Machines_Worksheet();
             
             CoreWb.SaveAs(CoreReportConstants.CoreReportPath);
@@ -399,9 +407,29 @@ namespace Azure.Migrate.Export.Excel
                 dataWs.Cell(2, 1).InsertData(All_VM_IaaS_Server_Rehost_Perf_List);
         }
 
+        private void Generate_AVS_Summary_Worksheet()
+        {
+            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.AVS_Summary_TabName, 16);
+
+            UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, CoreReportConstants.AVS_Summary_Columns);
+
+            if (AVS_Summary_List != null && AVS_Summary_List.Count > 0)
+                dataWs.Cell(2, 1).InsertData(AVS_Summary_List);
+        }
+
+        private void Generate_AVS_IaaS_Server_Rehost_Perf_Worksheet()
+        {
+            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.AVS_IaaS_Rehost_Perf_TabName, 17);
+
+            UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, CoreReportConstants.AVS_IaaS_Rehost_Perf_Columns);
+
+            if (AVS_IaaS_Rehost_Perf_List != null && AVS_IaaS_Rehost_Perf_List.Count > 0)
+                dataWs.Cell(2, 1).InsertData(AVS_IaaS_Rehost_Perf_List);
+        }
+
         private void Generate_Decommissioned_Machines_Worksheet()
         {
-            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.Decommissioned_Machines_TabName, 16);
+            var dataWs = CoreWb.Worksheets.Add(CoreReportConstants.Decommissioned_Machines_TabName, 18);
 
             UtilityFunctions.AddColumnHeadersToWorksheet(dataWs, CoreReportConstants.Decommissioned_Machines_Columns);
 
