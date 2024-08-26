@@ -21,28 +21,28 @@ namespace Azure.Migrate.Export.Common
         private int WebAppDevRowCount;
         private int WebAppProdRowCount;
 
-        private double SqlPaaSComputeCost;
-        private double SqlPaaSDevComputeCost;
-        private double SqlPaaSProdComputeCost;
-        private double WebAppPaaSComputeCost;
-        private double WebAppPaaSDevComputeCost;
-        private double WebAppPaaSProdComputeCost;
-        private double TotalPaaSComputeCost;
+        private double SqlPaasComputeCost;
+        private double SqlPaasDevComputeCost;
+        private double SqlPaasProdComputeCost;
+        private double WebappPaasComputeCost;
+        private double WebappPaasDevComputeCost;
+        private double WebappPaasProdComputeCost;
+        private double TotalPaasComputeCost;
 
-        private double SqlPaaSStorageCost;
-        private double SqlPaaSDevStorageCost;
-        private double SqlPaaSProdStorageCost;
-        private double WebAppPaaSStorageCost;
-        private double WebAppPaaSDevStorageCost;
-        private double WebAppPaaSProdStorageCost;
-        private double TotalPaaSStorageCost;
+        private double SqlPaasStorageCost;
+        private double SqlPaasDevStorageCost;
+        private double SqlPaasProdStorageCost;
+        private double WebappPaasStorageCost;
+        private double WebappPaasDevStorageCost;
+        private double WebappPaasProdStorageCost;
+        private double TotalPaasStorageCost;
 
-        private double SqlPaaSSecurityCost;
-        private double WebAppPaaSSecurityCost;
-        private double TotalPaaSSecurityCost;
+        private double SqlPaasSecurityCost;
+        private double WebappPaasSecurityCost;
+        private double TotalPaasSecurityCost;
 
-        private double SqlPaaSAhubSavings;
-        private double TotalPaaSAhubSavings;
+        private double SqlPaasAhubSavings;
+        private double TotalPaasAhubSavings;
 
         public AzurePaaSCostCalculator()
         {
@@ -60,30 +60,30 @@ namespace Azure.Migrate.Export.Common
             WebAppDevRowCount = 0;
             WebAppProdRowCount = 0;
 
-            SqlPaaSComputeCost = 0.0;
-            SqlPaaSDevComputeCost = 0.0;
-            SqlPaaSProdComputeCost = 0.0;
-            WebAppPaaSComputeCost = 0.0;
-            WebAppPaaSDevComputeCost = 0.0;
-            WebAppPaaSProdComputeCost = 0.0;
-            TotalPaaSComputeCost = 0.0;
+            SqlPaasComputeCost = 0.0;
+            SqlPaasDevComputeCost = 0.0;
+            SqlPaasProdComputeCost = 0.0;
+            WebappPaasComputeCost = 0.0;
+            WebappPaasDevComputeCost = 0.0;
+            WebappPaasProdComputeCost = 0.0;
+            TotalPaasComputeCost = 0.0;
 
-            SqlPaaSStorageCost = 0.0;
-            SqlPaaSDevStorageCost = 0.0;
-            SqlPaaSProdStorageCost = 0.0;
-            WebAppPaaSStorageCost = 0.0;
-            WebAppPaaSDevStorageCost = 0.0;
-            WebAppPaaSProdStorageCost = 0.0;
-            TotalPaaSStorageCost = 0.0;
+            SqlPaasStorageCost = 0.0;
+            SqlPaasDevStorageCost = 0.0;
+            SqlPaasProdStorageCost = 0.0;
+            WebappPaasStorageCost = 0.0;
+            WebappPaasDevStorageCost = 0.0;
+            WebappPaasProdStorageCost = 0.0;
+            TotalPaasStorageCost = 0.0;
 
-            SqlPaaSSecurityCost = 0.0;
-            WebAppPaaSSecurityCost = 0.0;
-            TotalPaaSSecurityCost = 0.0;
+            SqlPaasSecurityCost = 0.0;
+            WebappPaasSecurityCost = 0.0;
+            TotalPaasSecurityCost = 0.0;
 
-            SqlPaaSStorageCost = 0.0;
+            SqlPaasStorageCost = 0.0;
 
-            SqlPaaSAhubSavings = 0.0;
-            TotalPaaSAhubSavings = 0.0;
+            SqlPaasAhubSavings = 0.0;
+            TotalPaasAhubSavings = 0.0;
         }
 
         public void Calculate()
@@ -91,10 +91,10 @@ namespace Azure.Migrate.Export.Common
             CalculateSqlPaaSCost();
             CalculateWebAppPaaSCost();
 
-            TotalPaaSComputeCost = SqlPaaSComputeCost + WebAppPaaSComputeCost;
-            TotalPaaSStorageCost = SqlPaaSStorageCost + WebAppPaaSStorageCost;
-            TotalPaaSSecurityCost = SqlPaaSSecurityCost + WebAppPaaSSecurityCost;
-            TotalPaaSAhubSavings = SqlPaaSAhubSavings;
+            TotalPaasComputeCost = SqlPaasComputeCost + WebappPaasComputeCost;
+            TotalPaasStorageCost = SqlPaasStorageCost + WebappPaasStorageCost;
+            TotalPaasSecurityCost = SqlPaasSecurityCost + WebappPaasSecurityCost;
+            TotalPaasAhubSavings = SqlPaasAhubSavings;
 
             IsCalculated = true;
         }
@@ -106,60 +106,60 @@ namespace Azure.Migrate.Export.Common
 
         public double GetTotalSecurityCost()
         {
-            return TotalPaaSSecurityCost;
+            return TotalPaasSecurityCost;
         }
 
         public double GetTotalAhubSavings()
         {
-            return TotalPaaSAhubSavings;
+            return TotalPaasAhubSavings;
         }
 
         public double GetTotalComputeCost()
         {
-            return TotalPaaSComputeCost;
+            return TotalPaasComputeCost;
         }
 
         public double GetTotalStorageCost()
         {
-            return TotalPaaSStorageCost;
+            return TotalPaasStorageCost;
         }
 
         public double GetSqlPaaSDevComputeCost()
         {
-            return SqlPaaSDevComputeCost;
+            return SqlPaasDevComputeCost;
         }
 
         public double GetSqlPaaSProdComputeCost()
         {
-            return SqlPaaSProdComputeCost;
+            return SqlPaasProdComputeCost;
         }
 
         public double GetSqlPaaSDevStorageCost()
         {
-            return SqlPaaSDevStorageCost;
+            return SqlPaasDevStorageCost;
         }
 
         public double GetSqlPaaSProdStorageCost()
         {
-            return SqlPaaSProdStorageCost;
+            return SqlPaasProdStorageCost;
         }
 
         public double GetWebAppPaaSDevComputeCost()
         {
-            return WebAppPaaSDevComputeCost;
+            return WebappPaasDevComputeCost;
         }
         public double GetWebAppPaaSProdComputeCost()
         {
-            return WebAppPaaSProdComputeCost;
+            return WebappPaasProdComputeCost;
         }
         public double GetWebAppPaaSDevStorageCost()
         {
-            return WebAppPaaSDevStorageCost;
+            return WebappPaasDevStorageCost;
         }
 
         public double GetWebAppPaaSProdStorageCost()
         {
-            return WebAppPaaSProdStorageCost;
+            return WebappPaasProdStorageCost;
         }
 
         public int GetWebAppPaaSDevMachineIdCount()
@@ -210,8 +210,8 @@ namespace Azure.Migrate.Export.Common
             {
                 if (sqlInstance.Environment.Equals("Dev"))
                 {
-                    SqlPaaSDevComputeCost += sqlInstance.MonthlyComputeCostEstimate_AHUB_RI3year == 0 ? sqlInstance.MonthlyComputeCostEstimate_AHUB : sqlInstance.MonthlyComputeCostEstimate_AHUB_RI3year;
-                    SqlPaaSDevStorageCost += sqlInstance.MonthlyStorageCostEstimate;
+                    SqlPaasDevComputeCost += sqlInstance.MonthlyComputeCostEstimate_AHUB_RI3year == 0 ? sqlInstance.MonthlyComputeCostEstimate_AHUB : sqlInstance.MonthlyComputeCostEstimate_AHUB_RI3year;
+                    SqlPaasDevStorageCost += sqlInstance.MonthlyStorageCostEstimate;
                     nonAhubCost += sqlInstance.MonthlyComputeCostEstimate_RI3year == 0 ? sqlInstance.MonthlyComputeCostEstimate : sqlInstance.MonthlyComputeCostEstimate_RI3year;
 
                     SqlDevRowCount += 1;
@@ -221,8 +221,8 @@ namespace Azure.Migrate.Export.Common
                 }
                 else
                 {
-                    SqlPaaSProdComputeCost += sqlInstance.MonthlyComputeCostEstimate_AHUB_RI3year;
-                    SqlPaaSProdStorageCost += sqlInstance.MonthlyStorageCostEstimate;
+                    SqlPaasProdComputeCost += sqlInstance.MonthlyComputeCostEstimate_AHUB_RI3year;
+                    SqlPaasProdStorageCost += sqlInstance.MonthlyStorageCostEstimate;
                     nonAhubCost += sqlInstance.MonthlyComputeCostEstimate_RI3year;
 
                     SqlProdRowCount += 1;
@@ -230,11 +230,11 @@ namespace Azure.Migrate.Export.Common
                     if (!SqlUniqueProdMachines.Contains(sqlInstance.MachineId))
                         SqlUniqueProdMachines.Add(sqlInstance.MachineId);
                 }
-                SqlPaaSSecurityCost += sqlInstance.MonthlySecurityCostEstimate;
+                SqlPaasSecurityCost += sqlInstance.MonthlySecurityCostEstimate;
             }
-            SqlPaaSComputeCost = SqlPaaSDevComputeCost + SqlPaaSProdComputeCost;
-            SqlPaaSStorageCost = SqlPaaSDevStorageCost + SqlPaaSProdStorageCost;
-            SqlPaaSAhubSavings = nonAhubCost - SqlPaaSComputeCost;
+            SqlPaasComputeCost = SqlPaasDevComputeCost + SqlPaasProdComputeCost;
+            SqlPaasStorageCost = SqlPaasDevStorageCost + SqlPaasProdStorageCost;
+            SqlPaasAhubSavings = nonAhubCost - SqlPaasComputeCost;
         }
 
         private void CalculateWebAppPaaSCost()
@@ -243,7 +243,7 @@ namespace Azure.Migrate.Export.Common
             {
                 if (webapp.Environment.Equals("Dev"))
                 {
-                    WebAppPaaSDevComputeCost += webapp.MonthlyComputeCostEstimate_ASP3year == 0 ? webapp.MonthlyComputeCostEstimate : webapp.MonthlyComputeCostEstimate_ASP3year;
+                    WebappPaasDevComputeCost += webapp.MonthlyComputeCostEstimate_ASP3year == 0 ? webapp.MonthlyComputeCostEstimate : webapp.MonthlyComputeCostEstimate_ASP3year;
 
                     WebAppDevRowCount += 1;
 
@@ -252,7 +252,7 @@ namespace Azure.Migrate.Export.Common
                 }
                 else
                 {
-                    WebAppPaaSProdComputeCost += webapp.MonthlyComputeCostEstimate_ASP3year == 0 ? webapp.MonthlyComputeCostEstimate : webapp.MonthlyComputeCostEstimate_ASP3year;
+                    WebappPaasProdComputeCost += webapp.MonthlyComputeCostEstimate_ASP3year == 0 ? webapp.MonthlyComputeCostEstimate : webapp.MonthlyComputeCostEstimate_ASP3year;
 
                     WebAppProdRowCount += 1;
 
@@ -260,9 +260,9 @@ namespace Azure.Migrate.Export.Common
                         WebappUniqueProdMachines.Add(webapp.MachineId);
                 } 
 
-                WebAppPaaSSecurityCost += webapp.MonthlySecurityCostEstimate;
+                WebappPaasSecurityCost += webapp.MonthlySecurityCostEstimate;
             }
-            WebAppPaaSComputeCost = WebAppPaaSDevComputeCost + WebAppPaaSProdComputeCost;
+            WebappPaasComputeCost = WebappPaasDevComputeCost + WebappPaasProdComputeCost;
         }
 
         public void SetParameters(List<SQL_MI_PaaS> sql_MI_PaaS_List, List<WebApp_PaaS> webApp_PaaS_List)

@@ -1,16 +1,11 @@
 using Newtonsoft.Json;
 
-using Azure.Migrate.Export.Common;
-
 namespace Azure.Migrate.Export.Models
 {
     public class BusinessCaseSettingsJSON
     {
         [JsonProperty("name")]
         public string Name { get; set; }
-
-        [JsonProperty("location")]
-        public string Location { get; set; }
 
         [JsonProperty("properties")]
         public BuisnessCaseProperty Properties = new BuisnessCaseProperty();
@@ -31,6 +26,9 @@ namespace Azure.Migrate.Export.Models
 
     public class BusinessCaseAzureSettings
     {
+        [JsonProperty("targetLocation")]
+        public string TargetLocation { get; set; }
+
         [JsonProperty("discountPercentage")]
         public int DiscountPercentage { get; set; } = 0;
 
@@ -38,12 +36,12 @@ namespace Azure.Migrate.Export.Models
         public string Currency { get; set; }
 
         [JsonProperty("workloadDiscoverySource")]
-        public string WorkloadDiscoverySource { get; set; } = "Appliance";
+        public string WorkloadDiscoverySource { get; set; }
 
         [JsonProperty("businessCaseType")]
         public string BusinessCaseType { get; set; }
 
         [JsonProperty("savingsOption")]
-        public string SavingsOption { get; set; } = "SavingsPlan3Year"; 
+        public string SavingsOption { get; set; } 
     }
 }

@@ -20,14 +20,23 @@ namespace Azure.Migrate.Export.Factory
 
             BusinessCaseSettingsJSON obj = new BusinessCaseSettingsJSON();
             obj.Name = "bizcase-ame-" + sessionId;
-            obj.Location = userInputObj.TargetRegion.Key;
+            obj.Properties.Settings.AzureSettings.TargetLocation = userInputObj.TargetRegion.Key;
             obj.Properties.Settings.AzureSettings.Currency = userInputObj.Currency.Key;
 
             BusinessCaseTypes type = BusinessCaseTypes.OptimizeForPaas;
             if (userInputObj.PreferredOptimizationObj.OptimizationPreference.Key.Equals("MigrateToAllIaaS"))
                 type = BusinessCaseTypes.IaaSOnly;
+            else if (userInputObj.PreferredOptimizationObj.OptimizationPreference.Key.Equals("MigrateToAvs"))
+                type = BusinessCaseTypes.AVSOnly;
 
             obj.Properties.Settings.AzureSettings.BusinessCaseType = type.ToString();
+            obj.Properties.Settings.AzureSettings.WorkloadDiscoverySource = BusinessCaseWorkloadDiscoverySource.Appliance.ToString();
+            if (userInputObj.AzureMigrateSourceAppliances.Contains("import"))
+                obj.Properties.Settings.AzureSettings.WorkloadDiscoverySource = BusinessCaseWorkloadDiscoverySource.Import.ToString();            
+
+            obj.Properties.Settings.AzureSettings.SavingsOption = "SavingsPlan3Year";
+            if (userInputObj.BusinessProposal == BusinessProposal.AVS.ToString())
+                obj.Properties.Settings.AzureSettings.SavingsOption = "RI3Year";
 
             return new BusinessCaseInformation(obj.Name, JsonConvert.SerializeObject(obj));
         } 

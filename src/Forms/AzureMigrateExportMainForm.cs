@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows.Forms;
 
 using Azure.Migrate.Export.Authentication;
+using Azure.Migrate.Export.Common;
 using Azure.Migrate.Export.Models;
 
 namespace Azure.Migrate.Export.Forms
@@ -85,6 +86,7 @@ namespace Azure.Migrate.Export.Forms
             // Retrieve configuration
             List<string> azureMigrateSourceAppliances = ConfigurationFormObj.GetAzureMigrateSourceAppliances();
             bool isExpressWorkflow = ConfigurationFormObj.IsExpressWorkflowSelected();
+            string businessProposal = ConfigurationFormObj.GetBusinessProposal();
             string module = ConfigurationFormObj.GetModule();
 
             // Retrieve assessment settings
@@ -103,6 +105,7 @@ namespace Azure.Migrate.Export.Forms
                 assessmentProjectName,
                 azureMigrateSourceAppliances,
                 isExpressWorkflow,
+                businessProposal,
                 module,
                 targetRegion,
                 currency,

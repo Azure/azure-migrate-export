@@ -16,6 +16,7 @@ namespace Azure.Migrate.Export.Models
             string assessmentProjectName,
             List<string> azureMigrateSourceAppliances,
             bool isExpressWorkflow,
+            string businessProposal,
             string module,
             KeyValuePair<string, string> targetRegion,
             KeyValuePair<string, string> currency,
@@ -33,6 +34,7 @@ namespace Azure.Migrate.Export.Models
 
             AzureMigrateSourceAppliances = azureMigrateSourceAppliances;
             WorkflowObj = new Workflow(isExpressWorkflow, module);
+            BusinessProposal = businessProposal;
 
             TargetRegion = targetRegion;
             Currency = currency;
@@ -53,6 +55,7 @@ namespace Azure.Migrate.Export.Models
         // Configuration tab
         public List<string> AzureMigrateSourceAppliances { get; }
         public Workflow WorkflowObj { get; }
+        public string BusinessProposal { get; }
 
         // Assessment settings tab
         public KeyValuePair<string, string> TargetRegion { get; }

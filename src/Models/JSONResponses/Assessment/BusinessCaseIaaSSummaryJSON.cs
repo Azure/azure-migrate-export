@@ -5,6 +5,12 @@ namespace Azure.Migrate.Export.Models
 {
     public class BusinessCaseIaaSSummaryJSON
     {
+        [JsonProperty("properties")]
+        public BusinessCaseIaasSummaryProperties Properties { get; set; }                
+    }
+
+    public class BusinessCaseIaasSummaryProperties
+    {
         [JsonProperty("azureIaaSSummary")]
         public BusinessCaseAzureIaaSSummary AzureIaaSSummary { get; set; }
 
