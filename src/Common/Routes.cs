@@ -16,8 +16,9 @@ namespace Azure.Migrate.Export.Common
         public const string BusinessCasesPath = @"businessCases";
         public const string BusinessCaseCompareSummariesPath = @"comparesummary";
         public const string BusinessCaseOverviewSummariesPath = @"overviewsummaries";
-        public const string BusinessCaseIaaSSummariesPath = @"iaassummaries";
-        public const string BusinessCasePaaSSummariesPath = @"paassummaries";
+        public const string BusinessCaseIaasSummariesPath = @"iaassummaries";
+        public const string BusinessCasePaasSummariesPath = @"paassummaries";
+        public const string BusinessCaseAvsSummariesPath = @"avssummaries";
         public const string DefaultPath = @"default";
         public const string AssessedSQLMachinesPath = @"assessedSqlMachines";
         public const string SolutionsPath = @"Solutions";
@@ -38,7 +39,7 @@ namespace Azure.Migrate.Export.Common
         public const string ImportSitesApiVersion = @"2023-06-06";
         public const string AssessmentMachineListApiVersion = @"2023-03-03";
         public const string CreateAssessmentImportApiVersion = @"2023-05-01-preview";
-        public const string BusinessCaseApiVersion = @"2022-02-02-preview";
+        public const string BusinessCaseApiVersion = @"2023-09-09-preview";
         public const string QueryParameterApiVersion = @"api-version";
         public const string AzureMigrateQueryParameterFilter = @"filter";
         public const string AzureMigrateQueryPathProperties = @"Properties";

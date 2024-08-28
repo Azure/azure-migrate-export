@@ -674,15 +674,13 @@ namespace Azure.Migrate.Export.HttpRequestHelper
 
             if (createResponse == null)
                 throw new Exception($"Could not obtain a HTTP response for business case {businessCaseInfo.BusinessCaseName}.");
-
             else if (!createResponse.IsSuccessStatusCode)
             {
                 string createResponseContent = await createResponse.Content.ReadAsStringAsync();
-                throw new Exception($"HTTP create assessment {businessCaseInfo.BusinessCaseName} response was not successful: {createResponse.StatusCode}: {createResponseContent}");
+                throw new Exception($"HTTP create business case {businessCaseInfo.BusinessCaseName} response was not successful: {createResponse.StatusCode}: {createResponseContent}");
             }
-
-            else if (createResponse.StatusCode != HttpStatusCode.Created)
-                throw new Exception($"Received response for assessment {businessCaseInfo.BusinessCaseName}: {createResponse.StatusCode} is not as expected: {HttpStatusCode.Created}");
+            else if (createResponse.StatusCode != HttpStatusCode.OK)
+                throw new Exception($"Received response for business case {businessCaseInfo.BusinessCaseName}: {createResponse.StatusCode} is not as expected: {HttpStatusCode.Created}");
 
             userInputObj.LoggerObj.LogInformation($"Business case {businessCaseInfo.BusinessCaseName} created");
 

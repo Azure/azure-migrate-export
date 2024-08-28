@@ -30,10 +30,11 @@ namespace Azure.Migrate.Export.Forms
             ImportCheckBox.Checked = false;
 
             ExpressWorkflowRadioButton.Checked = true;
+            ComprehensiveProposalRadioButton.Checked = true;
         }
         #endregion
 
-        #region Workflow Radio Button Checked Changed
+        #region Radio Buttons Checked Changed
         private void CustomWorkflowRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             ModuleComboBox.Visible = true;
@@ -47,6 +48,18 @@ namespace Azure.Migrate.Export.Forms
             ModuleComboBox.Visible = false;
             mainFormObj.MakeConfigurationTabButtonEnableDecisions();
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
+        }
+
+        private void ComprehensiveProposalRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
+            mainFormObj.MakeConfigurationTabButtonEnableDecisions();
+        }
+
+        private void QuickAvsProposalRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
+            mainFormObj.MakeConfigurationTabButtonEnableDecisions();
         }
         #endregion
 
@@ -105,6 +118,9 @@ namespace Azure.Migrate.Export.Forms
             if (!ValidateWorkflow())
                 return false;
 
+            if (!ValidateBusinessProposal())
+                return false;
+
             return true;
         }
 
@@ -150,6 +166,14 @@ namespace Azure.Migrate.Export.Forms
                 else if ((string)ModuleComboBox.SelectedItem != "Discovery" && (string)ModuleComboBox.SelectedItem != "Assessment")
                     return false;
             }
+
+            return true;
+        }
+
+        private bool ValidateBusinessProposal()
+        {
+            if (ComprehensiveProposalRadioButton.Checked == false && QuickAvsProposalRadioButton.Checked == false)
+                return false;
 
             return true;
         }
@@ -262,6 +286,11 @@ namespace Azure.Migrate.Export.Forms
         public bool IsExpressWorkflowSelected()
         {
             return ExpressWorkflowRadioButton.Checked;
+        }
+
+        public bool IsAvsProposalSelected()
+        {
+            return QuickAvsProposalRadioButton.Checked;
         }
 
         public string GetModule()

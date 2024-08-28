@@ -149,7 +149,14 @@ namespace Azure.Migrate.Export.Common
     public enum BusinessCaseTypes
     {
         OptimizeForPaas,
-        IaaSOnly
+        IaaSOnly,
+        AVSOnly
+    }
+
+    public enum BusinessCaseWorkloadDiscoverySource
+    {
+        Appliance,
+        Import
     }
 
     public enum SupportabilityStatus
@@ -165,6 +172,12 @@ namespace Azure.Migrate.Export.Common
 
         [Description("Out of support")]
         OutOfSupport
+    }
+
+    public enum BusinessProposal
+    {
+        Comprehensive,
+        AVS,
     }
 
     public class EnumDescriptionHelper

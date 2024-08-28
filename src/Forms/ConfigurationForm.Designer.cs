@@ -42,11 +42,15 @@
             this.CustomWorkflowRadioButton = new System.Windows.Forms.RadioButton();
             this.ConfigurationDescriptionGroupBox = new System.Windows.Forms.GroupBox();
             this.ConfigurationDescriptionRichTextBox = new System.Windows.Forms.RichTextBox();
+            this.BusinessProposalGroupBox = new System.Windows.Forms.GroupBox();
+            this.QuickAvsProposalRadioButton = new System.Windows.Forms.RadioButton();
+            this.ComprehensiveProposalRadioButton = new System.Windows.Forms.RadioButton();
             this.AzureMigrateSourceApplianceGroupBox.SuspendLayout();
             this.WorkflowGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ExpressWorkflowInfoPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CustomWorkflowInfoPictureBox)).BeginInit();
             this.ConfigurationDescriptionGroupBox.SuspendLayout();
+            this.BusinessProposalGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // AzureMigrateSourceApplianceGroupBox
@@ -166,12 +170,37 @@
             this.ConfigurationDescriptionRichTextBox.Name = "ConfigurationDescriptionRichTextBox";
             this.ConfigurationDescriptionRichTextBox.ReadOnly = true;
             // 
+            // BusinessProposalGroupBox
+            // 
+            this.BusinessProposalGroupBox.Controls.Add(this.QuickAvsProposalRadioButton);
+            this.BusinessProposalGroupBox.Controls.Add(this.ComprehensiveProposalRadioButton);
+            resources.ApplyResources(this.BusinessProposalGroupBox, "BusinessProposalGroupBox");
+            this.BusinessProposalGroupBox.Name = "BusinessProposalGroupBox";
+            this.BusinessProposalGroupBox.TabStop = false;
+            // 
+            // QuickAvsProposalRadioButton
+            // 
+            resources.ApplyResources(this.QuickAvsProposalRadioButton, "QuickAvsProposalRadioButton");
+            this.QuickAvsProposalRadioButton.Name = "QuickAvsProposalRadioButton";
+            this.QuickAvsProposalRadioButton.TabStop = true;
+            this.QuickAvsProposalRadioButton.UseVisualStyleBackColor = true;
+            this.QuickAvsProposalRadioButton.CheckedChanged += new System.EventHandler(this.QuickAvsProposalRadioButton_CheckedChanged);
+            // 
+            // ComprehensiveProposalRadioButton
+            // 
+            resources.ApplyResources(this.ComprehensiveProposalRadioButton, "ComprehensiveProposalRadioButton");
+            this.ComprehensiveProposalRadioButton.Name = "ComprehensiveProposalRadioButton";
+            this.ComprehensiveProposalRadioButton.TabStop = true;
+            this.ComprehensiveProposalRadioButton.UseVisualStyleBackColor = true;
+            this.ComprehensiveProposalRadioButton.CheckedChanged += new System.EventHandler(this.ComprehensiveProposalRadioButton_CheckedChanged);
+            // 
             // ConfigurationForm
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.BusinessProposalGroupBox);
             this.Controls.Add(this.ConfigurationDescriptionGroupBox);
             this.Controls.Add(this.WorkflowGroupBox);
             this.Controls.Add(this.AzureMigrateSourceApplianceGroupBox);
@@ -184,6 +213,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.ExpressWorkflowInfoPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CustomWorkflowInfoPictureBox)).EndInit();
             this.ConfigurationDescriptionGroupBox.ResumeLayout(false);
+            this.BusinessProposalGroupBox.ResumeLayout(false);
+            this.BusinessProposalGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -203,5 +234,8 @@
         private System.Windows.Forms.PictureBox CustomWorkflowInfoPictureBox;
         private System.Windows.Forms.PictureBox ExpressWorkflowInfoPictureBox;
         private System.Windows.Forms.CheckBox ImportCheckBox;
+        private System.Windows.Forms.GroupBox BusinessProposalGroupBox;
+        private System.Windows.Forms.RadioButton QuickAvsProposalRadioButton;
+        private System.Windows.Forms.RadioButton ComprehensiveProposalRadioButton;
     }
 }

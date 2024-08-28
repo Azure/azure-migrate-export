@@ -1,5 +1,5 @@
-using System.Text.RegularExpressions;
-
+﻿using System.Text.RegularExpressions;
+using Azure.Migrate.Export.Common;
 using Azure.Migrate.Export.Models;
 
 namespace Azure.Migrate.Export.Processor
@@ -122,7 +122,8 @@ namespace Azure.Migrate.Export.Processor
         private static bool ValidateConfiguration(UserInput userInputObj)
         {
             return IsAzureMigrateSourceApplianceValid(userInputObj) &&
-                   IsWorkflowValid(userInputObj);
+                   IsWorkflowValid(userInputObj) && 
+                   IsBusinessProposalValid(userInputObj);
         }
 
         private static bool IsAzureMigrateSourceApplianceValid(UserInput userInputObj)
@@ -165,6 +166,22 @@ namespace Azure.Migrate.Export.Processor
 
             // Validate Assessment settings for Assessment module;
             return ValidateAssessmentSettings(userInputObj);
+        }
+        
+        private static bool IsBusinessProposalValid(UserInput userInputObj)
+        {
+            string businessProposal = "";
+            if (userInputObj.WorkflowObj.Module.Equals("Assessment"))
+            {
+                if (userInputObj.BusinessProposal == BusinessProposal.AVS.ToString())
+                    businessProposal = "Quick AVS Proposal";
+                else
+                    businessProposal = "Comprehensive Proposal for IaaS, PaaS and AVS targets​";
+
+                userInputObj.LoggerObj.LogInformation($"Validating Business Proposal: {businessProposal}");
+            }
+
+            return true;
         }
         #endregion
 
