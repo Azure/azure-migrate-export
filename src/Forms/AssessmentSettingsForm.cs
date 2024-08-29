@@ -139,7 +139,7 @@ namespace Azure.Migrate.Export.Forms
 
         private bool ValidateOptimizationPreference()
         {
-            if (OptimizationPreferenceComboBox.SelectedItem == null)
+            if (!mainFormObj.IsAvsBusinessProposalSelected() && OptimizationPreferenceComboBox.SelectedItem == null)
                 return false;
 
             /*
@@ -149,8 +149,7 @@ namespace Azure.Migrate.Export.Forms
                      AssessSqlServicesSeparatelyGroupBox.Visible == false)
             {
                 return false;
-            }
-            */
+            }*/
 
             return true;
         }
