@@ -358,6 +358,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
         {
             UserInputObj.LoggerObj.LogInformation("Creating excel model for assessment properties");
             coreProperties.Workflow = UserInputObj.WorkflowObj.IsExpressWorkflow ? "Express" : "Custom - Assessment";
+            coreProperties.BusinessProposal = UserInputObj.BusinessProposal;
             coreProperties.TenantId = UserInputObj.TenantId;
             coreProperties.Subscription = UserInputObj.Subscription.Value;
             coreProperties.ResourceGroupName = UserInputObj.ResourceGroupName.Value;
