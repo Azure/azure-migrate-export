@@ -106,7 +106,7 @@ namespace Azure.Migrate.Export.Forms
         }
 
         private void InitializeOptimizationPreference()
-        {
+        {   
             List<KeyValuePair<string, string>> optimizationPreferences = new List<KeyValuePair<string, string>>();
             optimizationPreferences.Add(new KeyValuePair<string, string>("ModernizeToPaaS", "Modernize to PaaS (PaaS preferred)"));
             optimizationPreferences.Add(new KeyValuePair<string, string>("MigrateToAllIaaS", "Migrate to all IaaS"));
@@ -160,17 +160,16 @@ namespace Azure.Migrate.Export.Forms
 
         private bool ValidateOptimizationPreference()
         {
-            if (OptimizationPreferenceComboBox.SelectedItem == null)
+            if (!mainFormObj.IsAvsBusinessProposalSelected() && OptimizationPreferenceComboBox.SelectedItem == null)
                 return false;
 
-            /*
-            else if (((KeyValuePair<string, string>)OptimizationPreferenceComboBox.SelectedItem).Key == "ModernizeToPaaS" &&
+            /*else if (!mainFormObj.IsAvsBusinessProposalSelected() &&
+                     ((KeyValuePair<string, string>)OptimizationPreferenceComboBox.SelectedItem).Key == "ModernizeToPaaS" &&
                      ((KeyValuePair<string, string>)OptimizationPreferenceComboBox.SelectedItem).Value == "Modernize to PaaS (PaaS preferred)" &&
                      AssessSqlServicesSeparatelyGroupBox.Visible == false)
             {
                 return false;
-            }
-            */
+            }*/
 
             return true;
         }
@@ -270,7 +269,9 @@ namespace Azure.Migrate.Export.Forms
         public KeyValuePair<string, string> GetSelectedOptimizationPreference()
         {
             KeyValuePair<string, string> empty = new KeyValuePair<string, string>("", "");
-            if (OptimizationPreferenceComboBox.SelectedItem == null)
+            if (mainFormObj.IsAvsBusinessProposalSelected())
+                return new KeyValuePair<string, string>("MigrateToAvs", "AVSOnly");
+            else if (!mainFormObj.IsAvsBusinessProposalSelected() && OptimizationPreferenceComboBox.SelectedItem == null)
                 return empty;
 
             return (KeyValuePair<string, string>)OptimizationPreferenceComboBox.SelectedItem;
@@ -359,6 +360,18 @@ namespace Azure.Migrate.Export.Forms
                 Verb = "open"
             };
             Process.Start(processDescription);
+        }
+        #endregion
+
+        #region Utilities
+        public void DisableOptimizationPreferenceComboBox()
+        {
+            OptimizationPreferenceComboBox.Enabled = false;
+        }
+
+        public void EnableOptimizationPreferenceComboBox()
+        {
+            OptimizationPreferenceComboBox.Enabled = true;
         }
         #endregion
     }

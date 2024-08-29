@@ -876,5 +876,26 @@ namespace Azure.Migrate.Export.Forms
             // Previous state must be retained, enabled tab buttons do not change.
         }
         #endregion
+
+        #region Utilities
+        public bool IsAvsBusinessProposalSelected()
+        {
+            return (ConfigurationFormObj.GetBusinessProposal() == BusinessProposal.AVS.ToString());
+        }
+
+        public void DisableOptimizationPreferenceComboBox()
+        {
+            if (AssessmentSettingsFormObj == null)
+                return;
+            AssessmentSettingsFormObj.DisableOptimizationPreferenceComboBox();
+        }
+
+        public void EnableOptimizationPreferenceComboBox()
+        {
+            if (AssessmentSettingsFormObj == null)
+                return;
+            AssessmentSettingsFormObj.EnableOptimizationPreferenceComboBox();
+        }
+        #endregion
     }
 }

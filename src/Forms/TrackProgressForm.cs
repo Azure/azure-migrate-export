@@ -199,6 +199,10 @@ namespace Azure.Migrate.Export.Forms
                     ProcessLogsRichTextBox.SelectionColor = Color.White;
 
                 ProcessLogsRichTextBox.AppendText(Environment.NewLine + $"--> {value}");
+
+                // Scroll to the end
+                ProcessLogsRichTextBox.SelectionStart = ProcessLogsRichTextBox.TextLength;
+                ProcessLogsRichTextBox.ScrollToCaret();
             }
         }
         #endregion

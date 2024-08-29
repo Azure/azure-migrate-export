@@ -441,7 +441,7 @@ namespace Azure.Migrate.Export.Forms
 
         private void UpdateAzureMigrateProjectDetails()
         {
-            UpdateDescriptionTextBox("Azure Migrate Project details", "Select the Subscription and Resource Group of the Azure Migrate Project that was used to discover the datacenter.\n\nBefore you begin, please ensure the following:\n\t1. You have created an Azure Migrate Project.\n\t2. You have contributor access to the Resource Group where the Azure Migrate Project resides.\n\t3. You have completed the discovery of your environment by deploying an Azure Migrate Appliance.");
+            UpdateDescriptionTextBox("Azure Migrate Project details", "Select the Subscription and Resource Group of the Azure Migrate Project that was used to discover the datacenter.\n\nBefore you begin, please ensure the following:\n\t1. You have created an Azure Migrate Project.\n\t2. You have contributor access to the Resource Group where the Azure Migrate Project resides.\n\t3. You have completed the discovery of your environment by deploying an Azure Migrate appliance or using import.");
         }
 
         private void UpdateDescriptionTextBox(string descriptionHeader, string description)

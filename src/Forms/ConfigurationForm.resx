@@ -117,17 +117,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="&gt;&gt;ImportCheckBox.Name" xml:space="preserve">
-    <value>ImportCheckBox</value>
+  <data name="&gt;&gt;ApplianceRadioButton.Name" xml:space="preserve">
+    <value>ApplianceRadioButton</value>
   </data>
-  <data name="&gt;&gt;ImportCheckBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;ApplianceRadioButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;ImportCheckBox.Parent" xml:space="preserve">
+  <data name="&gt;&gt;ApplianceRadioButton.Parent" xml:space="preserve">
     <value>AzureMigrateSourceApplianceGroupBox</value>
   </data>
-  <data name="&gt;&gt;ImportCheckBox.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;ApplianceRadioButton.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="&gt;&gt;ImportRadioButton.Name" xml:space="preserve">
+    <value>ImportRadioButton</value>
+  </data>
+  <data name="&gt;&gt;ImportRadioButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ImportRadioButton.Parent" xml:space="preserve">
+    <value>AzureMigrateSourceApplianceGroupBox</value>
+  </data>
+  <data name="&gt;&gt;ImportRadioButton.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="&gt;&gt;PhysicalCheckBox.Name" xml:space="preserve">
     <value>PhysicalCheckBox</value>
@@ -139,7 +151,7 @@
     <value>AzureMigrateSourceApplianceGroupBox</value>
   </data>
   <data name="&gt;&gt;PhysicalCheckBox.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="&gt;&gt;HyperVCheckBox.Name" xml:space="preserve">
     <value>HyperVCheckBox</value>
@@ -151,7 +163,7 @@
     <value>AzureMigrateSourceApplianceGroupBox</value>
   </data>
   <data name="&gt;&gt;HyperVCheckBox.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="&gt;&gt;VMwareCheckBox.Name" xml:space="preserve">
     <value>VMwareCheckBox</value>
@@ -163,14 +175,14 @@
     <value>AzureMigrateSourceApplianceGroupBox</value>
   </data>
   <data name="&gt;&gt;VMwareCheckBox.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="AzureMigrateSourceApplianceGroupBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>85, 40</value>
   </data>
   <data name="AzureMigrateSourceApplianceGroupBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>805, 156</value>
+    <value>805, 160</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="AzureMigrateSourceApplianceGroupBox.TabIndex" type="System.Int32, mscorlib">
@@ -191,32 +203,59 @@
   <data name="&gt;&gt;AzureMigrateSourceApplianceGroupBox.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="ImportCheckBox.AutoSize" type="System.Boolean, mscorlib">
+  <data name="ApplianceRadioButton.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="ImportCheckBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 120</value>
+  <data name="ApplianceRadioButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 56</value>
   </data>
-  <data name="ImportCheckBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>63, 20</value>
+  <data name="ApplianceRadioButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>86, 20</value>
   </data>
-  <data name="ImportCheckBox.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
+  <data name="ApplianceRadioButton.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
   </data>
-  <data name="ImportCheckBox.Text" xml:space="preserve">
-    <value>Import</value>
+  <data name="ApplianceRadioButton.Text" xml:space="preserve">
+    <value>Appliance</value>
   </data>
-  <data name="&gt;&gt;ImportCheckBox.Name" xml:space="preserve">
-    <value>ImportCheckBox</value>
+  <data name="&gt;&gt;ApplianceRadioButton.Name" xml:space="preserve">
+    <value>ApplianceRadioButton</value>
   </data>
-  <data name="&gt;&gt;ImportCheckBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;ApplianceRadioButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;ImportCheckBox.Parent" xml:space="preserve">
+  <data name="&gt;&gt;ApplianceRadioButton.Parent" xml:space="preserve">
     <value>AzureMigrateSourceApplianceGroupBox</value>
   </data>
-  <data name="&gt;&gt;ImportCheckBox.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;ApplianceRadioButton.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="ImportRadioButton.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ImportRadioButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 30</value>
+  </data>
+  <data name="ImportRadioButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>62, 20</value>
+  </data>
+  <data name="ImportRadioButton.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="ImportRadioButton.Text" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="&gt;&gt;ImportRadioButton.Name" xml:space="preserve">
+    <value>ImportRadioButton</value>
+  </data>
+  <data name="&gt;&gt;ImportRadioButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ImportRadioButton.Parent" xml:space="preserve">
+    <value>AzureMigrateSourceApplianceGroupBox</value>
+  </data>
+  <data name="&gt;&gt;ImportRadioButton.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="PhysicalCheckBox.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -226,7 +265,7 @@
     <value>NoControl</value>
   </data>
   <data name="PhysicalCheckBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 90</value>
+    <value>36, 134</value>
   </data>
   <data name="PhysicalCheckBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>77, 20</value>
@@ -247,7 +286,7 @@
     <value>AzureMigrateSourceApplianceGroupBox</value>
   </data>
   <data name="&gt;&gt;PhysicalCheckBox.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="HyperVCheckBox.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -256,7 +295,7 @@
     <value>NoControl</value>
   </data>
   <data name="HyperVCheckBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 60</value>
+    <value>37, 108</value>
   </data>
   <data name="HyperVCheckBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>76, 20</value>
@@ -277,13 +316,13 @@
     <value>AzureMigrateSourceApplianceGroupBox</value>
   </data>
   <data name="&gt;&gt;HyperVCheckBox.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="VMwareCheckBox.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="VMwareCheckBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 30</value>
+    <value>37, 82</value>
   </data>
   <data name="VMwareCheckBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 20</value>
@@ -304,7 +343,7 @@
     <value>AzureMigrateSourceApplianceGroupBox</value>
   </data>
   <data name="&gt;&gt;VMwareCheckBox.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="&gt;&gt;ExpressWorkflowInfoPictureBox.Name" xml:space="preserve">
     <value>ExpressWorkflowInfoPictureBox</value>
@@ -367,7 +406,7 @@
     <value>4</value>
   </data>
   <data name="WorkflowGroupBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>85, 202</value>
+    <value>85, 205</value>
   </data>
   <data name="WorkflowGroupBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>805, 90</value>
@@ -451,7 +490,7 @@
     <value>130, 23</value>
   </data>
   <data name="ModuleComboBox.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+    <value>1</value>
   </data>
   <data name="ModuleComboBox.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -481,7 +520,7 @@
     <value>74, 20</value>
   </data>
   <data name="ExpressWorkflowRadioButton.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="ExpressWorkflowRadioButton.Text" xml:space="preserve">
     <value>Express</value>
@@ -565,10 +604,10 @@
     <value>Microsoft Sans Serif, 9pt</value>
   </data>
   <data name="ConfigurationDescriptionRichTextBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>13, 23</value>
+    <value>13, 21</value>
   </data>
   <data name="ConfigurationDescriptionRichTextBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>780, 155</value>
+    <value>780, 157</value>
   </data>
   <data name="ConfigurationDescriptionRichTextBox.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -643,7 +682,7 @@
     <value>1</value>
   </data>
   <data name="BusinessProposalGroupBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>85, 299</value>
+    <value>85, 300</value>
   </data>
   <data name="BusinessProposalGroupBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>804, 89</value>
