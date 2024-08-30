@@ -140,7 +140,14 @@ namespace Azure.Migrate.Export.Forms
         private void AssessButton_Click(object sender, EventArgs e)
         {
             ConfigurationFormObj.SetModule("Assessment");
-            HandleTabChange(AssessmentSettingsFormObj, AssessmentSettingsTabButton);
+            ConfigurationFormObj.EnableBusinessProposal();
+            List<string> applianceList = ConfigurationFormObj.GetAzureMigrateSourceAppliances();
+            if (applianceList.Contains("import"))
+            {
+                ConfigurationFormObj.CheckOnlyQuickAvsProposal();
+            }
+
+            HandleTabChange(ConfigurationFormObj, ConfigurationTabButton);
         }
         #endregion
 

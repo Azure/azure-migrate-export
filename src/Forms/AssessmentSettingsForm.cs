@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 
+using Azure.Migrate.Export.Common;
+
 namespace Azure.Migrate.Export.Forms
 {
     public partial class AssessmentSettingsForm : Form
@@ -13,6 +15,9 @@ namespace Azure.Migrate.Export.Forms
         {
             InitializeComponent();
             mainFormObj = obj;
+
+            // Set the DropDownStyle to DropDownList to disable text entry
+            OptimizationPreferenceComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
         }
 
         #region Initialization
@@ -21,7 +26,6 @@ namespace Azure.Migrate.Export.Forms
             InitializeTargetRegionComboBox();
             InitializeCurrencyComboBox();
             InitializeAssessmentDurationComboBox();
-            InitializeOptimizationPreference();
         }
         
         private void InitializeTargetRegionComboBox()
@@ -39,25 +43,14 @@ namespace Azure.Migrate.Export.Forms
             location.Add(new KeyValuePair<string, string>("westeurope", "West Europe"));
             location.Add(new KeyValuePair<string, string>("centralus", "Central US"));
             location.Add(new KeyValuePair<string, string>("southafricanorth", "South Africa North"));
-            location.Add(new KeyValuePair<string, string>("centralindia", "Central India"));
             location.Add(new KeyValuePair<string, string>("eastasia", "East Asia"));
             location.Add(new KeyValuePair<string, string>("japaneast", "Japan East"));
-            location.Add(new KeyValuePair<string, string>("koreacentral", "Korea Central"));
             location.Add(new KeyValuePair<string, string>("canadacentral", "Canada Central"));
             location.Add(new KeyValuePair<string, string>("francecentral", "France Central"));
             location.Add(new KeyValuePair<string, string>("germanywestcentral", "Germany West Central"));
-            location.Add(new KeyValuePair<string, string>("norwayeast", "Norway East"));
-            location.Add(new KeyValuePair<string, string>("switzerlandnorth", "Switzerland North"));
-            location.Add(new KeyValuePair<string, string>("uaenorth", "UAE North"));
             location.Add(new KeyValuePair<string, string>("brazilsouth", "Brazil South"));
-            location.Add(new KeyValuePair<string, string>("eastus2euap", "East US 2 EUAP"));
-            location.Add(new KeyValuePair<string, string>("jioindiawest", "Jio India West"));
-            location.Add(new KeyValuePair<string, string>("centraluseuap", "Central US EUAP"));
-            location.Add(new KeyValuePair<string, string>("westcentralus", "West Central US"));
             location.Add(new KeyValuePair<string, string>("australiasoutheast", "Australia Southeast"));
             location.Add(new KeyValuePair<string, string>("japanwest", "Japan West"));
-            location.Add(new KeyValuePair<string, string>("koreasouth", "Korea South"));
-            location.Add(new KeyValuePair<string, string>("southindia", "South India"));
             location.Add(new KeyValuePair<string, string>("ukwest", "UK West"));
 
             TargetRegionComboBox.DataSource = location;
@@ -103,21 +96,7 @@ namespace Azure.Migrate.Export.Forms
             AssessmentDurationComboBox.ValueMember = "Key";
             AssessmentDurationComboBox.DisplayMember = "Value";
             AssessmentDurationComboBox.SelectedItem = new KeyValuePair<string, string>("week", "Week");
-        }
-
-        private void InitializeOptimizationPreference()
-        {   
-            List<KeyValuePair<string, string>> optimizationPreferences = new List<KeyValuePair<string, string>>();
-            optimizationPreferences.Add(new KeyValuePair<string, string>("ModernizeToPaaS", "Modernize to PaaS (PaaS preferred)"));
-            optimizationPreferences.Add(new KeyValuePair<string, string>("MigrateToAllIaaS", "Migrate to all IaaS"));
-
-            OptimizationPreferenceComboBox.DataSource = optimizationPreferences;
-            OptimizationPreferenceComboBox.ValueMember = "Key";
-            OptimizationPreferenceComboBox.DisplayMember = "Value";
-            OptimizationPreferenceComboBox.SelectedItem = new KeyValuePair<string, string>("ModernizeToPaaS", "Modernize to PaaS (PaaS preferred)");
-
-            AssessSqlServicesSeparatelyGroupBox.Visible = false;
-        }
+        }        
         #endregion
 
         #region Validation
@@ -160,16 +139,18 @@ namespace Azure.Migrate.Export.Forms
 
         private bool ValidateOptimizationPreference()
         {
-            if (!mainFormObj.IsAvsBusinessProposalSelected() && OptimizationPreferenceComboBox.SelectedItem == null)
+            if (OptimizationPreferenceComboBox.SelectedItem == null)
                 return false;
 
-            /*else if (!mainFormObj.IsAvsBusinessProposalSelected() &&
+            /*
+             else if (!mainFormObj.IsAvsBusinessProposalSelected() &&
                      ((KeyValuePair<string, string>)OptimizationPreferenceComboBox.SelectedItem).Key == "ModernizeToPaaS" &&
                      ((KeyValuePair<string, string>)OptimizationPreferenceComboBox.SelectedItem).Value == "Modernize to PaaS (PaaS preferred)" &&
                      AssessSqlServicesSeparatelyGroupBox.Visible == false)
             {
                 return false;
-            }*/
+            }
+            */
 
             return true;
         }
@@ -269,9 +250,8 @@ namespace Azure.Migrate.Export.Forms
         public KeyValuePair<string, string> GetSelectedOptimizationPreference()
         {
             KeyValuePair<string, string> empty = new KeyValuePair<string, string>("", "");
-            if (mainFormObj.IsAvsBusinessProposalSelected())
-                return new KeyValuePair<string, string>("MigrateToAvs", "AVSOnly");
-            else if (!mainFormObj.IsAvsBusinessProposalSelected() && OptimizationPreferenceComboBox.SelectedItem == null)
+            
+            if (OptimizationPreferenceComboBox.SelectedItem == null)
                 return empty;
 
             return (KeyValuePair<string, string>)OptimizationPreferenceComboBox.SelectedItem;
@@ -366,12 +346,37 @@ namespace Azure.Migrate.Export.Forms
         #region Utilities
         public void DisableOptimizationPreferenceComboBox()
         {
+            InitializeOptimizationPreference(BusinessProposal.AVS);
             OptimizationPreferenceComboBox.Enabled = false;
         }
 
         public void EnableOptimizationPreferenceComboBox()
         {
+            InitializeOptimizationPreference(BusinessProposal.Comprehensive);
             OptimizationPreferenceComboBox.Enabled = true;
+        }
+
+        private void InitializeOptimizationPreference(BusinessProposal businessProposal)
+        {
+            List<KeyValuePair<string, string>> optimizationPreferences = new List<KeyValuePair<string, string>>();
+            optimizationPreferences.Add(new KeyValuePair<string, string>("ModernizeToPaaS", "Modernize to PaaS (PaaS preferred)"));
+            optimizationPreferences.Add(new KeyValuePair<string, string>("MigrateToAllIaaS", "Migrate to all IaaS"));
+
+            OptimizationPreferenceComboBox.DataSource = optimizationPreferences;
+            OptimizationPreferenceComboBox.ValueMember = "Key";
+            OptimizationPreferenceComboBox.DisplayMember = "Value";
+            if (businessProposal == BusinessProposal.AVS)
+            {
+                var avsKeyValuePair = new KeyValuePair<string, string>("MigrateToAvs", "AVSOnly");
+                optimizationPreferences.Add(avsKeyValuePair);
+                OptimizationPreferenceComboBox.SelectedItem = avsKeyValuePair;
+            }
+            else
+            {
+                OptimizationPreferenceComboBox.SelectedItem = new KeyValuePair<string, string>("ModernizeToPaaS", "Modernize to PaaS (PaaS preferred)");
+            }            
+
+            AssessSqlServicesSeparatelyGroupBox.Visible = false;
         }
         #endregion
     }

@@ -43,6 +43,10 @@ namespace Azure.Migrate.Export.Forms
             if (selectedModule != null && selectedModule.Equals("Assessment"))
             {
                 EnableBusinessProposal();
+                if (ImportRadioButton.Checked)
+                {
+                    CheckOnlyQuickAvsProposal();
+                }
             }
             else
             {
@@ -57,6 +61,10 @@ namespace Azure.Migrate.Export.Forms
         {
             ModuleComboBox.Visible = false;
             EnableBusinessProposal();
+            if (ImportRadioButton.Checked)
+            {
+                CheckOnlyQuickAvsProposal();
+            }
 
             mainFormObj.MakeConfigurationTabButtonEnableDecisions();
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
@@ -90,6 +98,17 @@ namespace Azure.Migrate.Export.Forms
             PhysicalCheckBox.Enabled = false;
             PhysicalCheckBox.Checked = false;
 
+            string selectedModule = (string)ModuleComboBox.SelectedItem;
+            if (ExpressWorkflowRadioButton.Checked || 
+               (selectedModule != null && selectedModule.Equals("Assessment")))
+            {
+                CheckOnlyQuickAvsProposal();
+            }
+            else
+            {
+                DisableBusinessProposal();
+            }
+
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
             mainFormObj.MakeConfigurationTabButtonEnableDecisions();
         }
@@ -103,6 +122,8 @@ namespace Azure.Migrate.Export.Forms
             HyperVCheckBox.Checked = true;
             PhysicalCheckBox.Enabled = true;
             PhysicalCheckBox.Checked = true;
+
+            EnableBusinessProposal();
 
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
             mainFormObj.MakeConfigurationTabButtonEnableDecisions();
@@ -143,12 +164,16 @@ namespace Azure.Migrate.Export.Forms
                     ModuleComboBox.SelectedItem = "Discovery";
                 }
                 else
+                {
                     EnableBusinessProposal();
+                    if (ImportRadioButton.Checked)
+                    {
+                        CheckOnlyQuickAvsProposal();
+                    }
+                }                   
             }
             else if (selectedModule.Equals("Discovery"))
             {
-                QuickAvsProposalRadioButton.Checked = false;
-                ComprehensiveProposalRadioButton.Checked = false;
                 DisableBusinessProposal();
             }
 
@@ -417,16 +442,25 @@ namespace Azure.Migrate.Export.Forms
             return true;
         }
 
-        private void DisableBusinessProposal()
+        public void DisableBusinessProposal()
         {
             ComprehensiveProposalRadioButton.Enabled = false;
+            ComprehensiveProposalRadioButton.Checked = false;
             QuickAvsProposalRadioButton.Enabled = false;
+            QuickAvsProposalRadioButton.Checked = false;
         }
 
-        private void EnableBusinessProposal()
+        public void EnableBusinessProposal()
         {
             ComprehensiveProposalRadioButton.Enabled = true;
             QuickAvsProposalRadioButton.Enabled = true;
+        }
+
+        public void CheckOnlyQuickAvsProposal()
+        {
+            ComprehensiveProposalRadioButton.Enabled = false;
+            QuickAvsProposalRadioButton.Enabled = true;
+            QuickAvsProposalRadioButton.Checked = true;
         }
         #endregion
     }
