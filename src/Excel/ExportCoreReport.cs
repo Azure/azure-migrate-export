@@ -121,11 +121,12 @@ namespace Azure.Migrate.Export.Excel
             dataWs.Cell(2, 4).Value = CorePropertiesObj.AzureMigrateProjectName;
             dataWs.Cell(2, 5).Value = CorePropertiesObj.AssessmentSiteName;
             dataWs.Cell(2, 6).Value = CorePropertiesObj.Workflow;
-            dataWs.Cell(2, 7).Value = CorePropertiesObj.TargetRegion;
-            dataWs.Cell(2, 8).Value = CorePropertiesObj.Currency;
-            dataWs.Cell(2, 9).Value = CorePropertiesObj.AssessmentDuration;
-            dataWs.Cell(2, 10).Value = CorePropertiesObj.OptimizationPreference;
-            dataWs.Cell(2, 11).Value = CorePropertiesObj.AssessSQLServices;
+            dataWs.Cell(2, 7).Value = CorePropertiesObj.BusinessProposal;
+            dataWs.Cell(2, 8).Value = CorePropertiesObj.TargetRegion;
+            dataWs.Cell(2, 9).Value = CorePropertiesObj.Currency;
+            dataWs.Cell(2, 10).Value = CorePropertiesObj.AssessmentDuration;
+            dataWs.Cell(2, 11).Value = CorePropertiesObj.OptimizationPreference;
+            dataWs.Cell(2, 12).Value = CorePropertiesObj.AssessSQLServices;
         }
 
         private void Generate_Business_Case_Worksheet()

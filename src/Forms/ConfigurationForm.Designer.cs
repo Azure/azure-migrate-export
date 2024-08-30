@@ -30,7 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigurationForm));
             this.AzureMigrateSourceApplianceGroupBox = new System.Windows.Forms.GroupBox();
-            this.ImportCheckBox = new System.Windows.Forms.CheckBox();
+            this.ApplianceRadioButton = new System.Windows.Forms.RadioButton();
+            this.ImportRadioButton = new System.Windows.Forms.RadioButton();
             this.PhysicalCheckBox = new System.Windows.Forms.CheckBox();
             this.HyperVCheckBox = new System.Windows.Forms.CheckBox();
             this.VMwareCheckBox = new System.Windows.Forms.CheckBox();
@@ -55,7 +56,8 @@
             // 
             // AzureMigrateSourceApplianceGroupBox
             // 
-            this.AzureMigrateSourceApplianceGroupBox.Controls.Add(this.ImportCheckBox);
+            this.AzureMigrateSourceApplianceGroupBox.Controls.Add(this.ApplianceRadioButton);
+            this.AzureMigrateSourceApplianceGroupBox.Controls.Add(this.ImportRadioButton);
             this.AzureMigrateSourceApplianceGroupBox.Controls.Add(this.PhysicalCheckBox);
             this.AzureMigrateSourceApplianceGroupBox.Controls.Add(this.HyperVCheckBox);
             this.AzureMigrateSourceApplianceGroupBox.Controls.Add(this.VMwareCheckBox);
@@ -64,12 +66,21 @@
             this.AzureMigrateSourceApplianceGroupBox.TabStop = false;
             this.AzureMigrateSourceApplianceGroupBox.MouseHover += new System.EventHandler(this.AzureMigrateSourceApplianceGroupBox_MouseHover);
             // 
-            // ImportCheckBox
+            // ApplianceRadioButton
             // 
-            resources.ApplyResources(this.ImportCheckBox, "ImportCheckBox");
-            this.ImportCheckBox.Name = "ImportCheckBox";
-            this.ImportCheckBox.UseVisualStyleBackColor = true;
-            this.ImportCheckBox.CheckedChanged += new System.EventHandler(this.ImportCheckBox_CheckedChanged);
+            resources.ApplyResources(this.ApplianceRadioButton, "ApplianceRadioButton");
+            this.ApplianceRadioButton.Name = "ApplianceRadioButton";
+            this.ApplianceRadioButton.TabStop = true;
+            this.ApplianceRadioButton.UseVisualStyleBackColor = true;
+            this.ApplianceRadioButton.Click += new System.EventHandler(this.ApplianceRadioButton_Click);
+            // 
+            // ImportRadioButton
+            // 
+            resources.ApplyResources(this.ImportRadioButton, "ImportRadioButton");
+            this.ImportRadioButton.Name = "ImportRadioButton";
+            this.ImportRadioButton.TabStop = true;
+            this.ImportRadioButton.UseVisualStyleBackColor = true;
+            this.ImportRadioButton.Click += new System.EventHandler(this.ImportRadioButton_Click);
             // 
             // PhysicalCheckBox
             // 
@@ -177,6 +188,7 @@
             resources.ApplyResources(this.BusinessProposalGroupBox, "BusinessProposalGroupBox");
             this.BusinessProposalGroupBox.Name = "BusinessProposalGroupBox";
             this.BusinessProposalGroupBox.TabStop = false;
+            this.BusinessProposalGroupBox.MouseHover += new System.EventHandler(this.BusinessProposalGroupBox_MouseHover);
             // 
             // QuickAvsProposalRadioButton
             // 
@@ -185,6 +197,7 @@
             this.QuickAvsProposalRadioButton.TabStop = true;
             this.QuickAvsProposalRadioButton.UseVisualStyleBackColor = true;
             this.QuickAvsProposalRadioButton.CheckedChanged += new System.EventHandler(this.QuickAvsProposalRadioButton_CheckedChanged);
+            this.QuickAvsProposalRadioButton.MouseHover += new System.EventHandler(this.QuickAvsProposalRadioButton_MouseHover);
             // 
             // ComprehensiveProposalRadioButton
             // 
@@ -193,6 +206,7 @@
             this.ComprehensiveProposalRadioButton.TabStop = true;
             this.ComprehensiveProposalRadioButton.UseVisualStyleBackColor = true;
             this.ComprehensiveProposalRadioButton.CheckedChanged += new System.EventHandler(this.ComprehensiveProposalRadioButton_CheckedChanged);
+            this.ComprehensiveProposalRadioButton.MouseHover += new System.EventHandler(this.ComprehensiveProposalRadioButton_MouseHover);
             // 
             // ConfigurationForm
             // 
@@ -233,9 +247,10 @@
         private System.Windows.Forms.RichTextBox ConfigurationDescriptionRichTextBox;
         private System.Windows.Forms.PictureBox CustomWorkflowInfoPictureBox;
         private System.Windows.Forms.PictureBox ExpressWorkflowInfoPictureBox;
-        private System.Windows.Forms.CheckBox ImportCheckBox;
         private System.Windows.Forms.GroupBox BusinessProposalGroupBox;
         private System.Windows.Forms.RadioButton QuickAvsProposalRadioButton;
         private System.Windows.Forms.RadioButton ComprehensiveProposalRadioButton;
+        private System.Windows.Forms.RadioButton ApplianceRadioButton;
+        private System.Windows.Forms.RadioButton ImportRadioButton;
     }
 }

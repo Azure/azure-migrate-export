@@ -8,6 +8,7 @@ namespace Azure.Migrate.Export.Models
         public string AzureMigrateProjectName { get; set; }
         public string AssessmentSiteName { get; set; }
         public string Workflow { get; set; }
+        public string BusinessProposal { get; set; }
         public string TargetRegion { get; set; }
         public string Currency { get; set; }
         public string AssessmentDuration { get; set; }

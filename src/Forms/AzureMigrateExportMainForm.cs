@@ -140,7 +140,14 @@ namespace Azure.Migrate.Export.Forms
         private void AssessButton_Click(object sender, EventArgs e)
         {
             ConfigurationFormObj.SetModule("Assessment");
-            HandleTabChange(AssessmentSettingsFormObj, AssessmentSettingsTabButton);
+            ConfigurationFormObj.EnableBusinessProposal();
+            List<string> applianceList = ConfigurationFormObj.GetAzureMigrateSourceAppliances();
+            if (applianceList.Contains("import"))
+            {
+                ConfigurationFormObj.CheckOnlyQuickAvsProposal();
+            }
+
+            HandleTabChange(ConfigurationFormObj, ConfigurationTabButton);
         }
         #endregion
 
@@ -874,6 +881,27 @@ namespace Azure.Migrate.Export.Forms
         public void MakeTrackProgressTabButtonEnableDecisions()
         {
             // Previous state must be retained, enabled tab buttons do not change.
+        }
+        #endregion
+
+        #region Utilities
+        public bool IsAvsBusinessProposalSelected()
+        {
+            return (ConfigurationFormObj.GetBusinessProposal() == BusinessProposal.AVS.ToString());
+        }
+
+        public void DisableOptimizationPreferenceComboBox()
+        {
+            if (AssessmentSettingsFormObj == null)
+                return;
+            AssessmentSettingsFormObj.DisableOptimizationPreferenceComboBox();
+        }
+
+        public void EnableOptimizationPreferenceComboBox()
+        {
+            if (AssessmentSettingsFormObj == null)
+                return;
+            AssessmentSettingsFormObj.EnableOptimizationPreferenceComboBox();
         }
         #endregion
     }

@@ -24,10 +24,10 @@ namespace Azure.Migrate.Export.Forms
         #region Set Default Values
         public void SetDefaultConfigurationValues()
         {
-            HyperVCheckBox.Checked = true;
+            ApplianceRadioButton.Checked = true;
             VMwareCheckBox.Checked = true;
+            HyperVCheckBox.Checked = true;
             PhysicalCheckBox.Checked = true;
-            ImportCheckBox.Checked = false;
 
             ExpressWorkflowRadioButton.Checked = true;
             ComprehensiveProposalRadioButton.Checked = true;
@@ -39,6 +39,20 @@ namespace Azure.Migrate.Export.Forms
         {
             ModuleComboBox.Visible = true;
 
+            string selectedModule = (string)ModuleComboBox.SelectedItem;
+            if (selectedModule != null && selectedModule.Equals("Assessment"))
+            {
+                EnableBusinessProposal();
+                if (ImportRadioButton.Checked)
+                {
+                    CheckOnlyQuickAvsProposal();
+                }
+            }
+            else
+            {
+                DisableBusinessProposal();
+            }    
+
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
             mainFormObj.MakeConfigurationTabButtonEnableDecisions();
         }
@@ -46,18 +60,71 @@ namespace Azure.Migrate.Export.Forms
         private void ExpressWorkflowRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             ModuleComboBox.Visible = false;
+            EnableBusinessProposal();
+            if (ImportRadioButton.Checked)
+            {
+                CheckOnlyQuickAvsProposal();
+            }
+
             mainFormObj.MakeConfigurationTabButtonEnableDecisions();
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
         }
 
         private void ComprehensiveProposalRadioButton_CheckedChanged(object sender, EventArgs e)
         {
+            mainFormObj.EnableOptimizationPreferenceComboBox();
+
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
             mainFormObj.MakeConfigurationTabButtonEnableDecisions();
         }
 
         private void QuickAvsProposalRadioButton_CheckedChanged(object sender, EventArgs e)
         {
+            mainFormObj.DisableOptimizationPreferenceComboBox();
+
+            mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
+            mainFormObj.MakeConfigurationTabButtonEnableDecisions();
+        }
+        #endregion
+
+        #region Radio Buttons Clicked
+        private void ImportRadioButton_Click(object sender, EventArgs e)
+        {
+            ApplianceRadioButton.Checked = false;
+            VMwareCheckBox.Enabled = false;
+            VMwareCheckBox.Checked = false;
+            HyperVCheckBox.Enabled = false;
+            HyperVCheckBox.Checked = false;
+            PhysicalCheckBox.Enabled = false;
+            PhysicalCheckBox.Checked = false;
+
+            string selectedModule = (string)ModuleComboBox.SelectedItem;
+            if (ExpressWorkflowRadioButton.Checked || 
+               (selectedModule != null && selectedModule.Equals("Assessment")))
+            {
+                CheckOnlyQuickAvsProposal();
+            }
+            else
+            {
+                DisableBusinessProposal();
+            }
+
+            mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
+            mainFormObj.MakeConfigurationTabButtonEnableDecisions();
+        }
+
+        private void ApplianceRadioButton_Click(object sender, EventArgs e)
+        {
+            ImportRadioButton.Checked = false;
+            VMwareCheckBox.Enabled = true;
+            VMwareCheckBox.Checked = true;
+            HyperVCheckBox.Enabled = true;
+            HyperVCheckBox.Checked = true;
+            PhysicalCheckBox.Enabled = true;
+            PhysicalCheckBox.Checked = true;
+
+            EnableBusinessProposal();
+
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
             mainFormObj.MakeConfigurationTabButtonEnableDecisions();
         }
@@ -81,12 +148,6 @@ namespace Azure.Migrate.Export.Forms
             mainFormObj.MakeConfigurationTabButtonEnableDecisions();
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
         }
-
-        private void ImportCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            mainFormObj.MakeConfigurationTabButtonEnableDecisions();
-            mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
-        }
         #endregion
 
         #region ComboBox Selection Change Committed
@@ -102,6 +163,18 @@ namespace Azure.Migrate.Export.Forms
                     MessageBox.Show("No discovery report found. Please complete discovery before running assessments.", "Azure Migrate Export");
                     ModuleComboBox.SelectedItem = "Discovery";
                 }
+                else
+                {
+                    EnableBusinessProposal();
+                    if (ImportRadioButton.Checked)
+                    {
+                        CheckOnlyQuickAvsProposal();
+                    }
+                }                   
+            }
+            else if (selectedModule.Equals("Discovery"))
+            {
+                DisableBusinessProposal();
             }
 
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
@@ -126,29 +199,23 @@ namespace Azure.Migrate.Export.Forms
 
         private bool ValidateAzureMigrateSourceAppliance()
         {
-            if (!(VMwareCheckBox.Checked ||
-                  HyperVCheckBox.Checked ||
-                  PhysicalCheckBox.Checked ||
-                  ImportCheckBox.Checked))
-            {
+            if (!ImportRadioButton.Checked && !ApplianceRadioButton.Checked)
                 return false;
-            }
 
-            if ((VMwareCheckBox.Checked ||
-                 HyperVCheckBox.Checked ||
-                 PhysicalCheckBox.Checked) &&
-                 ImportCheckBox.Checked)
-            {
+            if (ImportRadioButton.Checked && ApplianceRadioButton.Checked)
                 return false;
-            }
 
-            if (ImportCheckBox.Checked &&
-               (VMwareCheckBox.Checked ||
+            if (ApplianceRadioButton.Checked && 
+                !VMwareCheckBox.Checked && 
+                !HyperVCheckBox.Checked &&
+                !PhysicalCheckBox.Checked)
+                return false;
+            
+            if (ImportRadioButton.Checked &&
+                (VMwareCheckBox.Checked ||
                 HyperVCheckBox.Checked ||
                 PhysicalCheckBox.Checked))
-            {
                 return false;
-            }
 
             return true;
         }
@@ -172,7 +239,14 @@ namespace Azure.Migrate.Export.Forms
 
         private bool ValidateBusinessProposal()
         {
-            if (ComprehensiveProposalRadioButton.Checked == false && QuickAvsProposalRadioButton.Checked == false)
+            string selectedModule = (string)ModuleComboBox.SelectedItem;
+            if (selectedModule != null && 
+               (selectedModule.Equals("Assessment") || ExpressWorkflowRadioButton.Checked) &&
+               (ComprehensiveProposalRadioButton.Checked == false && QuickAvsProposalRadioButton.Checked == false))
+                return false;
+
+            if (selectedModule != null && selectedModule.Equals("Discovery") &&
+               (ComprehensiveProposalRadioButton.Checked == true || QuickAvsProposalRadioButton.Checked == true))
                 return false;
 
             return true;
@@ -248,14 +322,34 @@ namespace Azure.Migrate.Export.Forms
             UpdateWorkflowDescription();
         }
 
+        private void BusinessProposalGroupBox_MouseHover(object sender, EventArgs e)
+        {
+            UpdateBusinessProposalDescription();
+        }
+
+        private void ComprehensiveProposalRadioButton_MouseHover(object sender, EventArgs e)
+        {
+            UpdateBusinessProposalDescription();
+        }
+
+        private void QuickAvsProposalRadioButton_MouseHover(object sender, EventArgs e)
+        {
+            UpdateBusinessProposalDescription();
+        }
+
         private void UpdateAzureMigrateSourceApplianceDescription()
         {
-            UpdateDescriptionTextBox("Azure Migrate Source Appliance", "Azure Migrate Export can be used to assess servers in VMware, Hyper-V and Physical/Bare-Metal environments.\n\nSelect appropriate source appliance stacks that were used to discover the respective environments using Azure Migrate: Discovery and Assessment tool.");
+            UpdateDescriptionTextBox("Discovery Appliance", "Azure Migrate Export can be used to assess servers in VMware, Hyper-V and Physical/Bare-Metal environments.\n\nTo create a business proposal, you can use the inventory of servers either discovered using appliance or via import.​\nIn case of appliance-based discovery, select appropriate source appliance stacks that were used to discover the inventory.​\nIn case of you have used import-based discovery via .csv or RVTools, select Import. ");
         }
 
         private void UpdateWorkflowDescription()
         {
             UpdateDescriptionTextBox("Workflow", "Azure Migrate Export supports two workflows:\n\t1. Custom - Enables you to make customizations before generating the reports and presentations - classifying workloads into \"Dev\" or\n\t    \"Prod\", moving servers out of scope, and scoping discovered servers to IaaS assessments. This will help you present advantages of\n\t    Dev/Test pricing and customize the scope of presentation.\n\t2. Express - Enables you to generate reports and presentations quickly - assuming all discovered servers are in-scope and are\n\t    production servers.");
+        }
+
+        private void UpdateBusinessProposalDescription()
+        {
+            UpdateDescriptionTextBox("Business Proposal", "Create a comprehensive business proposal that includes IaaS, PaaS and AVS targets for your servers and databases. The proposal includes in-depth analysis for transformations to recommended targets. ​\n\nCreate a Quick AVS proposal if you want to quickly migrate your VMware hosted servers to Azure VMware service. ​");
         }
 
         private void UpdateDescriptionTextBox(string descriptionHeader, string description)
@@ -277,7 +371,7 @@ namespace Azure.Migrate.Export.Forms
                 azureMigrateSourceAppliances.Add("hyperv");
             if (PhysicalCheckBox.Checked == true)
                 azureMigrateSourceAppliances.Add("physical");
-            if (ImportCheckBox.Checked == true)
+            if (ImportRadioButton.Checked == true)
                 azureMigrateSourceAppliances.Add("import");
 
             return azureMigrateSourceAppliances;
@@ -288,9 +382,15 @@ namespace Azure.Migrate.Export.Forms
             return ExpressWorkflowRadioButton.Checked;
         }
 
-        public bool IsAvsProposalSelected()
+        public string GetBusinessProposal()
         {
-            return QuickAvsProposalRadioButton.Checked;
+            if (QuickAvsProposalRadioButton.Checked)
+                return BusinessProposal.AVS.ToString();
+
+            if (ComprehensiveProposalRadioButton.Checked)
+                return BusinessProposal.Comprehensive.ToString();
+
+            return string.Empty;
         }
 
         public string GetModule()
@@ -340,6 +440,27 @@ namespace Azure.Migrate.Export.Forms
                 return false;
 
             return true;
+        }
+
+        public void DisableBusinessProposal()
+        {
+            ComprehensiveProposalRadioButton.Enabled = false;
+            ComprehensiveProposalRadioButton.Checked = false;
+            QuickAvsProposalRadioButton.Enabled = false;
+            QuickAvsProposalRadioButton.Checked = false;
+        }
+
+        public void EnableBusinessProposal()
+        {
+            ComprehensiveProposalRadioButton.Enabled = true;
+            QuickAvsProposalRadioButton.Enabled = true;
+        }
+
+        public void CheckOnlyQuickAvsProposal()
+        {
+            ComprehensiveProposalRadioButton.Enabled = false;
+            QuickAvsProposalRadioButton.Enabled = true;
+            QuickAvsProposalRadioButton.Checked = true;
         }
         #endregion
     }

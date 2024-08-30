@@ -18,6 +18,7 @@ namespace Azure.Migrate.Export.Common
             "Azure Migrate Project Name",
             "Assessment Site Name",
             "Workflow",
+            "Business Proposal",
             "Target Region",
             "Currency",
             "Assessment Duration",
