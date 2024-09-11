@@ -529,12 +529,15 @@ namespace Azure.Migrate.Export.Common
             "Category",
             "On-Prem IaaS Cost",
             "On-Prem PaaS Cost",
-            "On-Premises AVS Cost",
+            "On-Prem AVS Cost",
             "Total On-Premises Cost",
             "Azure IaaS Cost",
             "Azure PaaS Cost",
             "Azure AVS Cost",
-            "Total Azure Cost"
+            "Total Azure Cost",
+            "Windows Server License Savings",
+            "SQL Server License Savings",
+            "ESU Savings"
         };
         public static readonly List<string> Business_Case_RowTypes = new List<string>
         {

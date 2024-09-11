@@ -171,7 +171,7 @@ namespace Azure.Migrate.Export.Processor
         private static bool IsBusinessProposalValid(UserInput userInputObj)
         {
             string businessProposal = "";
-            if (userInputObj.WorkflowObj.Module.Equals("Assessment"))
+            if (userInputObj.WorkflowObj.IsExpressWorkflow || userInputObj.WorkflowObj.Module.Equals("Assessment"))
             {
                 if (userInputObj.BusinessProposal == BusinessProposal.AVS.ToString())
                     businessProposal = "Quick AVS Proposal";

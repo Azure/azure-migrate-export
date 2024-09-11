@@ -12,7 +12,16 @@ namespace Azure.Migrate.Export.Models
     {
         [JsonProperty("totalAzureAvsCost")]
         public double TotalAzureAvsCost { get; set; }
-        
+
+        [JsonProperty("windowsAhubSavings")]
+        public double WindowsAhubSavings { get; set; }
+
+        [JsonProperty("sqlAhubSavings")]
+        public double SqlAhubSavings { get; set; }
+
+        [JsonProperty("esuSavingsFor4years")]
+        public double EsuSavingsFor4years { get; set; }
+
         [JsonProperty("yearOnYearEstimates")]
         public BusinessCaseYOYCostDetailsJSON YearOnYearEstimates { get; set; }
     }

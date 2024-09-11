@@ -2315,7 +2315,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             Business_Case_Data.AzurePaaSCost.ITStaffCost = BusinessCaseData.AzurePaaSCostDetails.ITStaffCost;
             Business_Case_Data.AzurePaaSCost.FacilitiesCost = 0;
 
-            if (!AzureAvsCalculator.IsCalculationComplete())
+            if (UserInputObj.BusinessProposal == BusinessProposal.AVS.ToString() && !AzureAvsCalculator.IsCalculationComplete())
             {
                 AzureAvsCalculator.SetParameters(AVSAssessmentsData);
                 AzureAvsCalculator.Calculate();
@@ -2365,6 +2365,10 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 Business_Case_Data.AzureIaaSCost.FacilitiesCost +
                 Business_Case_Data.AzurePaaSCost.FacilitiesCost +
                 Business_Case_Data.AzureAvsCost.FacilitiesCost;
+
+            Business_Case_Data.WindowsServerLicense.ComputeLicenseCost = BusinessCaseData.WindowsServerLicense.ComputeLicenseCost;
+            Business_Case_Data.SqlServerLicense.ComputeLicenseCost = BusinessCaseData.SqlServerLicense.ComputeLicenseCost;
+            Business_Case_Data.EsuSavings.ComputeLicenseCost = BusinessCaseData.EsuSavings.ComputeLicenseCost;
 
             UserInputObj.LoggerObj.LogInformation("Updated Business_Case excel model");
         }

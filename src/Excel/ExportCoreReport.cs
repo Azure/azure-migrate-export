@@ -203,6 +203,30 @@ namespace Azure.Migrate.Export.Excel
             dataWs.Cell(6, 9).Value = Business_Case_Data.TotalAzureCost.SecurityCost;
             dataWs.Cell(7, 9).Value = Business_Case_Data.TotalAzureCost.ITStaffCost;
             dataWs.Cell(8, 9).Value = Business_Case_Data.TotalAzureCost.FacilitiesCost;
+
+            dataWs.Cell(2, 10).Value = Business_Case_Data.WindowsServerLicense.ComputeLicenseCost;
+            dataWs.Cell(3, 10).Value = 0.00;
+            dataWs.Cell(4, 10).Value = 0.00;
+            dataWs.Cell(5, 10).Value = 0.00;
+            dataWs.Cell(6, 10).Value = 0.00;
+            dataWs.Cell(7, 10).Value = 0.00;
+            dataWs.Cell(8, 10).Value = 0.00;
+
+            dataWs.Cell(2, 11).Value = Business_Case_Data.SqlServerLicense.ComputeLicenseCost;
+            dataWs.Cell(3, 11).Value = 0.00;
+            dataWs.Cell(4, 11).Value = 0.00;
+            dataWs.Cell(5, 11).Value = 0.00;
+            dataWs.Cell(6, 11).Value = 0.00;
+            dataWs.Cell(7, 11).Value = 0.00;
+            dataWs.Cell(8, 11).Value = 0.00;
+
+            dataWs.Cell(2, 12).Value = Business_Case_Data.EsuSavings.ComputeLicenseCost;
+            dataWs.Cell(3, 12).Value = 0.00;
+            dataWs.Cell(4, 12).Value = 0.00;
+            dataWs.Cell(5, 12).Value = 0.00;
+            dataWs.Cell(6, 12).Value = 0.00;
+            dataWs.Cell(7, 12).Value = 0.00;
+            dataWs.Cell(8, 12).Value = 0.00;
         }
 
         private void Generate_Cash_Flows_Worksheet()
