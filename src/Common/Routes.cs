@@ -23,6 +23,8 @@ namespace Azure.Migrate.Export.Common
         public const string AssessedSQLMachinesPath = @"assessedSqlMachines";
         public const string SolutionsPath = @"Solutions";
         public const string MachinesPath = @"machines";
+        public const string HostsPath = @"hosts";
+        public const string VCentersPath = @"vcenters";
         public const string UpdateMachinesPath = @"updateMachines";
         public const string ApplicationsPath = @"applications";
         public const string ServerDiscoveryPath = @"Servers-Discovery-ServerDiscovery";

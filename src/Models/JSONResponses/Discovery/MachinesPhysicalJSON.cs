@@ -50,6 +50,9 @@ namespace Azure.Migrate.Export.Models
         [JsonProperty("operatingSystemDetails")]
         public PhysicalMachinesOperatingSystemDetailsInfo OperatingSystemDetails { get; set; }
 
+        [JsonProperty("productSupportStatus")]
+        public ProductSupportStatusInfo ProductSupportStatus { get; set; }
+
         [JsonProperty("firmware")]
         public string Firmware { get; set; }
 

@@ -10,12 +10,14 @@ namespace  Azure.Migrate.Export.Excel
     {
         private readonly List<DiscoveryData> DiscoveredData;
         private readonly DiscoveryProperties DiscoveryPropertiesData;
+        private readonly vCenterHostDiscovery VCenterHostDiscoveryData;
         XLWorkbook DiscoveryWb;
 
-        public ExportDiscoveryReport(List<DiscoveryData> discoveredData, DiscoveryProperties discoveryPropertiesData)
+        public ExportDiscoveryReport(List<DiscoveryData> discoveredData, vCenterHostDiscovery vCenterHostData, DiscoveryProperties discoveryPropertiesData)
         {
             DiscoveredData = discoveredData;
             DiscoveryPropertiesData = discoveryPropertiesData;
+            VCenterHostDiscoveryData = vCenterHostData;
             DiscoveryWb = new XLWorkbook();
         }
 
@@ -23,6 +25,7 @@ namespace  Azure.Migrate.Export.Excel
         {
             GeneratePropertyWorksheet();
             GenerateDiscoveryReportWorksheet();
+            GeneratevCenterHostReportWorksheet();
 
             DiscoveryWb.SaveAs(DiscoveryReportConstants.DiscoveryReportPath);
         }
@@ -55,6 +58,19 @@ namespace  Azure.Migrate.Export.Excel
 
             if (DiscoveredData != null && DiscoveredData.Count > 0)
                 dataWs.Cell(2, 1).InsertData(DiscoveredData);
+        }
+
+        private void GeneratevCenterHostReportWorksheet()
+        {
+            var dataWs = DiscoveryWb.Worksheets.Add(DiscoveryReportConstants.vCenterHost_Report_TabName, 3);
+
+            var dataHeaders = DiscoveryReportConstants.VCenterHostReportColumns;
+
+            for (int i = 0; i < dataHeaders.Count; i++)
+                dataWs.Cell(1, i + 1).Value = dataHeaders[i];
+
+            dataWs.Cell(2, 1).Value = VCenterHostDiscoveryData.vCenters;
+            dataWs.Cell(2, 2).Value = VCenterHostDiscoveryData.Hosts;
         }
     }
 }

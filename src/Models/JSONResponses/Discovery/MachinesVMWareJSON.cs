@@ -50,6 +50,9 @@ namespace Azure.Migrate.Export.Models
         [JsonProperty("operatingSystemDetails")]
         public VMWareMachinesOperatingSystemDetailsInfo OperatingSystemDetails { get; set; }
 
+        [JsonProperty("productSupportStatus")]
+        public ProductSupportStatusInfo ProductSupportStatus { get; set; }
+
         [JsonProperty("firmware")]
         public string Firmware { get; set; }
 
@@ -124,5 +127,11 @@ namespace Azure.Migrate.Export.Models
     {
         [JsonProperty("osName")]
         public string OSName { get; set; }
+    }
+
+    public class ProductSupportStatusInfo
+    {
+        [JsonProperty("supportStatus")]
+        public string SupportStatus { get; set; }
     }
 }
