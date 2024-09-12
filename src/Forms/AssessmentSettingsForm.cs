@@ -30,28 +30,30 @@ namespace Azure.Migrate.Export.Forms
         
         private void InitializeTargetRegionComboBox()
         {
-            List<KeyValuePair<string, string>> location = new List<KeyValuePair<string, string>>();
-            location.Add(new KeyValuePair<string, string>("eastus", "East US"));
-            location.Add(new KeyValuePair<string, string>("eastus2", "East US 2"));
-            location.Add(new KeyValuePair<string, string>("southcentralus", "South Central US"));
-            location.Add(new KeyValuePair<string, string>("westus2", "West US 2"));
-            location.Add(new KeyValuePair<string, string>("australiaeast", "Australia East"));
-            location.Add(new KeyValuePair<string, string>("southeastasia", "Southeast Asia"));
-            location.Add(new KeyValuePair<string, string>("northeurope", "North Europe"));
-            location.Add(new KeyValuePair<string, string>("swedencentral", "Sweden Central"));
-            location.Add(new KeyValuePair<string, string>("uksouth", "UK South"));
-            location.Add(new KeyValuePair<string, string>("westeurope", "West Europe"));
-            location.Add(new KeyValuePair<string, string>("centralus", "Central US"));
-            location.Add(new KeyValuePair<string, string>("southafricanorth", "South Africa North"));
-            location.Add(new KeyValuePair<string, string>("eastasia", "East Asia"));
-            location.Add(new KeyValuePair<string, string>("japaneast", "Japan East"));
-            location.Add(new KeyValuePair<string, string>("canadacentral", "Canada Central"));
-            location.Add(new KeyValuePair<string, string>("francecentral", "France Central"));
-            location.Add(new KeyValuePair<string, string>("germanywestcentral", "Germany West Central"));
-            location.Add(new KeyValuePair<string, string>("brazilsouth", "Brazil South"));
-            location.Add(new KeyValuePair<string, string>("australiasoutheast", "Australia Southeast"));
-            location.Add(new KeyValuePair<string, string>("japanwest", "Japan West"));
-            location.Add(new KeyValuePair<string, string>("ukwest", "UK West"));
+            List<KeyValuePair<string, string>> location = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("australiaeast", "Australia East"),
+                new KeyValuePair<string, string>("australiasoutheast", "Australia Southeast"),
+                new KeyValuePair<string, string>("brazilsouth", "Brazil South"),
+                new KeyValuePair<string, string>("canadacentral", "Canada Central"),
+                new KeyValuePair<string, string>("centralus", "Central US"),
+                new KeyValuePair<string, string>("eastasia", "East Asia"),
+                new KeyValuePair<string, string>("eastus", "East US"),
+                new KeyValuePair<string, string>("eastus2", "East US 2"),
+                new KeyValuePair<string, string>("francecentral", "France Central"),
+                new KeyValuePair<string, string>("germanywestcentral", "Germany West Central"),
+                new KeyValuePair<string, string>("japaneast", "Japan East"),
+                new KeyValuePair<string, string>("japanwest", "Japan West"),
+                new KeyValuePair<string, string>("northeurope", "North Europe"),
+                new KeyValuePair<string, string>("southafricanorth", "South Africa North"),
+                new KeyValuePair<string, string>("southcentralus", "South Central US"),
+                new KeyValuePair<string, string>("southeastasia", "Southeast Asia"),
+                new KeyValuePair<string, string>("swedencentral", "Sweden Central"),
+                new KeyValuePair<string, string>("uksouth", "UK South"),
+                new KeyValuePair<string, string>("ukwest", "UK West"),
+                new KeyValuePair<string, string>("westeurope", "West Europe"),
+                new KeyValuePair<string, string>("westus2", "West US 2")
+            };
 
             TargetRegionComboBox.DataSource = location;
             TargetRegionComboBox.ValueMember = "Key";
@@ -301,7 +303,7 @@ namespace Azure.Migrate.Export.Forms
 
         private void UpdateOptimizationPreferenceDescription()
         {
-            UpdateDescriptionTextBox("Migration Strategy", "Select the strategy for migrating workloads to Azure. The workloads are recommended for respective Azure Targets as per the logic below:\n\t1. Modernize to PaaS (PaaS Preferred) - Workloads that have SQL Server or web application running on them are first\n\t    assessed for Migration to respective PaaS targets; if the workload is not ready for migration to the respective PaaS target,\n\t    then the workload will be considered for migration to Azure VM.\n\t2. Migrate to IaaS only - Workloads are assessed for migration to Azure VM.");
+            UpdateDescriptionTextBox("Migration Strategy", "Select the strategy for migrating workloads to Azure. The workloads are recommended for respective Azure Targets as per the logic below:\n\t1. Modernize to PaaS (PaaS Preferred) - Workloads that have SQL Server or web application running on them are first\n\t    assessed for Migration to respective PaaS targets; if the workload is not ready for migration to the respective PaaS target,\n\t    then the workload will be considered for migration to Azure VM.\n\t2. Migrate to IaaS only - Workloads are assessed for migration to Azure VM.\n\t3. Migrate to AVS - Workloads are assessed for migration to Azure AVS.");
         }
 
         private void UpdateAssessSqlServicesSeparatelyDescription()
@@ -362,17 +364,20 @@ namespace Azure.Migrate.Export.Forms
             optimizationPreferences.Add(new KeyValuePair<string, string>("ModernizeToPaaS", "Modernize to PaaS (PaaS preferred)"));
             optimizationPreferences.Add(new KeyValuePair<string, string>("MigrateToAllIaaS", "Migrate to all IaaS"));
 
-            OptimizationPreferenceComboBox.DataSource = optimizationPreferences;
             OptimizationPreferenceComboBox.ValueMember = "Key";
             OptimizationPreferenceComboBox.DisplayMember = "Value";
+
             if (businessProposal == BusinessProposal.AVS)
             {
-                var avsKeyValuePair = new KeyValuePair<string, string>("MigrateToAvs", "AVSOnly");
-                optimizationPreferences.Add(avsKeyValuePair);
-                OptimizationPreferenceComboBox.SelectedItem = avsKeyValuePair;
+                var kvp = new KeyValuePair<string, string>("MigrateToAvs", "Migrate to AVS");
+                optimizationPreferences.Add(kvp);
+
+                OptimizationPreferenceComboBox.DataSource = optimizationPreferences;
+                OptimizationPreferenceComboBox.SelectedItem = kvp;
             }
             else
             {
+                OptimizationPreferenceComboBox.DataSource = optimizationPreferences;
                 OptimizationPreferenceComboBox.SelectedItem = new KeyValuePair<string, string>("ModernizeToPaaS", "Modernize to PaaS (PaaS preferred)");
             }            
 

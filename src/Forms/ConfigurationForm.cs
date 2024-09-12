@@ -36,22 +36,24 @@ namespace Azure.Migrate.Export.Forms
 
         #region Radio Buttons Checked Changed
         private void CustomWorkflowRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            ModuleComboBox.Visible = true;
-
-            string selectedModule = (string)ModuleComboBox.SelectedItem;
-            if (selectedModule != null && selectedModule.Equals("Assessment"))
+        {            
+            if (CustomWorkflowRadioButton.Checked)
             {
-                EnableBusinessProposal();
-                if (ImportRadioButton.Checked)
+                ModuleComboBox.Visible = true;
+                string selectedModule = (string)ModuleComboBox.SelectedItem;
+                if (selectedModule != null && selectedModule.Equals("Assessment"))
                 {
-                    CheckOnlyQuickAvsProposal();
+                    EnableBusinessProposal();
+                    if (ImportRadioButton.Checked)
+                    {
+                        CheckOnlyQuickAvsProposal();
+                    }
+                }
+                else
+                {
+                    DisableBusinessProposal();
                 }
             }
-            else
-            {
-                DisableBusinessProposal();
-            }    
 
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
             mainFormObj.MakeConfigurationTabButtonEnableDecisions();
@@ -59,12 +61,15 @@ namespace Azure.Migrate.Export.Forms
 
         private void ExpressWorkflowRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            ModuleComboBox.Visible = false;
-            EnableBusinessProposal();
-            if (ImportRadioButton.Checked)
+            if (ExpressWorkflowRadioButton.Checked)
             {
-                CheckOnlyQuickAvsProposal();
-            }
+                ModuleComboBox.Visible = false;
+                EnableBusinessProposal();
+                if (ImportRadioButton.Checked)
+                {
+                    CheckOnlyQuickAvsProposal();
+                }
+            }            
 
             mainFormObj.MakeConfigurationTabButtonEnableDecisions();
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
@@ -72,7 +77,11 @@ namespace Azure.Migrate.Export.Forms
 
         private void ComprehensiveProposalRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            mainFormObj.EnableOptimizationPreferenceComboBox();
+            if (ComprehensiveProposalRadioButton.Checked)
+            {
+                mainFormObj.EnableOptimizationPreferenceComboBox();
+/*                Enable*/
+            }
 
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
             mainFormObj.MakeConfigurationTabButtonEnableDecisions();
@@ -80,7 +89,14 @@ namespace Azure.Migrate.Export.Forms
 
         private void QuickAvsProposalRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            mainFormObj.DisableOptimizationPreferenceComboBox();
+            if (QuickAvsProposalRadioButton.Checked)
+            {
+                mainFormObj.DisableOptimizationPreferenceComboBox();
+                if (ApplianceRadioButton.Checked)
+                {
+                    DisableHypervAndPhysicalCheckBoxes();
+                }
+            }
 
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
             mainFormObj.MakeConfigurationTabButtonEnableDecisions();
@@ -90,24 +106,27 @@ namespace Azure.Migrate.Export.Forms
         #region Radio Buttons Clicked
         private void ImportRadioButton_Click(object sender, EventArgs e)
         {
-            ApplianceRadioButton.Checked = false;
-            VMwareCheckBox.Enabled = false;
-            VMwareCheckBox.Checked = false;
-            HyperVCheckBox.Enabled = false;
-            HyperVCheckBox.Checked = false;
-            PhysicalCheckBox.Enabled = false;
-            PhysicalCheckBox.Checked = false;
+            if (ImportRadioButton.Checked)
+            {
+                ApplianceRadioButton.Checked = false;
+                VMwareCheckBox.Enabled = false;
+                VMwareCheckBox.Checked = false;
+                HyperVCheckBox.Enabled = false;
+                HyperVCheckBox.Checked = false;
+                PhysicalCheckBox.Enabled = false;
+                PhysicalCheckBox.Checked = false;
 
-            string selectedModule = (string)ModuleComboBox.SelectedItem;
-            if (ExpressWorkflowRadioButton.Checked || 
-               (selectedModule != null && selectedModule.Equals("Assessment")))
-            {
-                CheckOnlyQuickAvsProposal();
-            }
-            else
-            {
-                DisableBusinessProposal();
-            }
+                string selectedModule = (string)ModuleComboBox.SelectedItem;
+                if (ExpressWorkflowRadioButton.Checked ||
+                   (selectedModule != null && selectedModule.Equals("Assessment")))
+                {
+                    CheckOnlyQuickAvsProposal();
+                }
+                else
+                {
+                    DisableBusinessProposal();
+                }
+            }           
 
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
             mainFormObj.MakeConfigurationTabButtonEnableDecisions();
@@ -115,15 +134,22 @@ namespace Azure.Migrate.Export.Forms
 
         private void ApplianceRadioButton_Click(object sender, EventArgs e)
         {
-            ImportRadioButton.Checked = false;
-            VMwareCheckBox.Enabled = true;
-            VMwareCheckBox.Checked = true;
-            HyperVCheckBox.Enabled = true;
-            HyperVCheckBox.Checked = true;
-            PhysicalCheckBox.Enabled = true;
-            PhysicalCheckBox.Checked = true;
+            if (ApplianceRadioButton.Checked)
+            {
+                ImportRadioButton.Checked = false;
+                VMwareCheckBox.Enabled = true;
+                VMwareCheckBox.Checked = true;
+                HyperVCheckBox.Enabled = true;
+                HyperVCheckBox.Checked = true;
+                PhysicalCheckBox.Enabled = true;
+                PhysicalCheckBox.Checked = true;
 
-            EnableBusinessProposal();
+                EnableBusinessProposal();
+                if (QuickAvsProposalRadioButton.Checked)
+                {
+                    DisableHypervAndPhysicalCheckBoxes();
+                }
+            }            
 
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
             mainFormObj.MakeConfigurationTabButtonEnableDecisions();
@@ -240,8 +266,7 @@ namespace Azure.Migrate.Export.Forms
         private bool ValidateBusinessProposal()
         {
             string selectedModule = (string)ModuleComboBox.SelectedItem;
-            if (selectedModule != null && 
-               (selectedModule.Equals("Assessment") || ExpressWorkflowRadioButton.Checked) &&
+            if (((selectedModule != null && selectedModule.Equals("Assessment")) || ExpressWorkflowRadioButton.Checked) &&
                (ComprehensiveProposalRadioButton.Checked == false && QuickAvsProposalRadioButton.Checked == false))
                 return false;
 
@@ -461,6 +486,17 @@ namespace Azure.Migrate.Export.Forms
             ComprehensiveProposalRadioButton.Enabled = false;
             QuickAvsProposalRadioButton.Enabled = true;
             QuickAvsProposalRadioButton.Checked = true;
+        }
+
+        private void DisableHypervAndPhysicalCheckBoxes()
+        {
+            ImportRadioButton.Checked = false;
+            VMwareCheckBox.Enabled = true;
+            VMwareCheckBox.Checked = true;
+            HyperVCheckBox.Enabled = false;
+            HyperVCheckBox.Checked = false;
+            PhysicalCheckBox.Enabled = false;
+            PhysicalCheckBox.Checked = false;
         }
         #endregion
     }

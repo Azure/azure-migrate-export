@@ -99,6 +99,7 @@
     <Compile Include="Models\Assessment\Excel\CoreReport\Business_Case.cs" />
     <Compile Include="Models\Assessment\Excel\CoreReport\Cash_Flows.cs" />
     <Compile Include="Models\Assessment\Excel\CoreReport\Financial_Summary.cs" />
+    <Compile Include="Models\Discovery\vCenterHostDiscovery.cs" />
     <Compile Include="Models\JSONResponses\Assessment\BusinessCaseAvsSummaryJSON.cs" />
     <Compile Include="Models\JSONResponses\Assessment\BusinessCaseCompareSummaryJSON.cs" />
     <Compile Include="Models\JSONResponses\Assessment\BusinessCaseCostDetailsJSON.cs" />
@@ -110,6 +111,8 @@
     <Compile Include="Models\JSONResponses\Assessment\Helpers\AzureAssessmentCostComponent.cs" />
     <Compile Include="Models\JSONResponses\Assessment\Helpers\ProductSupportState.cs" />
     <Compile Include="Models\JSONResponses\Discovery\MachinesImportJSON.cs" />
+    <Compile Include="Models\JSONResponses\Discovery\VMwareHostsJSON.cs" />
+    <Compile Include="Models\JSONResponses\Discovery\VMwareVCenterJSON.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Extensions\ExtendActionButtonEnableDisable.cs" />
     <Compile Include="Extensions\ExtendTabButtonEnableDisable.cs" />

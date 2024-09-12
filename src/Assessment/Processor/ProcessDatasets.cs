@@ -369,6 +369,9 @@ namespace Azure.Migrate.Export.Assessment.Processor
             coreProperties.AssessmentDuration = UserInputObj.AssessmentDuration.Value;
             coreProperties.OptimizationPreference = UserInputObj.PreferredOptimizationObj.OptimizationPreference.Value;
             coreProperties.AssessSQLServices = UserInputObj.PreferredOptimizationObj.AssessSqlServicesSeparately ? "Yes" : "No";
+            coreProperties.VCpuOverSubscription = AvsAssessmentConstants.VCpuOversubscription;
+            coreProperties.MemoryOverCommit = AvsAssessmentConstants.MemoryOvercommit;
+            coreProperties.DedupeCompression = AvsAssessmentConstants.DedupeCompression;
         }
 
         private void Process_AVS_Summary_Model(List<AVS_Summary> AVS_Summary_List)
@@ -421,8 +424,10 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 obj.MachinesReadyWithConditions = avsAssessmentData.Value.MachinesReadyWithConditions;
                 obj.MachinesNotReady = avsAssessmentData.Value.MachinesNotReady;
                 obj.MachinesReadinessUnknown = avsAssessmentData.Value.MachinesReadinessUnknown;
-                obj.RecommendedNumberOfNodes = avsAssessmentData.Value.RecommendedNumberOfNodes;
-                obj.NodeType = avsAssessmentData.Value.NodeType;
+                obj.TotalRecommendedNumberOfNodes = avsAssessmentData.Value.TotalRecommendedNumberOfNodes;
+                obj.NodeTypes = avsAssessmentData.Value.NodeTypes;
+                obj.RecommendedNodes = avsAssessmentData.Value.RecommendedNodes;
+                obj.RecommendedFttRaidLevels = avsAssessmentData.Value.RecommendedFttRaidLevels;
                 obj.MonthlyTotalCostEstimate = avsAssessmentData.Value.TotalMonthlyCostEstimate;
                 obj.PredictedCpuUtilizationPercentage = avsAssessmentData.Value.PredictedCpuUtilizationPercentage;
                 obj.PredictedMemoryUtilizationPercentage = avsAssessmentData.Value.PredictedMemoryUtilizationPercentage;
@@ -2315,7 +2320,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
             Business_Case_Data.AzurePaaSCost.ITStaffCost = BusinessCaseData.AzurePaaSCostDetails.ITStaffCost;
             Business_Case_Data.AzurePaaSCost.FacilitiesCost = 0;
 
-            if (!AzureAvsCalculator.IsCalculationComplete())
+            if (UserInputObj.BusinessProposal == BusinessProposal.AVS.ToString() && !AzureAvsCalculator.IsCalculationComplete())
             {
                 AzureAvsCalculator.SetParameters(AVSAssessmentsData);
                 AzureAvsCalculator.Calculate();
@@ -2365,6 +2370,10 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 Business_Case_Data.AzureIaaSCost.FacilitiesCost +
                 Business_Case_Data.AzurePaaSCost.FacilitiesCost +
                 Business_Case_Data.AzureAvsCost.FacilitiesCost;
+
+            Business_Case_Data.WindowsServerLicense.ComputeLicenseCost = BusinessCaseData.WindowsServerLicense.ComputeLicenseCost;
+            Business_Case_Data.SqlServerLicense.ComputeLicenseCost = BusinessCaseData.SqlServerLicense.ComputeLicenseCost;
+            Business_Case_Data.EsuSavings.ComputeLicenseCost = BusinessCaseData.EsuSavings.ComputeLicenseCost;
 
             UserInputObj.LoggerObj.LogInformation("Updated Business_Case excel model");
         }

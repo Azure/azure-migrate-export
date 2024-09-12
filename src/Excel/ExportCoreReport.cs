@@ -127,6 +127,9 @@ namespace Azure.Migrate.Export.Excel
             dataWs.Cell(2, 10).Value = CorePropertiesObj.AssessmentDuration;
             dataWs.Cell(2, 11).Value = CorePropertiesObj.OptimizationPreference;
             dataWs.Cell(2, 12).Value = CorePropertiesObj.AssessSQLServices;
+            dataWs.Cell(2, 13).Value = CorePropertiesObj.VCpuOverSubscription;
+            dataWs.Cell(2, 14).Value = CorePropertiesObj.MemoryOverCommit;
+            dataWs.Cell(2, 15).Value = CorePropertiesObj.DedupeCompression;
         }
 
         private void Generate_Business_Case_Worksheet()
@@ -203,6 +206,30 @@ namespace Azure.Migrate.Export.Excel
             dataWs.Cell(6, 9).Value = Business_Case_Data.TotalAzureCost.SecurityCost;
             dataWs.Cell(7, 9).Value = Business_Case_Data.TotalAzureCost.ITStaffCost;
             dataWs.Cell(8, 9).Value = Business_Case_Data.TotalAzureCost.FacilitiesCost;
+
+            dataWs.Cell(2, 10).Value = Business_Case_Data.WindowsServerLicense.ComputeLicenseCost;
+            dataWs.Cell(3, 10).Value = 0.00;
+            dataWs.Cell(4, 10).Value = 0.00;
+            dataWs.Cell(5, 10).Value = 0.00;
+            dataWs.Cell(6, 10).Value = 0.00;
+            dataWs.Cell(7, 10).Value = 0.00;
+            dataWs.Cell(8, 10).Value = 0.00;
+
+            dataWs.Cell(2, 11).Value = Business_Case_Data.SqlServerLicense.ComputeLicenseCost;
+            dataWs.Cell(3, 11).Value = 0.00;
+            dataWs.Cell(4, 11).Value = 0.00;
+            dataWs.Cell(5, 11).Value = 0.00;
+            dataWs.Cell(6, 11).Value = 0.00;
+            dataWs.Cell(7, 11).Value = 0.00;
+            dataWs.Cell(8, 11).Value = 0.00;
+
+            dataWs.Cell(2, 12).Value = Business_Case_Data.EsuSavings.ComputeLicenseCost;
+            dataWs.Cell(3, 12).Value = 0.00;
+            dataWs.Cell(4, 12).Value = 0.00;
+            dataWs.Cell(5, 12).Value = 0.00;
+            dataWs.Cell(6, 12).Value = 0.00;
+            dataWs.Cell(7, 12).Value = 0.00;
+            dataWs.Cell(8, 12).Value = 0.00;
         }
 
         private void Generate_Cash_Flows_Worksheet()

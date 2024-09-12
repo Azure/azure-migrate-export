@@ -15,8 +15,10 @@ namespace Azure.Migrate.Export.Models
         public int MachinesReadyWithConditions { get; set; }
         public int MachinesReadinessUnknown { get; set; }
         public int MachinesNotReady { get; set; }
-        public int RecommendedNumberOfNodes { get; set; }
-        public string NodeType { get; set; }
+        public int TotalRecommendedNumberOfNodes { get; set; }
+        public string NodeTypes { get; set; }
+        public string RecommendedNodes { get; set; }
+        public string RecommendedFttRaidLevels { get; set; }
         public double TotalMonthlyCostEstimate { get; set; }
         public double PredictedCpuUtilizationPercentage { get; set; }
         public double PredictedMemoryUtilizationPercentage { get; set; }

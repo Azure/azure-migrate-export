@@ -23,7 +23,10 @@ namespace Azure.Migrate.Export.Common
             "Currency",
             "Assessment Duration",
             "Optimization Preference",
-            "Assess SQL Services"
+            "Assess SQL Services",
+            "vCPU Oversubscription",
+            "Memory Overcommit",
+            "Dedupe and Compression factor"
         };
 
         public const string All_VM_IaaS_Server_Rehost_Perf_TabName = "All_VM_IaaS_Server_Rehost_Perf";
@@ -529,12 +532,15 @@ namespace Azure.Migrate.Export.Common
             "Category",
             "On-Prem IaaS Cost",
             "On-Prem PaaS Cost",
-            "On-Premises AVS Cost",
+            "On-Prem AVS Cost",
             "Total On-Premises Cost",
             "Azure IaaS Cost",
             "Azure PaaS Cost",
             "Azure AVS Cost",
-            "Total Azure Cost"
+            "Total Azure Cost",
+            "Windows Server License Savings",
+            "SQL Server License Savings",
+            "ESU Savings"
         };
         public static readonly List<string> Business_Case_RowTypes = new List<string>
         {
@@ -627,6 +633,8 @@ namespace Azure.Migrate.Export.Common
             "Machines Readiness Unknown",
             "Recommended Number of Nodes",
             "Node Type",
+            "Recommended Nodes",
+            "Recommended FttRaidLevel",
             "Monthly Total Cost Estimate",
             "Predicted CPU Utilization (in %)",
             "Predicted Memory Utilization (in %)",

@@ -157,6 +157,7 @@ namespace Azure.Migrate.Export.Discovery
 
                 discoveryDataObj.BootType = string.IsNullOrEmpty(value.Properties.Firmware) ? "" : value.Properties.Firmware.ToUpper();
                 discoveryDataObj.PowerStatus = string.IsNullOrEmpty(value.Properties.PowerStatus) ? "" : value.Properties.PowerStatus;
+                discoveryDataObj.SupportStatus = value.Properties.ProductSupportStatus?.SupportStatus ?? SupportabilityStatus.Unknown.ToString();
                 discoveryDataObj.FirstDiscoveryTime = value.Properties.CreatedTimeStamp;
                 discoveryDataObj.LastUpdatedTime = value.Properties.UpdatedTimestamp;
 
@@ -203,6 +204,7 @@ namespace Azure.Migrate.Export.Discovery
 
                 discoveryDataObj.BootType = string.IsNullOrEmpty(value.Properties.Firmware) ? "" : value.Properties.Firmware.ToUpper();
                 discoveryDataObj.PowerStatus = string.IsNullOrEmpty(value.Properties.PowerStatus) ? "" : value.Properties.PowerStatus;
+                discoveryDataObj.SupportStatus = value.Properties.ProductSupportStatus?.SupportStatus ?? SupportabilityStatus.Unknown.ToString();
                 discoveryDataObj.FirstDiscoveryTime = value.Properties.CreatedTimeStamp;
                 discoveryDataObj.LastUpdatedTime = value.Properties.UpdatedTimestamp;
 
@@ -249,6 +251,7 @@ namespace Azure.Migrate.Export.Discovery
 
                 discoveryDataObj.BootType = string.IsNullOrEmpty(value.Properties.Firmware) ? "" : value.Properties.Firmware.ToUpper();
                 discoveryDataObj.PowerStatus = string.IsNullOrEmpty(value.Properties.PowerStatus) ? "" : value.Properties.PowerStatus;
+                discoveryDataObj.SupportStatus = value.Properties.ProductSupportStatus?.SupportStatus ?? SupportabilityStatus.Unknown.ToString();
                 discoveryDataObj.FirstDiscoveryTime = value.Properties.CreatedTimeStamp;
                 discoveryDataObj.LastUpdatedTime = value.Properties.UpdatedTimestamp;
 
@@ -287,6 +290,7 @@ namespace Azure.Migrate.Export.Discovery
 
                 discoveryDataObj.BootType = string.IsNullOrEmpty(value.Properties.Firmware) ? "" : value.Properties.Firmware.ToUpper();
                 discoveryDataObj.PowerStatus = "";
+                discoveryDataObj.SupportStatus = value.Properties.ProductSupportStatus?.SupportStatus ?? SupportabilityStatus.Unknown.ToString();
                 discoveryDataObj.FirstDiscoveryTime = value.Properties.CreatedTimestamp;
                 discoveryDataObj.LastUpdatedTime = value.Properties.UpdatedTimestamp;
 
@@ -312,6 +316,105 @@ namespace Azure.Migrate.Export.Discovery
             }
 
             return new KeyValuePair<string, string>(macAddresses, ipAddresses);
+        }
+
+        public static List<KeyValuePair<string, int>> RetrieveHostvCenterData(UserInput userInputObj, string siteUrl)
+        {
+            userInputObj.LoggerObj.LogInformation($"Retrieving hosts and vCenter data for VMWare site {siteUrl}");
+            string hostUrl = Routes.ProtocolScheme + Routes.AzureManagementApiHostname + siteUrl + Routes.ForwardSlash +
+                             Routes.HostsPath + Routes.QueryStringQuestionMark + Routes.QueryParameterApiVersion + Routes.QueryStringEquals + Routes.ImportSitesApiVersion;
+
+            List<KeyValuePair<string, int>> keyValuePair = new List<KeyValuePair<string, int>>();
+            int vmwareHostCount = 0;
+            while (!string.IsNullOrEmpty(hostUrl))
+            {
+                if (userInputObj.CancellationContext.IsCancellationRequested)
+                    UtilityFunctions.InitiateCancellation(userInputObj);               
+
+                string jsonResponse = "";
+                try
+                {
+                    jsonResponse = new HttpClientHelper().GetHttpRequestJsonStringResponse(hostUrl, userInputObj).Result;
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (AggregateException aeRetrieveDiscoveryData)
+                {
+                    string errorMessage = "";
+                    foreach (var e in aeRetrieveDiscoveryData.Flatten().InnerExceptions)
+                    {
+                        if (e is OperationCanceledException)
+                            throw e;
+                        else
+                        {
+                            errorMessage = errorMessage + e.Message + " ";
+                        }
+                    }
+                    userInputObj.LoggerObj.LogError($"URL: {hostUrl} for vmware site failed with messsage: {errorMessage}");
+                    return keyValuePair;
+                }
+                catch (Exception exJsonResponse)
+                {
+                    userInputObj.LoggerObj.LogError($"URL: {hostUrl} for vmware site failed with messsage: {exJsonResponse.Message}");
+                    return keyValuePair;
+                }
+
+                VMwareHostsJSON jsonObj = JsonConvert.DeserializeObject<VMwareHostsJSON>(jsonResponse);
+                vmwareHostCount += jsonObj.Values.Count();
+                hostUrl = jsonObj.NextLink;
+            }
+
+            keyValuePair.Add(new KeyValuePair<string, int>("VMWare Host Count", vmwareHostCount));
+
+            string vcenterUrl = Routes.ProtocolScheme + Routes.AzureManagementApiHostname + siteUrl + Routes.ForwardSlash +
+                             Routes.VCentersPath + Routes.QueryStringQuestionMark + Routes.QueryParameterApiVersion + Routes.QueryStringEquals + Routes.ImportSitesApiVersion;
+
+            int vmwareVCenterCount = 0;
+            while (!string.IsNullOrEmpty(vcenterUrl))
+            {
+                if (userInputObj.CancellationContext.IsCancellationRequested)
+                    UtilityFunctions.InitiateCancellation(userInputObj);
+
+                string jsonResponse = "";
+                try
+                {
+                    jsonResponse = new HttpClientHelper().GetHttpRequestJsonStringResponse(vcenterUrl, userInputObj).Result;
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (AggregateException aeRetrieveDiscoveryData)
+                {
+                    string errorMessage = "";
+                    foreach (var e in aeRetrieveDiscoveryData.Flatten().InnerExceptions)
+                    {
+                        if (e is OperationCanceledException)
+                            throw e;
+                        else
+                        {
+                            errorMessage = errorMessage + e.Message + " ";
+                        }
+                    }
+                    userInputObj.LoggerObj.LogError($"URL: {vcenterUrl} for vmware site failed with messsage: {errorMessage}");
+                    return keyValuePair;
+                }
+                catch (Exception exJsonResponse)
+                {
+                    userInputObj.LoggerObj.LogError($"URL: {vcenterUrl} for vmware site failed with messsage: {exJsonResponse.Message}");
+                    return keyValuePair;
+                }
+
+                VMwareVCenterJSON jsonObj = JsonConvert.DeserializeObject<VMwareVCenterJSON>(jsonResponse);
+                vmwareVCenterCount += jsonObj.Values.Count();
+                vcenterUrl = jsonObj.NextLink;
+            }
+
+            keyValuePair.Add( new KeyValuePair<string, int>("VMWare VCenter Count", vmwareVCenterCount));
+            userInputObj.LoggerObj.LogInformation($"Retrieved hosts and vCenter data for VMWare site {siteUrl}");
+            return keyValuePair;
         }
         #endregion
     }

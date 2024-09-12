@@ -15,11 +15,13 @@ namespace Azure.Migrate.Export.Discovery
     {
         private UserInput UserInputObj;
         public List<DiscoveryData> DiscoveredData;
+        public vCenterHostDiscovery VCenterHostData;
 
         public Discover(UserInput userInputObj)
         {
             UserInputObj = userInputObj;
             DiscoveredData = new List<DiscoveryData>();
+            VCenterHostData = new vCenterHostDiscovery();
         }
 
         public bool BeginDiscovery()
@@ -30,7 +32,7 @@ namespace Azure.Migrate.Export.Discovery
             UserInputObj.LoggerObj.LogInformation("Initiating discovered data retrieval");
 
             DeletePreviousDiscoveryReport();
-            
+
             string masterSitesUrl = Routes.ProtocolScheme + Routes.AzureManagementApiHostname + Routes.ForwardSlash +
                                     Routes.SubscriptionPath + Routes.ForwardSlash + UserInputObj.Subscription.Key + Routes.ForwardSlash +
                                     Routes.ResourceGroupPath + Routes.ForwardSlash + UserInputObj.ResourceGroupName.Value + Routes.ForwardSlash +
@@ -91,9 +93,9 @@ namespace Azure.Migrate.Export.Discovery
             DiscoveryProperties discoveryProperties = new DiscoveryProperties();
             CreateDiscoveryPropertiesModel(discoveryProperties);
 
-            ExportDiscoveryReport exporter = new ExportDiscoveryReport(DiscoveredData, discoveryProperties);
+            ExportDiscoveryReport exporter = new ExportDiscoveryReport(DiscoveredData, VCenterHostData, discoveryProperties);
             exporter.GenerateDiscoveryReportExcel();
-            
+
             UserInputObj.LoggerObj.LogInformation(excelCreationPercentProgress, "Discovery report excel created successfully"); // IsExpressWorkflow ? 20 : 100 % Complete
 
             return true;
@@ -170,6 +172,7 @@ namespace Azure.Migrate.Export.Discovery
                     {
                         UserInputObj.LoggerObj.LogInformation("Retrieving discovery data from VMWare sites");
                         vmwareMachinesDiscovery = new RetrieveDiscoveryData().BeginRetrieval(UserInputObj, vmwareSites, DiscoverySites.VMWare);
+                        CalculateVCenterHostDiscoveryData(UserInputObj, vmwareSites);
                         UserInputObj.LoggerObj.LogInformation(discoveryDataPerSitePercentProgress, $"Retrieved discovery data for {vmwareMachinesDiscovery.Count.ToString()} machines from VMWare sites");
                     }
                     else if (UserInputObj.AzureMigrateSourceAppliances[i].Equals("hyperv"))
@@ -250,10 +253,10 @@ namespace Azure.Migrate.Export.Discovery
             List<DiscoveryData> importMachinesDiscovery = new List<DiscoveryData>();
 
             try
-            {                
+            {
                 UserInputObj.LoggerObj.LogInformation("Retrieving discovery data from Import sites");
                 importMachinesDiscovery = new RetrieveDiscoveryData().BeginRetrieval(UserInputObj, importSites, DiscoverySites.Import);
-                UserInputObj.LoggerObj.LogInformation(discoveryDataPerSitePercentProgress, $"Retrieved discovery data for {importMachinesDiscovery.Count.ToString()} machines from Import sites");                                   
+                UserInputObj.LoggerObj.LogInformation(discoveryDataPerSitePercentProgress, $"Retrieved discovery data for {importMachinesDiscovery.Count.ToString()} machines from Import sites");
             }
             catch (AggregateException ae)
             {
@@ -281,9 +284,19 @@ namespace Azure.Migrate.Export.Discovery
             catch (Exception exConsolidateImport)
             {
                 UserInputObj.LoggerObj.LogWarning($"Failed data consolidation from Import sites: {exConsolidateImport.Message}");
-            }            
+            }
 
             return excelCreationPercentProgress;
+        }
+
+        private void CalculateVCenterHostDiscoveryData(UserInput userInputObj, List<string> vmwareSiteUrls)
+        {
+            foreach (string siteUrl in vmwareSiteUrls)
+            {
+                List<KeyValuePair<string, int>> hostAndVCenterList = RetrieveDiscoveryData.RetrieveHostvCenterData(userInputObj, siteUrl);
+                VCenterHostData.Hosts += hostAndVCenterList[0].Value;
+                VCenterHostData.vCenters += hostAndVCenterList[1].Value;
+            };
         }
     }
 }

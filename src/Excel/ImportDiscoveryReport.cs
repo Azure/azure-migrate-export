@@ -105,9 +105,10 @@ namespace Azure.Migrate.Export.Excel
                 obj.TotalNetworkAdapters = row.Cell(13).GetValue<int>();
                 obj.BootType = row.Cell(14).GetValue<string>();
                 obj.PowerStatus = row.Cell(15).GetValue<string>();
-                obj.FirstDiscoveryTime = row.Cell(16).GetValue<string>();
-                obj.LastUpdatedTime = row.Cell(17).GetValue<string>();
-                obj.MachineId = row.Cell(18).GetValue<string>();
+                obj.SupportStatus = row.Cell(16).GetValue<string>();
+                obj.FirstDiscoveryTime = row.Cell(17).GetValue<string>();
+                obj.LastUpdatedTime = row.Cell(18).GetValue<string>();
+                obj.MachineId = row.Cell(19).GetValue<string>();
 
                 DiscoveredData.Add(obj);
 

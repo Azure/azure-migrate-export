@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
+using Azure.Migrate.Export.Common;
+
 namespace Azure.Migrate.Export.Models
 {
     public class AzureVMWareSolutionAssessmentSettingsJSON
@@ -23,17 +25,17 @@ namespace Azure.Migrate.Export.Models
         [JsonProperty("nodeTypes")]
         public List<string> NodeTypes { get; set; }
 
-        [JsonProperty("failuresToTolerateAndRaidLevel")]
-        public string FailuresToTolerateAndRaidLevel { get; set; } = "Ftt1Raid1";
+        [JsonProperty("failuresToTolerateAndRaidLevelList")]
+        public List<string> FailuresToTolerateAndRaidLevelList { get; set; } = new List<string> { "Ftt1Raid1", "Ftt1Raid5", "Ftt2Raid1", "Ftt2Raid6", "Ftt3Raid1" };
 
         [JsonProperty("vcpuOversubscription")]
-        public string VcpuOversubscription { get; set; } = "4:1";
+        public string VcpuOversubscription { get; set; } = AvsAssessmentConstants.VCpuOversubscription;
 
         [JsonProperty("memOvercommit")]
         public string MemOverCommit { get; set; } = "1";
 
         [JsonProperty("dedupeCompression")]
-        public string DedupeCompression { get; set; } = "1.5";
+        public string DedupeCompression { get; set; } = AvsAssessmentConstants.DedupeCompression.ToString();
 
         [JsonProperty("isStretchClusterEnabled")]
         public string IsStretchClusterEnabled { get; set; } = "No";
@@ -58,5 +60,8 @@ namespace Azure.Migrate.Export.Models
 
         [JsonProperty("azureLocation")]
         public string AzureLocation { get; set; }
+
+        [JsonProperty("externalStorageTypes")]
+        public List<string> ExternalStorageTypes { get; set; } = new List<string> { "AnfStandard", "AnfPremium", "AnfUltra" };
     }
 }

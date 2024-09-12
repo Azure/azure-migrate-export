@@ -10,6 +10,9 @@
         public BusinessCaseDatasetCostDetails AzurePaaSCost { get; set; }
         public BusinessCaseDatasetCostDetails AzureAvsCost { get; set; }
         public BusinessCaseDatasetCostDetails TotalAzureCost { get; set; }
+        public BusinessCaseDatasetCostDetails WindowsServerLicense { get; set; }
+        public BusinessCaseDatasetCostDetails SqlServerLicense { get; set; }
+        public BusinessCaseDatasetCostDetails EsuSavings {  get; set; }
 
         public Business_Case()
         {
@@ -21,6 +24,9 @@
             AzurePaaSCost = new BusinessCaseDatasetCostDetails();
             AzureAvsCost = new BusinessCaseDatasetCostDetails();
             TotalAzureCost = new BusinessCaseDatasetCostDetails();
+            WindowsServerLicense = new BusinessCaseDatasetCostDetails();
+            SqlServerLicense = new BusinessCaseDatasetCostDetails();
+            EsuSavings = new BusinessCaseDatasetCostDetails();
         }
     }
 }

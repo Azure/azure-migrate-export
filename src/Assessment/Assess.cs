@@ -169,14 +169,17 @@ namespace Azure.Migrate.Export.Assessment
                     if (!AssessmentIdToDiscoveryIdLookup.ContainsKey(assessmentSiteMachine.AssessmentId))
                         AssessmentIdToDiscoveryIdLookup.Add(assessmentSiteMachine.AssessmentId, discoverySiteMachine.MachineId);
 
-                    if (!UserInputObj.AzureMigrateSourceAppliances.Contains("import"))
+                    if (UserInputObj.BusinessProposal == BusinessProposal.Comprehensive.ToString() &&
+                        !UserInputObj.AzureMigrateSourceAppliances.Contains("import"))
                     {
                         if (!AzureVM.ContainsKey(discoverySiteMachine.EnvironmentType))
                             AzureVM.Add(discoverySiteMachine.EnvironmentType, new List<AssessmentSiteMachine>());
                         AzureVM[discoverySiteMachine.EnvironmentType].Add(assessmentSiteMachine);
                     }                    
                     
-                    if (assessmentSiteMachine.SqlInstancesCount > 0 && discoverySiteMachine.SqlDiscoveryServerCount > 0)
+                    if (UserInputObj.BusinessProposal == BusinessProposal.Comprehensive.ToString() &&
+                        assessmentSiteMachine.SqlInstancesCount > 0 && 
+                        discoverySiteMachine.SqlDiscoveryServerCount > 0)
                     {
                         addMachineToGeneralVM = false;
 
@@ -185,7 +188,9 @@ namespace Azure.Migrate.Export.Assessment
                         AzureSql[discoverySiteMachine.EnvironmentType].Add(assessmentSiteMachine);
                     }
 
-                    if (assessmentSiteMachine.WebApplicationsCount > 0 && discoverySiteMachine.WebAppCount > 0)
+                    if (UserInputObj.BusinessProposal == BusinessProposal.Comprehensive.ToString() &&
+                        assessmentSiteMachine.WebApplicationsCount > 0 && 
+                        discoverySiteMachine.WebAppCount > 0)
                     {
                         addMachineToGeneralVM = false;
                         
@@ -202,7 +207,9 @@ namespace Azure.Migrate.Export.Assessment
                         }
                     }
 
-                    if (discoverySiteMachine.IsSqlServicePresent && UserInputObj.PreferredOptimizationObj.AssessSqlServicesSeparately)
+                    if (UserInputObj.BusinessProposal == BusinessProposal.Comprehensive.ToString() &&
+                        discoverySiteMachine.IsSqlServicePresent && 
+                        UserInputObj.PreferredOptimizationObj.AssessSqlServicesSeparately)
                     {
                         addMachineToGeneralVM = false;
 
@@ -210,11 +217,15 @@ namespace Azure.Migrate.Export.Assessment
                             SqlServicesVM.Add(discoverySiteMachine.MachineId);
                     }
 
-                    if (discoverySiteMachine.MachineId.Contains("vmwaresites") || (UserInputObj.AzureMigrateSourceAppliances.Contains("import") && discoverySiteMachine.MachineId.Contains("importsites")))
+                    if (discoverySiteMachine.MachineId.Contains("vmwaresites") || discoverySiteMachine.MachineId.Contains("importsites"))
+                    {
                         AzureVMWareSolution.Add(assessmentSiteMachine);
+                    }
 
                     // TO DO: Handle IaaS based assessments for import based discovery in future
-                    if (!UserInputObj.AzureMigrateSourceAppliances.Contains("import") && addMachineToGeneralVM)
+                    if (!UserInputObj.AzureMigrateSourceAppliances.Contains("import") &&
+                        UserInputObj.BusinessProposal == BusinessProposal.Comprehensive.ToString() &&
+                        addMachineToGeneralVM)
                     {
                         if (!GeneralVM.Contains(discoverySiteMachine.MachineId))
                             GeneralVM.Add(discoverySiteMachine.MachineId);
@@ -494,7 +505,7 @@ namespace Azure.Migrate.Export.Assessment
                 throw;
             }
 
-            UserInputObj.LoggerObj.LogInformation($"Retrieved status information for {AssessmentStatusMap.Count} assessments");
+           UserInputObj.LoggerObj.LogInformation($"Retrieved status information for {AssessmentStatusMap.Count} assessments");
 
             int completedAssessmentsCount = 0;
             int invalidAssessmentsCount = 0;

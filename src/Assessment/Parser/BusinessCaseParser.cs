@@ -73,8 +73,8 @@ namespace Azure.Migrate.Export.Assessment.Parser
                                                UserInput userInputObj)
         {
             if ((bizCaseCompareSummaryJsonObj == null || bizCaseOverviewSummariesJsonObj == null) ||
-                (userInputObj.AzureMigrateSourceAppliances.Contains("import") && bizCaseAvsSummariesJsonObj == null) ||
-                (!userInputObj.AzureMigrateSourceAppliances.Contains("import") && (bizCasePaaSSummariesJsonObj == null || bizCaseIaaSSummariesJsonObj == null)))
+                (userInputObj.BusinessProposal == BusinessProposal.AVS.ToString() && bizCaseAvsSummariesJsonObj == null) ||
+                (userInputObj.BusinessProposal != BusinessProposal.AVS.ToString() && (bizCasePaaSSummariesJsonObj == null || bizCaseIaaSSummariesJsonObj == null)))
             {
                 userInputObj.LoggerObj.LogWarning("Business case information not parsed successfully, dataset may not be complete");
                 return;
@@ -107,6 +107,10 @@ namespace Azure.Migrate.Export.Assessment.Parser
             BusinessCaseData.AzureIaaSCostDetails.ITStaffCost = bizCaseCompareSummaryJsonObj.AzureIaaSCostDetails?.ITLaborCost ?? 0.00;
             BusinessCaseData.AzurePaaSCostDetails.ITStaffCost = bizCaseCompareSummaryJsonObj.AzurePaaSCostDetails?.ITLaborCost ?? 0.00;
             BusinessCaseData.AzureAvsCostDetails.ITStaffCost = bizCaseCompareSummaryJsonObj.AzureAvsCostDetails?.ITLaborCost ?? 0.00;
+
+            BusinessCaseData.WindowsServerLicense.ComputeLicenseCost = bizCaseOverviewSummariesJsonObj.Properties?.WindowsAhubSavings ?? 0.00;
+            BusinessCaseData.SqlServerLicense.ComputeLicenseCost = bizCaseOverviewSummariesJsonObj.Properties?.SqlAhubSavings ?? 0.00;
+            BusinessCaseData.EsuSavings.ComputeLicenseCost = bizCaseOverviewSummariesJsonObj.Properties?.EsuSavingsFor4years ?? 0.00;
 
             BusinessCaseData.TotalYOYCashFlows = bizCaseOverviewSummariesJsonObj.Properties.YearOnYearEstimates;
             if (userInputObj.BusinessProposal == BusinessProposal.AVS.ToString())

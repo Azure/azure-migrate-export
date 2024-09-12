@@ -10,6 +10,7 @@ namespace Azure.Migrate.Export.Common
         public const string DiscoveryReportPath = DiscoveryReportDirectory + BackSlash + DiscoveryReportName;
         public const string PropertiesTabName = "Properties";
         public const string Discovery_Report_TabName = "Discovery_Report";
+        public const string vCenterHost_Report_TabName = "vCenter_Host_Report";
 
         public static readonly List<string> PropertiesList = new List<string>
         {
@@ -39,9 +40,16 @@ namespace Azure.Migrate.Export.Common
             "Total Network Adapters",
             "Boot Type",
             "Power Stats",
+            "Support Status",
             "First Discovery Time",
             "Last Updated Time",
             "Machine ID"
+        };
+
+        public static readonly List<string> VCenterHostReportColumns = new List<string>
+        {
+            "vCenters",
+            "Hosts"
         };
     }
 }

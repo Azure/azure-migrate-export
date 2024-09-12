@@ -36,12 +36,7 @@ namespace Azure.Migrate.Export.Factory
         private List<AssessmentInformation> GetAzureVMWareSolutionProdAssessmentSettings(UserInput userInputObj, string groupName)
         {
             List<AssessmentInformation> result = new List<AssessmentInformation>();
-            List<string> nodeTypes = new List<string>();
-
-            if (AvsAssessmentConstants.RegionToAvsNodeTypeMap.ContainsKey(userInputObj.TargetRegion.Key))
-                nodeTypes = AvsAssessmentConstants.RegionToAvsNodeTypeMap[userInputObj.TargetRegion.Key];
-            else
-                throw new Exception($"Import based AVS assessment cannot be created for region: {userInputObj.TargetRegion.Value}");
+            List<string> nodeTypes = AvsAssessmentConstants.RegionToAvsNodeTypeMap[userInputObj.TargetRegion.Key];           
 
             // Performance based - Pay as you go
             AzureVMWareSolutionAssessmentSettingsJSON obj1 = new AzureVMWareSolutionAssessmentSettingsJSON();
@@ -50,7 +45,12 @@ namespace Azure.Migrate.Export.Factory
             obj1.Properties.Currency = userInputObj.Currency.Key;
             obj1.Properties.AzureLocation = userInputObj.TargetRegion.Key;
             obj1.Properties.NodeTypes = nodeTypes;
-            result.Add(new AssessmentInformation(groupName, "AVS-Prod-AzMigExport-1", AssessmentType.AVSAssessment, AssessmentTag.PerformanceBased, JsonConvert.SerializeObject(obj1)));
+            result.Add(new AssessmentInformation(
+                groupName, "AVS-Prod-AzMigExport-1",
+                AssessmentType.AVSAssessment,
+                AssessmentTag.PerformanceBased,
+                JsonConvert.SerializeObject(obj1)
+            ));
 
             // Performance based - Pay as you go + RI 1 year
             AzureVMWareSolutionAssessmentSettingsJSON obj2 = new AzureVMWareSolutionAssessmentSettingsJSON();
@@ -59,7 +59,13 @@ namespace Azure.Migrate.Export.Factory
             obj2.Properties.Currency = userInputObj.Currency.Key;
             obj2.Properties.AzureLocation = userInputObj.TargetRegion.Key;
             obj2.Properties.NodeTypes = nodeTypes;
-            result.Add(new AssessmentInformation(groupName, "AVS-Prod-AzMigExport-2", AssessmentType.AVSAssessment, AssessmentTag.PerformanceBased_RI1year, JsonConvert.SerializeObject(obj2)));
+            result.Add(new AssessmentInformation(
+                groupName,
+                "AVS-Prod-AzMigExport-2",
+                AssessmentType.AVSAssessment,
+                AssessmentTag.PerformanceBased_RI1year,
+                JsonConvert.SerializeObject(obj2)
+            ));
 
             // Performance based - Pay as you go + RI 3 year
             AzureVMWareSolutionAssessmentSettingsJSON obj3 = new AzureVMWareSolutionAssessmentSettingsJSON();
@@ -68,18 +74,57 @@ namespace Azure.Migrate.Export.Factory
             obj3.Properties.Currency = userInputObj.Currency.Key;
             obj3.Properties.AzureLocation = userInputObj.TargetRegion.Key;
             obj3.Properties.NodeTypes = nodeTypes;
-            result.Add(new AssessmentInformation(groupName, "AVS-Prod-AzMigExport-3", AssessmentType.AVSAssessment, AssessmentTag.PerformanceBased_RI3year, JsonConvert.SerializeObject(obj3)));
+            result.Add(new AssessmentInformation(
+                groupName, "AVS-Prod-AzMigExport-3",
+                AssessmentType.AVSAssessment,
+                AssessmentTag.PerformanceBased_RI3year,
+                JsonConvert.SerializeObject(obj3)
+            ));
 
-
-            // As- Onpremises - Pay as you go + RI 3 Year
+            // As- Onpremises - Pay as you go
             AzureVMWareSolutionAssessmentSettingsJSON obj4 = new AzureVMWareSolutionAssessmentSettingsJSON();
             obj4.Properties.SizingCriterion = "AsOnPremises";
-            obj4.Properties.ReservedInstance = "RI3Year";
-            obj4.Properties.Currency = userInputObj.Currency.Key; 
+            obj4.Properties.ReservedInstance = "None";
+            obj4.Properties.Currency = userInputObj.Currency.Key;
             obj4.Properties.AzureLocation = userInputObj.TargetRegion.Key;
             obj4.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
             obj4.Properties.NodeTypes = nodeTypes;
-            result.Add(new AssessmentInformation(groupName, "AVS-Prod-AzMigExport-4", AssessmentType.AVSAssessment, AssessmentTag.AsOnPremises, JsonConvert.SerializeObject(obj4)));
+            result.Add(new AssessmentInformation(
+                groupName, "AVS-Prod-AzMigExport-4",
+                AssessmentType.AVSAssessment,
+                AssessmentTag.AsOnPremises,
+                JsonConvert.SerializeObject(obj4)
+            ));
+
+            // As- Onpremises - Pay as you go + RI 1 Year
+            AzureVMWareSolutionAssessmentSettingsJSON obj5 = new AzureVMWareSolutionAssessmentSettingsJSON();
+            obj5.Properties.SizingCriterion = "AsOnPremises";
+            obj5.Properties.ReservedInstance = "RI1Year";
+            obj5.Properties.Currency = userInputObj.Currency.Key;
+            obj5.Properties.AzureLocation = userInputObj.TargetRegion.Key;
+            obj5.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
+            obj5.Properties.NodeTypes = nodeTypes;
+            result.Add(new AssessmentInformation(
+                groupName, "AVS-Prod-AzMigExport-5",
+                AssessmentType.AVSAssessment,
+                AssessmentTag.AsOnPremises_RI1Year,
+                JsonConvert.SerializeObject(obj5)
+            ));
+            
+            // As- Onpremises - Pay as you go + RI 3 Year
+            AzureVMWareSolutionAssessmentSettingsJSON obj6 = new AzureVMWareSolutionAssessmentSettingsJSON();
+            obj6.Properties.SizingCriterion = "AsOnPremises";
+            obj6.Properties.ReservedInstance = "RI3Year";
+            obj6.Properties.Currency = userInputObj.Currency.Key; 
+            obj6.Properties.AzureLocation = userInputObj.TargetRegion.Key;
+            obj6.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
+            obj6.Properties.NodeTypes = nodeTypes;
+            result.Add(new AssessmentInformation(
+                groupName, "AVS-Prod-AzMigExport-6",
+                AssessmentType.AVSAssessment,
+                AssessmentTag.AsOnPremises_RI3Year,
+                JsonConvert.SerializeObject(obj6)
+            ));
 
             return result;
         }

@@ -525,8 +525,8 @@ namespace Azure.Migrate.Export.HttpRequestHelper
                 };
 
                 string apiVersion = Routes.AssessmentMachineListApiVersion;
-                if (userInputObj.AzureMigrateSourceAppliances.Contains("import"))
-                    apiVersion = Routes.CreateAssessmentImportApiVersion;
+                if (assessmentInfo.AssessmentType == AssessmentType.AVSAssessment)
+                    apiVersion = Routes.AvsAssessmentApiVersion;
 
                 string url = Routes.ProtocolScheme + Routes.AzureManagementApiHostname + Routes.ForwardSlash +
                              Routes.SubscriptionPath + Routes.ForwardSlash + userInputObj.Subscription.Key + Routes.ForwardSlash +
