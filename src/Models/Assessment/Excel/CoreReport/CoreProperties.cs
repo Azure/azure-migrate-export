@@ -14,5 +14,8 @@ namespace Azure.Migrate.Export.Models
         public string AssessmentDuration { get; set; }
         public string OptimizationPreference { get; set; }
         public string AssessSQLServices { get; set; }
+        public string VCpuOverSubscription { get; set; }
+        public string MemoryOverCommit { get; set; }
+        public double DedupeCompression { get; set; }
     }
 }

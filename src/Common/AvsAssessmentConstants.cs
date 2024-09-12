@@ -28,5 +28,8 @@ namespace Azure.Migrate.Export.Common
             { "japanwest", new List<string> { "AV36" } },
             { "ukwest", new List<string> { "AV36" } }
         };
+        public static string VCpuOversubscription = "4:1";
+        public static readonly string MemoryOvercommit = "100%";
+        public static double DedupeCompression = 1.5;
     }
 }

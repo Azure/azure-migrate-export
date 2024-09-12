@@ -80,6 +80,12 @@ namespace Azure.Migrate.Export.Common
         [Description("As-is")]
         AsOnPremises,
 
+        [Description("As-is + RI1Year")]
+        AsOnPremises_RI1Year,
+
+        [Description("As-is + RI3Year")]
+        AsOnPremises_RI3Year,
+
         [Description("Pay-as-you-go")]
         PerformanceBased,
 

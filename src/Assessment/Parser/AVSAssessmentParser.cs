@@ -43,6 +43,10 @@ namespace Azure.Migrate.Export.Assessment.Parser
 
                 userInputObj.LoggerObj.LogInformation($"Parsing AVS assessment {kvp.Key.AssessmentName}");
 
+                string apiVersion = Routes.AssessmentMachineListApiVersion;
+                if (kvp.Key.AssessmentType == AssessmentType.AVSAssessment)
+                    apiVersion = Routes.AvsAssessmentApiVersion;
+
                 string url = Routes.ProtocolScheme + Routes.AzureManagementApiHostname + Routes.ForwardSlash +
                              Routes.SubscriptionPath + Routes.ForwardSlash + userInputObj.Subscription.Key + Routes.ForwardSlash +
                              Routes.ResourceGroupPath + Routes.ForwardSlash + userInputObj.ResourceGroupName.Value + Routes.ForwardSlash +
@@ -51,7 +55,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
                              Routes.GroupsPath + Routes.ForwardSlash + kvp.Key.GroupName + Routes.ForwardSlash +
                              new EnumDescriptionHelper().GetEnumDescription(kvp.Key.AssessmentType) + Routes.ForwardSlash + kvp.Key.AssessmentName +
                              Routes.QueryStringQuestionMark +
-                             Routes.QueryParameterApiVersion + Routes.QueryStringEquals + Routes.AssessmentMachineListApiVersion;
+                             Routes.QueryParameterApiVersion + Routes.QueryStringEquals + apiVersion;
 
                 string assessmentPropertiesResponse = "";
                 try
@@ -97,7 +101,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
                       new EnumDescriptionHelper().GetEnumDescription(kvp.Key.AssessmentType) + Routes.ForwardSlash + kvp.Key.AssessmentName + Routes.ForwardSlash +
                       Routes.AVSAssessedMachinesPath +
                       Routes.QueryStringQuestionMark +
-                      Routes.QueryParameterApiVersion + Routes.QueryStringEquals + Routes.AssessmentMachineListApiVersion;
+                      Routes.QueryParameterApiVersion + Routes.QueryStringEquals + apiVersion;
 
                 while (!string.IsNullOrEmpty(url))
                 {
@@ -179,6 +183,23 @@ namespace Azure.Migrate.Export.Assessment.Parser
 
             AVSAssessmentsData.Add(assessmentInfo, new AVSAssessmentPropertiesDataset());
 
+            string recommendedNodes = "";
+            string recommendedFttRaidLevels = "";
+            string nodeTypes = "";
+            foreach (var item in avsPropertiesObj.Properties.EstimatedNodes)
+            {
+                recommendedNodes += item.NodeNumber + " nodes of " + item.NodeType + ", ";
+                string uppercaseFttRaidLevel = item.FttRaidLevel.ToUpper();
+                recommendedFttRaidLevels += uppercaseFttRaidLevel.Substring(0, 3) + "-" + uppercaseFttRaidLevel.Substring(3, 1) + " & " +
+                                            uppercaseFttRaidLevel.Substring(4, 4) + "-" + uppercaseFttRaidLevel.Substring(8, 1) + " on " +
+                                            item.NodeType + ", ";
+                nodeTypes += item.NodeType + ", ";
+            }
+
+            nodeTypes = nodeTypes.Substring(0, nodeTypes.Length - 1);
+            recommendedNodes = recommendedNodes.Substring(0, recommendedNodes.Length - 1);
+            recommendedFttRaidLevels = recommendedFttRaidLevels.Substring(0, recommendedFttRaidLevels.Length - 1);
+
             AVSAssessmentsData[assessmentInfo].SubscriptionId = userInputObj.Subscription.Key;
             AVSAssessmentsData[assessmentInfo].ResourceGroup = userInputObj.ResourceGroupName.Value;
             AVSAssessmentsData[assessmentInfo].AssessmentProjectName = userInputObj.AssessmentProjectName;
@@ -191,8 +212,10 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AVSAssessmentsData[assessmentInfo].MachinesReadyWithConditions = avsPropertiesObj.Properties.SuitabilitySummary?.ConditionallySuitable ?? 0;
             AVSAssessmentsData[assessmentInfo].MachinesReadinessUnknown = avsPropertiesObj.Properties.SuitabilitySummary?.ReadinessUnknown ?? 0;
             AVSAssessmentsData[assessmentInfo].MachinesNotReady = avsPropertiesObj.Properties.SuitabilitySummary?.NotSuitable ?? 0;
-            AVSAssessmentsData[assessmentInfo].RecommendedNumberOfNodes = avsPropertiesObj.Properties.NumberOfNodes ?? 0;
-            AVSAssessmentsData[assessmentInfo].NodeType = avsPropertiesObj.Properties.NodeType;
+            AVSAssessmentsData[assessmentInfo].TotalRecommendedNumberOfNodes = avsPropertiesObj.Properties.NumberOfNodes ?? 0;
+            AVSAssessmentsData[assessmentInfo].NodeTypes = nodeTypes;
+            AVSAssessmentsData[assessmentInfo].RecommendedNodes = recommendedNodes;
+            AVSAssessmentsData[assessmentInfo].RecommendedFttRaidLevels = recommendedFttRaidLevels;
             AVSAssessmentsData[assessmentInfo].TotalMonthlyCostEstimate = avsPropertiesObj.Properties.TotalMonthlyCost ?? 0.00;
             AVSAssessmentsData[assessmentInfo].PredictedCpuUtilizationPercentage = avsPropertiesObj.Properties.CpuUtilization ?? 0.00;
             AVSAssessmentsData[assessmentInfo].PredictedMemoryUtilizationPercentage = avsPropertiesObj.Properties.RamUtilization ?? 0.00;
@@ -207,6 +230,9 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AVSAssessmentsData[assessmentInfo].MemoryInTBFree = AVSAssessmentsData[assessmentInfo].MemoryInTBAvailable - AVSAssessmentsData[assessmentInfo].MemoryInTBUsed;
             AVSAssessmentsData[assessmentInfo].StorageInTBFree = AVSAssessmentsData[assessmentInfo].StorageInTBAvailable - AVSAssessmentsData[assessmentInfo].StorageInTBUsed;
             AVSAssessmentsData[assessmentInfo].ConfidenceRating = UtilityFunctions.GetConfidenceRatingInStars(avsPropertiesObj.Properties.ConfidenceRatingInPercentage?? 0);
+
+            AvsAssessmentConstants.VCpuOversubscription = ((int)(avsPropertiesObj.Properties.VCpuOversubscription)).ToString() + ":1";
+            AvsAssessmentConstants.DedupeCompression = avsPropertiesObj.Properties.DedupeCompression ?? 1.5;
         }
 
         #region Utilities

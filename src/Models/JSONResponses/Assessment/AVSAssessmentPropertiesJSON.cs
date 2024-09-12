@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 using Azure.Migrate.Export.Common;
 
@@ -21,8 +22,8 @@ namespace Azure.Migrate.Export.Models
 
     public class AVSAssessmentProperty
     {
-        [JsonProperty("nodeType")]
-        public string NodeType { get; set; }
+        [JsonProperty("avsEstimatedNodes")]
+        public List<AvsEstimatedNodes> EstimatedNodes { get; set; }
 
         [JsonProperty("totalMonthlyCost")]
         public double? TotalMonthlyCost { get; set; }
@@ -54,6 +55,12 @@ namespace Azure.Migrate.Export.Models
         [JsonProperty("totalStorageInGB")]
         public double? TotalStorageInGB { get; set; }
 
+        [JsonProperty("vcpuOversubscription")]
+        public double? VCpuOversubscription { get; set; }
+
+        [JsonProperty("dedupeCompression")]
+        public double? DedupeCompression { get; set; }
+
         [JsonProperty("numberOfMachines")]
         public int? NumberOfMachines { get; set; }
 
@@ -80,5 +87,17 @@ namespace Azure.Migrate.Export.Models
 
         [JsonProperty("readinessUnknown")]
         public int? ReadinessUnknown { get; set; }
+    }
+
+    public class AvsEstimatedNodes
+    {
+        [JsonProperty("nodeType")]
+        public string NodeType { get; set; }
+
+        [JsonProperty("nodeNumber")]
+        public int NodeNumber { get; set; }
+
+        [JsonProperty("fttRaidLevel")]
+        public string FttRaidLevel { get; set; }
     }
 }

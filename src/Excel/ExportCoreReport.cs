@@ -127,6 +127,9 @@ namespace Azure.Migrate.Export.Excel
             dataWs.Cell(2, 10).Value = CorePropertiesObj.AssessmentDuration;
             dataWs.Cell(2, 11).Value = CorePropertiesObj.OptimizationPreference;
             dataWs.Cell(2, 12).Value = CorePropertiesObj.AssessSQLServices;
+            dataWs.Cell(2, 13).Value = CorePropertiesObj.VCpuOverSubscription;
+            dataWs.Cell(2, 14).Value = CorePropertiesObj.MemoryOverCommit;
+            dataWs.Cell(2, 15).Value = CorePropertiesObj.DedupeCompression;
         }
 
         private void Generate_Business_Case_Worksheet()
