@@ -61,43 +61,16 @@ namespace Azure.Migrate.Export.Models
     }
 
     public class ImportMachinesDisk
-    {
-        [JsonProperty("megabytesPerSecondOfRead")]
-        public double? MegabytesPerSecondOfRead { get; set; }
-
-        [JsonProperty("megabytesPerSecondOfWrite")]
-        public double? MegabytesPerSecondOfWrite { get; set; }
-
-        [JsonProperty("numberOfReadOperationsPerSecond")]
-        public double? NumberOfReadOperationsPerSecond { get; set; }
-
-        [JsonProperty("numberOfWriteOperationsPerSecond")]
-        public double? NumberOfWriteOperationsPerSecond { get; set; }
-
-        [JsonProperty("maxSizeInBytes")]
-        public long? MaxSizeInBytes { get; set; }
-
-        [JsonProperty("usedSpaceInBytes")]
-        public int? UsedSpaceInBytes { get; set; }
-
+    {        
         [JsonProperty("name")]
         public string Name { get; set; }
 
         [JsonProperty("diskType")]
         public string DiskType { get; set; }
-
-        [JsonProperty("lun")]
-        public int? Lun { get; set; }
-
-        [JsonProperty("path")]
-        public string Path { get; set; }
     }
 
     public class ImportMachinesOperatingSystemDetailsInfo
     {
-        [JsonProperty("osType")]
-        public string OSType { get; set; }
-
         [JsonProperty("osName")]
         public string OSName { get; set; }
     }
