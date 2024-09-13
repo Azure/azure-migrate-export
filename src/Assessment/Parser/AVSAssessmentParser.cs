@@ -196,9 +196,9 @@ namespace Azure.Migrate.Export.Assessment.Parser
                 nodeTypes += item.NodeType + ", ";
             }
 
-            nodeTypes = nodeTypes.Substring(0, nodeTypes.Length - 1);
-            recommendedNodes = recommendedNodes.Substring(0, recommendedNodes.Length - 1);
-            recommendedFttRaidLevels = recommendedFttRaidLevels.Substring(0, recommendedFttRaidLevels.Length - 1);
+            nodeTypes = nodeTypes.Substring(0, nodeTypes.Length - 2);
+            recommendedNodes = recommendedNodes.Substring(0, recommendedNodes.Length - 2);
+            recommendedFttRaidLevels = recommendedFttRaidLevels.Substring(0, recommendedFttRaidLevels.Length - 2);
 
             AVSAssessmentsData[assessmentInfo].SubscriptionId = userInputObj.Subscription.Key;
             AVSAssessmentsData[assessmentInfo].ResourceGroup = userInputObj.ResourceGroupName.Value;
