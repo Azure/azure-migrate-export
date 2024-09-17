@@ -64,6 +64,7 @@ namespace Azure.Migrate.Export.Forms
             if (ExpressWorkflowRadioButton.Checked)
             {
                 ModuleComboBox.Visible = false;
+                ModuleComboBox.SelectedItem = null;
                 EnableBusinessProposal();
                 if (ImportRadioButton.Checked)
                 {
@@ -80,7 +81,15 @@ namespace Azure.Migrate.Export.Forms
             if (ComprehensiveProposalRadioButton.Checked)
             {
                 mainFormObj.EnableOptimizationPreferenceComboBox();
-/*                Enable*/
+                if (ApplianceRadioButton.Checked)
+                {
+                    VMwareCheckBox.Enabled = true;
+                    VMwareCheckBox.Checked = true;
+                    HyperVCheckBox.Enabled = true;
+                    HyperVCheckBox.Checked = true;
+                    PhysicalCheckBox.Enabled = true;
+                    PhysicalCheckBox.Checked = true;
+                }
             }
 
             mainFormObj.MakeConfigurationActionButtonsEnabledDecision();
@@ -208,7 +217,7 @@ namespace Azure.Migrate.Export.Forms
         }
         #endregion
 
-        #region Validataion
+        #region Validation
         public bool ValidateConfiguration()
         {
             if (!ValidateAzureMigrateSourceAppliance())
