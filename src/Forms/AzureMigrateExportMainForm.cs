@@ -894,6 +894,8 @@ namespace Azure.Migrate.Export.Forms
         {
             if (AssessmentSettingsFormObj == null)
                 return;
+            AssessmentSettingsFormObj.InitializeCurrencyComboBox();
+            AssessmentSettingsFormObj.InitializeTargetRegionComboBox();
             AssessmentSettingsFormObj.DisableOptimizationPreferenceComboBox();
         }
 
@@ -901,7 +903,27 @@ namespace Azure.Migrate.Export.Forms
         {
             if (AssessmentSettingsFormObj == null)
                 return;
+            AssessmentSettingsFormObj.InitializeCurrencyComboBox();
+            AssessmentSettingsFormObj.InitializeTargetRegionComboBox();
             AssessmentSettingsFormObj.EnableOptimizationPreferenceComboBox();
+        }
+
+        public void DisableAssessmentDurationComboBox()
+        {
+            if (AssessmentSettingsFormObj == null)
+                return;
+            AssessmentSettingsFormObj.InitializeCurrencyComboBox();
+            AssessmentSettingsFormObj.InitializeTargetRegionComboBox();
+            AssessmentSettingsFormObj.DisableAssessmentDurationComboBox();
+        }
+
+        public void EnableAssessmentDurationComboBox()
+        {
+            if (AssessmentSettingsFormObj == null)
+                return;
+            AssessmentSettingsFormObj.InitializeCurrencyComboBox();
+            AssessmentSettingsFormObj.InitializeTargetRegionComboBox();
+            AssessmentSettingsFormObj.EnableAssessmentDurationComboBox();
         }
         #endregion
     }

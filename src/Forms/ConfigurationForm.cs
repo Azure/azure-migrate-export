@@ -81,6 +81,7 @@ namespace Azure.Migrate.Export.Forms
             if (ComprehensiveProposalRadioButton.Checked)
             {
                 mainFormObj.EnableOptimizationPreferenceComboBox();
+                mainFormObj.EnableAssessmentDurationComboBox();
                 if (ApplianceRadioButton.Checked)
                 {
                     VMwareCheckBox.Enabled = true;
@@ -101,6 +102,7 @@ namespace Azure.Migrate.Export.Forms
             if (QuickAvsProposalRadioButton.Checked)
             {
                 mainFormObj.DisableOptimizationPreferenceComboBox();
+                mainFormObj.DisableAssessmentDurationComboBox();
                 if (ApplianceRadioButton.Checked)
                 {
                     DisableHypervAndPhysicalCheckBoxes();

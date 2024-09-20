@@ -28,32 +28,70 @@ namespace Azure.Migrate.Export.Forms
             InitializeAssessmentDurationComboBox();
         }
         
-        private void InitializeTargetRegionComboBox()
+        public void InitializeTargetRegionComboBox()
         {
             List<KeyValuePair<string, string>> location = new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("australiaeast", "Australia East"),
+                    new KeyValuePair<string, string>("australiasoutheast", "Australia Southeast"),
+                    new KeyValuePair<string, string>("brazilsouth", "Brazil South"),
+                    new KeyValuePair<string, string>("canadacentral", "Canada Central"),
+                    new KeyValuePair<string, string>("centralus", "Central US"),
+                    new KeyValuePair<string, string>("eastasia", "East Asia"),
+                    new KeyValuePair<string, string>("eastus", "East US"),
+                    new KeyValuePair<string, string>("eastus2", "East US 2"),
+                    new KeyValuePair<string, string>("francecentral", "France Central"),
+                    new KeyValuePair<string, string>("germanywestcentral", "Germany West Central"),
+                    new KeyValuePair<string, string>("japaneast", "Japan East"),
+                    new KeyValuePair<string, string>("japanwest", "Japan West"),
+                    new KeyValuePair<string, string>("northeurope", "North Europe"),
+                    new KeyValuePair<string, string>("southafricanorth", "South Africa North"),
+                    new KeyValuePair<string, string>("southcentralus", "South Central US"),
+                    new KeyValuePair<string, string>("southeastasia", "Southeast Asia"),
+                    new KeyValuePair<string, string>("swedencentral", "Sweden Central"),
+                    new KeyValuePair<string, string>("uksouth", "UK South"),
+                    new KeyValuePair<string, string>("ukwest", "UK West"),
+                    new KeyValuePair<string, string>("westeurope", "West Europe"),
+                    new KeyValuePair<string, string>("westus2", "West US 2")
+                };
+
+            if (mainFormObj.IsAvsBusinessProposalSelected())
             {
-                new KeyValuePair<string, string>("australiaeast", "Australia East"),
-                new KeyValuePair<string, string>("australiasoutheast", "Australia Southeast"),
-                new KeyValuePair<string, string>("brazilsouth", "Brazil South"),
-                new KeyValuePair<string, string>("canadacentral", "Canada Central"),
-                new KeyValuePair<string, string>("centralus", "Central US"),
-                new KeyValuePair<string, string>("eastasia", "East Asia"),
-                new KeyValuePair<string, string>("eastus", "East US"),
-                new KeyValuePair<string, string>("eastus2", "East US 2"),
-                new KeyValuePair<string, string>("francecentral", "France Central"),
-                new KeyValuePair<string, string>("germanywestcentral", "Germany West Central"),
-                new KeyValuePair<string, string>("japaneast", "Japan East"),
-                new KeyValuePair<string, string>("japanwest", "Japan West"),
-                new KeyValuePair<string, string>("northeurope", "North Europe"),
-                new KeyValuePair<string, string>("southafricanorth", "South Africa North"),
-                new KeyValuePair<string, string>("southcentralus", "South Central US"),
-                new KeyValuePair<string, string>("southeastasia", "Southeast Asia"),
-                new KeyValuePair<string, string>("swedencentral", "Sweden Central"),
-                new KeyValuePair<string, string>("uksouth", "UK South"),
-                new KeyValuePair<string, string>("ukwest", "UK West"),
-                new KeyValuePair<string, string>("westeurope", "West Europe"),
-                new KeyValuePair<string, string>("westus2", "West US 2")
-            };
+                location = new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("australiaeast", "Australia East"),
+                    new KeyValuePair<string, string>("australiasoutheast", "Australia Southeast"),
+                    new KeyValuePair<string, string>("brazilsouth", "Brazil South"),
+                    new KeyValuePair<string, string>("canadacentral", "Canada Central"),
+                    new KeyValuePair<string, string>("canadaeast", "Canada East"),
+                    new KeyValuePair<string, string>("centralindia", "Central India"),
+                    new KeyValuePair<string, string>("centralus", "Central US"),
+                    new KeyValuePair<string, string>("eastasia", "East Asia"),
+                    new KeyValuePair<string, string>("eastus", "East US"),
+                    new KeyValuePair<string, string>("eastus2", "East US 2"),
+                    new KeyValuePair<string, string>("francecentral", "France Central"),
+                    new KeyValuePair<string, string>("germanywestcentral", "Germany West Central"),
+                    new KeyValuePair<string, string>("italynorth", "Italy North"),
+                    new KeyValuePair<string, string>("japaneast", "Japan East"),
+                    new KeyValuePair<string, string>("japanwest", "Japan West"),
+                    new KeyValuePair<string, string>("mexicocentral", "Mexico Central"),
+                    new KeyValuePair<string, string>("northcentralus", "North Central US"),
+                    new KeyValuePair<string, string>("northeurope", "North Europe"),
+                    new KeyValuePair<string, string>("qatarcentral", "Qatar Central"),
+                    new KeyValuePair<string, string>("southafricanorth", "South Africa North"),
+                    new KeyValuePair<string, string>("southcentralus", "South Central US"),
+                    new KeyValuePair<string, string>("southeastasia", "Southeast Asia"),
+                    new KeyValuePair<string, string>("swedencentral", "Sweden Central"),
+                    new KeyValuePair<string, string>("switzerlandnorth", "Switzerland North"),
+                    new KeyValuePair<string, string>("switzerlandwest", "Switzerland South"),
+                    new KeyValuePair<string, string>("uaenorth", "UAE North"),
+                    new KeyValuePair<string, string>("uksouth", "UK South"),
+                    new KeyValuePair<string, string>("ukwest", "UK West"),
+                    new KeyValuePair<string, string>("westeurope", "West Europe"),
+                    new KeyValuePair<string, string>("westus", "West US"),
+                    new KeyValuePair<string, string>("westus2", "West US 2")
+                };
+            }
 
             TargetRegionComboBox.DataSource = location;
             TargetRegionComboBox.ValueMember = "Key";
@@ -61,7 +99,7 @@ namespace Azure.Migrate.Export.Forms
             TargetRegionComboBox.SelectedItem = null;
         }
 
-        private void InitializeCurrencyComboBox()
+        public void InitializeCurrencyComboBox()
         {
             List<KeyValuePair<string, string>> currency = new List<KeyValuePair<string, string>>();
             currency.Add(new KeyValuePair<string, string>("USD", "United States – Dollar ($) USD"));
@@ -81,6 +119,18 @@ namespace Azure.Migrate.Export.Forms
             currency.Add(new KeyValuePair<string, string>("TWD", "Taiwan – Dollar (NT$) TWD"));
             currency.Add(new KeyValuePair<string, string>("GBP", "United Kingdom – Pound (£) GBP"));
 
+            if (mainFormObj.IsAvsBusinessProposalSelected())
+            {
+                currency.Add(new KeyValuePair<string, string>("IDR", "Indonesia – Rupiah (Rp) IDR"));
+                currency.Add(new KeyValuePair<string, string>("SAR", "Saudi Arabia – Riyal (ر.س) SAR"));
+                currency.Add(new KeyValuePair<string, string>("ZAR", "South Africa – Rand (R) ZAR"));
+                currency.Add(new KeyValuePair<string, string>("TRY", "Turkish – Lira (₺) TRY"));
+                currency.Add(new KeyValuePair<string, string>("MXN", "Mexico – Peso ($) MXN"));
+                currency.Add(new KeyValuePair<string, string>("MYR", "Malaysia – Ringgit (RM) MYR"));
+                currency.Add(new KeyValuePair<string, string>("HKD", "Hong Kong - Dollar ($) HKD"));
+                currency.Add(new KeyValuePair<string, string>("ARS", "Argentina – Dollar ($) USD"));
+            }
+
             CurrencyComboBox.DataSource = currency;
             CurrencyComboBox.ValueMember = "Key";
             CurrencyComboBox.DisplayMember = "Value";
@@ -98,7 +148,7 @@ namespace Azure.Migrate.Export.Forms
             AssessmentDurationComboBox.ValueMember = "Key";
             AssessmentDurationComboBox.DisplayMember = "Value";
             AssessmentDurationComboBox.SelectedItem = new KeyValuePair<string, string>("week", "Week");
-        }        
+        }
         #endregion
 
         #region Validation
@@ -383,6 +433,16 @@ namespace Azure.Migrate.Export.Forms
 
             AssessSqlServicesSeparatelyGroupBox.Visible = false;
         }
+
+        public void DisableAssessmentDurationComboBox()
+        {
+            AssessmentDurationComboBox.Enabled = false;
+        }
+
+        public void EnableAssessmentDurationComboBox()
+        {
+            AssessmentDurationComboBox.Enabled = true;
+        }        
         #endregion
     }
 }

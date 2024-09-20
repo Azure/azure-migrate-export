@@ -186,6 +186,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             string recommendedNodes = "";
             string recommendedFttRaidLevels = "";
             string nodeTypes = "";
+            string recommendedExternalStorages = "";
             foreach (var item in avsPropertiesObj.Properties.EstimatedNodes)
             {
                 recommendedNodes += item.NodeNumber + " nodes of " + item.NodeType + ", ";
@@ -199,6 +200,13 @@ namespace Azure.Migrate.Export.Assessment.Parser
             nodeTypes = nodeTypes.Substring(0, nodeTypes.Length - 2);
             recommendedNodes = recommendedNodes.Substring(0, recommendedNodes.Length - 2);
             recommendedFttRaidLevels = recommendedFttRaidLevels.Substring(0, recommendedFttRaidLevels.Length - 2);
+
+            foreach (var item in avsPropertiesObj.Properties.AvsEstimatedExternalStorages)
+            {
+                recommendedExternalStorages += item.TotalStorageInGB/1024 + " TB of " + item.StorageType + ", ";
+            }
+
+            recommendedExternalStorages = recommendedExternalStorages.Substring(0, recommendedExternalStorages.Length - 2);
 
             AVSAssessmentsData[assessmentInfo].SubscriptionId = userInputObj.Subscription.Key;
             AVSAssessmentsData[assessmentInfo].ResourceGroup = userInputObj.ResourceGroupName.Value;
@@ -216,6 +224,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             AVSAssessmentsData[assessmentInfo].NodeTypes = nodeTypes;
             AVSAssessmentsData[assessmentInfo].RecommendedNodes = recommendedNodes;
             AVSAssessmentsData[assessmentInfo].RecommendedFttRaidLevels = recommendedFttRaidLevels;
+            AVSAssessmentsData[assessmentInfo].RecommendedExternalStorage = recommendedExternalStorages;
             AVSAssessmentsData[assessmentInfo].TotalMonthlyCostEstimate = avsPropertiesObj.Properties.TotalMonthlyCost ?? 0.00;
             AVSAssessmentsData[assessmentInfo].PredictedCpuUtilizationPercentage = avsPropertiesObj.Properties.CpuUtilization ?? 0.00;
             AVSAssessmentsData[assessmentInfo].PredictedMemoryUtilizationPercentage = avsPropertiesObj.Properties.RamUtilization ?? 0.00;
