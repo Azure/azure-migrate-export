@@ -36,15 +36,30 @@ namespace Azure.Migrate.Export.Factory
         private List<AssessmentInformation> GetAzureVMWareSolutionProdAssessmentSettings(UserInput userInputObj, string groupName)
         {
             List<AssessmentInformation> result = new List<AssessmentInformation>();
-            List<string> nodeTypes = AvsAssessmentConstants.RegionToAvsNodeTypeMap[userInputObj.TargetRegion.Key];           
+            List<string> nodeTypes = AvsAssessmentConstants.RegionToAvsNodeTypeMap[userInputObj.TargetRegion.Key];
+            List<string> externalStorageTypes = new List<string>();
+            if (AvsAssessmentConstants.anfStandardStorageRegionList.Contains(userInputObj.TargetRegion.Key))
+            {
+                externalStorageTypes.Add("AnfStandard");
+            }
+            
+            if (AvsAssessmentConstants.anfPremiumStorageRegionList.Contains (userInputObj.TargetRegion.Key))
+            {
+                externalStorageTypes.Add("AnfPremium");
+            }
+
+            if (AvsAssessmentConstants.anfUltraStorageRegionLis.Contains(userInputObj.TargetRegion.Key))
+            {
+                externalStorageTypes.Add("AnfUltra");
+            }
 
             // Performance based - Pay as you go
             AzureVMWareSolutionAssessmentSettingsJSON obj1 = new AzureVMWareSolutionAssessmentSettingsJSON();
             obj1.Properties.ReservedInstance = "None";
-            obj1.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
             obj1.Properties.Currency = userInputObj.Currency.Key;
             obj1.Properties.AzureLocation = userInputObj.TargetRegion.Key;
             obj1.Properties.NodeTypes = nodeTypes;
+            obj1.Properties.ExternalStorageTypes = externalStorageTypes;
             result.Add(new AssessmentInformation(
                 groupName, "AVS-Prod-AzMigExport-1",
                 AssessmentType.AVSAssessment,
@@ -55,10 +70,10 @@ namespace Azure.Migrate.Export.Factory
             // Performance based - Pay as you go + RI 1 year
             AzureVMWareSolutionAssessmentSettingsJSON obj2 = new AzureVMWareSolutionAssessmentSettingsJSON();
             obj2.Properties.ReservedInstance = "RI1Year";
-            obj2.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
             obj2.Properties.Currency = userInputObj.Currency.Key;
             obj2.Properties.AzureLocation = userInputObj.TargetRegion.Key;
             obj2.Properties.NodeTypes = nodeTypes;
+            obj2.Properties.ExternalStorageTypes = externalStorageTypes;
             result.Add(new AssessmentInformation(
                 groupName,
                 "AVS-Prod-AzMigExport-2",
@@ -70,10 +85,10 @@ namespace Azure.Migrate.Export.Factory
             // Performance based - Pay as you go + RI 3 year
             AzureVMWareSolutionAssessmentSettingsJSON obj3 = new AzureVMWareSolutionAssessmentSettingsJSON();
             obj3.Properties.ReservedInstance = "RI3Year";
-            obj3.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
             obj3.Properties.Currency = userInputObj.Currency.Key;
             obj3.Properties.AzureLocation = userInputObj.TargetRegion.Key;
             obj3.Properties.NodeTypes = nodeTypes;
+            obj3.Properties.ExternalStorageTypes = externalStorageTypes;
             result.Add(new AssessmentInformation(
                 groupName, "AVS-Prod-AzMigExport-3",
                 AssessmentType.AVSAssessment,
@@ -87,8 +102,8 @@ namespace Azure.Migrate.Export.Factory
             obj4.Properties.ReservedInstance = "None";
             obj4.Properties.Currency = userInputObj.Currency.Key;
             obj4.Properties.AzureLocation = userInputObj.TargetRegion.Key;
-            obj4.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
             obj4.Properties.NodeTypes = nodeTypes;
+            obj4.Properties.ExternalStorageTypes = externalStorageTypes;
             result.Add(new AssessmentInformation(
                 groupName, "AVS-Prod-AzMigExport-4",
                 AssessmentType.AVSAssessment,
@@ -102,8 +117,8 @@ namespace Azure.Migrate.Export.Factory
             obj5.Properties.ReservedInstance = "RI1Year";
             obj5.Properties.Currency = userInputObj.Currency.Key;
             obj5.Properties.AzureLocation = userInputObj.TargetRegion.Key;
-            obj5.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
             obj5.Properties.NodeTypes = nodeTypes;
+            obj5.Properties.ExternalStorageTypes = externalStorageTypes;
             result.Add(new AssessmentInformation(
                 groupName, "AVS-Prod-AzMigExport-5",
                 AssessmentType.AVSAssessment,
@@ -117,8 +132,8 @@ namespace Azure.Migrate.Export.Factory
             obj6.Properties.ReservedInstance = "RI3Year";
             obj6.Properties.Currency = userInputObj.Currency.Key; 
             obj6.Properties.AzureLocation = userInputObj.TargetRegion.Key;
-            obj6.Properties.TimeRange = userInputObj.AssessmentDuration.Key;
             obj6.Properties.NodeTypes = nodeTypes;
+            obj6.Properties.ExternalStorageTypes = externalStorageTypes;
             result.Add(new AssessmentInformation(
                 groupName, "AVS-Prod-AzMigExport-6",
                 AssessmentType.AVSAssessment,

@@ -67,6 +67,9 @@ namespace Azure.Migrate.Export.Models
         [JsonProperty("suitabilitySummary")]
         public AVSSuitabilitySummary SuitabilitySummary { get; set; }
 
+        [JsonProperty("avsEstimatedExternalStorages")]
+        public List<AvsEstimatedExternalStorages> AvsEstimatedExternalStorages { get; set; }
+
         [JsonProperty("createdTimestamp")]
         public string CreatedTimestamp { get; set; }
 
@@ -99,5 +102,14 @@ namespace Azure.Migrate.Export.Models
 
         [JsonProperty("fttRaidLevel")]
         public string FttRaidLevel { get; set; }
+    }
+
+    public class AvsEstimatedExternalStorages
+    {
+        [JsonProperty("storageType")]
+        public string StorageType { get; set; }
+
+        [JsonProperty("totalStorageInGB")]
+        public double TotalStorageInGB { get; set; }
     }
 }

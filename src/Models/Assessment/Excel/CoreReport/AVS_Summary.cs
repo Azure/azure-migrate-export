@@ -19,6 +19,7 @@ namespace Azure.Migrate.Export.Models
         public string NodeTypes { get; set; }
         public string RecommendedNodes { get; set; }
         public string RecommendedFttRaidLevels { get; set; }
+        public string RecommendedExternalStorage {  get; set; }
         public double MonthlyTotalCostEstimate { get; set; }
         public double PredictedCpuUtilizationPercentage { get; set; }
         public double PredictedMemoryUtilizationPercentage { get; set; }

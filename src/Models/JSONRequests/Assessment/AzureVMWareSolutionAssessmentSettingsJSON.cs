@@ -26,7 +26,7 @@ namespace Azure.Migrate.Export.Models
         public List<string> NodeTypes { get; set; }
 
         [JsonProperty("failuresToTolerateAndRaidLevelList")]
-        public List<string> FailuresToTolerateAndRaidLevelList { get; set; } = new List<string> { "Ftt1Raid1", "Ftt1Raid5", "Ftt2Raid1", "Ftt2Raid6", "Ftt3Raid1" };
+        public List<string> FailuresToTolerateAndRaidLevelList { get; set; } = new List<string> { "Ftt1Raid1", "Ftt2Raid6"};
 
         [JsonProperty("vcpuOversubscription")]
         public string VcpuOversubscription { get; set; } = AvsAssessmentConstants.VCpuOversubscription;
@@ -42,9 +42,6 @@ namespace Azure.Migrate.Export.Models
 
         [JsonProperty("percentile")]
         public string Percentile { get; set; } = "Percentile95";
-
-        [JsonProperty("timeRange")]
-        public string TimeRange { get; set; }
 
         [JsonProperty("scalingFactor")]
         public int ScalingFactor { get; set; } = 1;
@@ -62,6 +59,6 @@ namespace Azure.Migrate.Export.Models
         public string AzureLocation { get; set; }
 
         [JsonProperty("externalStorageTypes")]
-        public List<string> ExternalStorageTypes { get; set; } = new List<string> { "AnfStandard", "AnfPremium", "AnfUltra" };
+        public List<string> ExternalStorageTypes { get; set; }
     }
 }
