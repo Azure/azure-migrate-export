@@ -2328,20 +2328,22 @@ namespace Azure.Migrate.Export.Assessment.Processor
             }
 
             Business_Case_Data.AzureAvsCost.ComputeLicenseCost = AzureAvsCalculator.GetTotalAvsComputeCost() * 12.0;
-            if (UserInputObj.BusinessProposal == BusinessProposal.AVS.ToString() && UserInputObj.WorkflowObj.IsExpressWorkflow)
-            {
-                Business_Case_Data.AzureAvsCost.ComputeLicenseCost = BusinessCaseData.AzureAvsCostDetails.ComputeLicenseCost -
-                    BusinessCaseData.AzureAvsCostDetails.EsuLicenseCost;
-            }
-
-            Business_Case_Data.AzureAvsCost.EsuLicenseCost = 0;
+            Business_Case_Data.AzureAvsCost.EsuLicenseCost = BusinessCaseData.AzureAvsCostDetails.EsuLicenseCost;
             Business_Case_Data.AzureAvsCost.StorageCost = BusinessCaseData.AzureAvsCostDetails.StorageCost;
             Business_Case_Data.AzureAvsCost.NetworkCost = 
                 BusinessCaseData.AzureAvsCostDetails.NetworkCost + 
                 0.05 * (Business_Case_Data.AzureAvsCost.ComputeLicenseCost - BusinessCaseData.AzureAvsCostDetails.ComputeLicenseCost);
             Business_Case_Data.AzureAvsCost.ITStaffCost = BusinessCaseData.AzureAvsCostDetails.ITStaffCost;
             Business_Case_Data.AzureAvsCost.SecurityCost = BusinessCaseData.AzureAvsCostDetails.SecurityCost;
-            Business_Case_Data.AzureAvsCost.FacilitiesCost = BusinessCaseData.AzureAvsCostDetails.FacilitiesCost;
+            Business_Case_Data.AzureAvsCost.FacilitiesCost = 0;
+
+            if (UserInputObj.BusinessProposal == BusinessProposal.AVS.ToString() && UserInputObj.WorkflowObj.IsExpressWorkflow)
+            {
+                Business_Case_Data.AzureAvsCost.ComputeLicenseCost = BusinessCaseData.AzureAvsCostDetails.ComputeLicenseCost -
+                    BusinessCaseData.AzureAvsCostDetails.EsuLicenseCost;
+
+                Business_Case_Data.AzureAvsCost.NetworkCost = BusinessCaseData.AzureAvsCostDetails.NetworkCost;
+            }
 
             Business_Case_Data.TotalAzureCost.ComputeLicenseCost =
                 Business_Case_Data.AzureIaaSCost.ComputeLicenseCost +
