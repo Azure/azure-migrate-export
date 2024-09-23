@@ -26,6 +26,7 @@ namespace Azure.Migrate.Export.Forms
             InitializeTargetRegionComboBox();
             InitializeCurrencyComboBox();
             InitializeAssessmentDurationComboBox();
+            InitializeOptimizationPreference(BusinessProposal.Comprehensive);
         }
         
         public void InitializeTargetRegionComboBox()
