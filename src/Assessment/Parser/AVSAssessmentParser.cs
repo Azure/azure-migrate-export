@@ -203,7 +203,8 @@ namespace Azure.Migrate.Export.Assessment.Parser
 
             foreach (var item in avsPropertiesObj.Properties.AvsEstimatedExternalStorages)
             {
-                recommendedExternalStorages += item.TotalStorageInGB/1024 + " TB of " + item.StorageType + ", ";
+                string storageType = item.StorageType.Substring(0, 3).ToUpper() + "-" + item.StorageType.Substring(3);
+                recommendedExternalStorages += item.TotalStorageInGB/1024 + " TB of " + storageType + ", ";
             }
 
             recommendedExternalStorages = recommendedExternalStorages.Substring(0, recommendedExternalStorages.Length - 2);
