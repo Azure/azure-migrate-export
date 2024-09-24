@@ -22,7 +22,6 @@ namespace Azure.Migrate.Export.Common
             { "eastasia", new List<string> { "AV36", "AV36P" } },
             { "japaneast", new List<string> { "AV36", "AV64" } },
             { "canadacentral", new List<string> { "AV36", "AV36P" } },
-            { "canadaeast", new List<string> { "AV36"} },
             { "switzerlandnorth", new List<string> { "AV36", "AV36P", "AV64" } },
             { "switzerlandwest", new List<string> { "AV36", "AV36P", "AV64" } },
             { "italynorth", new List<string> { "AV36", "AV36P", "AV52" } },
@@ -33,9 +32,7 @@ namespace Azure.Migrate.Export.Common
             { "westus", new List<string> { "AV36P" } },
             { "uaenorth", new List<string> { "AV36P" } },
             { "qatarcentral", new List<string> { "AV36P", "AV64" } },
-            { "mexicocentral", new List<string> { "AV36P" } },
-            { "brazilsouth", new List<string> { "AV36" } },            
-            { "australiasoutheast", new List<string> { "AV36" } },
+            { "brazilsouth", new List<string> { "AV36" } },
             { "japanwest", new List<string> { "AV36", "AV64" } },
             { "ukwest", new List<string> { "AV36" } }
         };
@@ -45,10 +42,8 @@ namespace Azure.Migrate.Export.Common
             "eastasia",
             "southeastasia",
             "australiaeast",
-            "australiasoutheast",
             "brazilsouth",
             "canadacentral",
-            "canadaeast",
             "westeurope",
             "northeurope",
             "centralindia",
@@ -72,7 +67,6 @@ namespace Azure.Migrate.Export.Common
             "swedencentral",
             "qatarcentral",
             "italynorth",
-            "mexicocentral"
         };
 
         public static List<string> anfPremiumStorageRegionList = new List<string>
@@ -80,10 +74,8 @@ namespace Azure.Migrate.Export.Common
             "eastasia",
             "southeastasia",
             "australiaeast",
-            "australiasoutheast",
             "brazilsouth",
             "canadacentral",
-            "canadaeast",
             "westeurope",
             "northeurope",
             "centralindia",
@@ -114,10 +106,8 @@ namespace Azure.Migrate.Export.Common
             "eastasia",
             "southeastasia",
             "australiaeast",
-            "australiasoutheast",
             "brazilsouth",
             "canadacentral",
-            "canadaeast",
             "westeurope",
             "northeurope",
             "centralindia",
@@ -141,7 +131,6 @@ namespace Azure.Migrate.Export.Common
             "qatarcentral",
             "swedencentral",
             "italynorth",
-            "mexicocentral"
         };
 
         public static string VCpuOversubscription = "4:1";
