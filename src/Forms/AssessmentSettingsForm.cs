@@ -34,7 +34,6 @@ namespace Azure.Migrate.Export.Forms
             List<KeyValuePair<string, string>> location = new List<KeyValuePair<string, string>>()
                 {
                     new KeyValuePair<string, string>("australiaeast", "Australia East"),
-                    new KeyValuePair<string, string>("australiasoutheast", "Australia Southeast"),
                     new KeyValuePair<string, string>("brazilsouth", "Brazil South"),
                     new KeyValuePair<string, string>("canadacentral", "Canada Central"),
                     new KeyValuePair<string, string>("centralus", "Central US"),
@@ -61,10 +60,8 @@ namespace Azure.Migrate.Export.Forms
                 location = new List<KeyValuePair<string, string>>()
                 {
                     new KeyValuePair<string, string>("australiaeast", "Australia East"),
-                    new KeyValuePair<string, string>("australiasoutheast", "Australia Southeast"),
                     new KeyValuePair<string, string>("brazilsouth", "Brazil South"),
                     new KeyValuePair<string, string>("canadacentral", "Canada Central"),
-                    new KeyValuePair<string, string>("canadaeast", "Canada East"),
                     new KeyValuePair<string, string>("centralindia", "Central India"),
                     new KeyValuePair<string, string>("centralus", "Central US"),
                     new KeyValuePair<string, string>("eastasia", "East Asia"),
@@ -75,7 +72,6 @@ namespace Azure.Migrate.Export.Forms
                     new KeyValuePair<string, string>("italynorth", "Italy North"),
                     new KeyValuePair<string, string>("japaneast", "Japan East"),
                     new KeyValuePair<string, string>("japanwest", "Japan West"),
-                    new KeyValuePair<string, string>("mexicocentral", "Mexico Central"),
                     new KeyValuePair<string, string>("northcentralus", "North Central US"),
                     new KeyValuePair<string, string>("northeurope", "North Europe"),
                     new KeyValuePair<string, string>("qatarcentral", "Qatar Central"),

@@ -207,7 +207,10 @@ namespace Azure.Migrate.Export.Assessment.Parser
                 recommendedExternalStorages += item.TotalStorageInGB/1024 + " TB of " + storageType + ", ";
             }
 
-            recommendedExternalStorages = recommendedExternalStorages.Substring(0, recommendedExternalStorages.Length - 2);
+            if (recommendedExternalStorages.Length > 0)
+            {
+                recommendedExternalStorages = recommendedExternalStorages.Substring(0, recommendedExternalStorages.Length - 2);
+            }
 
             AVSAssessmentsData[assessmentInfo].SubscriptionId = userInputObj.Subscription.Key;
             AVSAssessmentsData[assessmentInfo].ResourceGroup = userInputObj.ResourceGroupName.Value;
