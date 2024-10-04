@@ -2,7 +2,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 
 using Azure.Migrate.Export.Assessment.Parser;
 using Azure.Migrate.Export.Assessment.Processor;
@@ -297,7 +296,9 @@ namespace Azure.Migrate.Export.Assessment
             UserInputObj.LoggerObj.LogInformation($"General VM count: {GeneralVM.Count}");
 
             UserInputObj.LoggerObj.LogInformation($"Machines with SQL services: {SqlServicesVM.Count}");
-            
+
+            Dictionary<string, GroupPollResponse> GroupStatusMap = new Dictionary<string, GroupPollResponse>();
+
             foreach (var kvp in GroupMachinesMap)
             {
                 if (UserInputObj.CancellationContext.IsCancellationRequested)
@@ -306,7 +307,8 @@ namespace Azure.Migrate.Export.Assessment
                 bool isGroupCreationComplete = false;
                 try
                 {
-                    isGroupCreationComplete = new HttpClientHelper().CreateGroup(UserInputObj, kvp).Result;
+                    GroupStatusMap.Add(kvp.Key, GroupPollResponse.Invalid);
+                    isGroupCreationComplete = new HttpClientHelper().CreateGroup(UserInputObj, kvp, GroupStatusMap).Result;
                 }
                 catch (OperationCanceledException)
                 {
@@ -351,79 +353,14 @@ namespace Azure.Migrate.Export.Assessment
 
             UserInputObj.LoggerObj.LogInformation(2, $"Created groups: {CreatedGroups.Count}"); // IsExpressWorkflow ? 27 : 7 % complete
 
-            int numberOfPollTries = 0;
-
-            Dictionary<string, GroupPollResponse> GroupStatusMap = new Dictionary<string, GroupPollResponse>();
             int completedGroups = 0;
             int invalidGroups = 0;
-
-            while (numberOfPollTries < 50) // limit to prevent infinite loop on non-retryable failures
+            foreach (var kvp in GroupStatusMap)
             {
-                UserInputObj.LoggerObj.LogInformation("Initiating polling for status of created groups");
-                bool isNonRetryableResponse = false;
-                
-                foreach (string groupName in CreatedGroups)
-                {
-                    if (GroupStatusMap.ContainsKey(groupName) && (GroupStatusMap[groupName] == GroupPollResponse.Completed || GroupStatusMap[groupName] == GroupPollResponse.Invalid))
-                        continue;
-
-                    GroupPollResponse pollResult;
-                    try
-                    {
-                        pollResult = new HttpClientHelper().PollGroup(UserInputObj, groupName).Result;
-
-                        if (pollResult == GroupPollResponse.Error)
-                        {
-                            UserInputObj.LoggerObj.LogWarning($"Polling for group {groupName} resulted in a non-retryable error");
-                            isNonRetryableResponse = true;
-                        }
-
-                        if (!GroupStatusMap.ContainsKey(groupName))
-                            GroupStatusMap.Add(groupName, pollResult);
-                        else
-                            GroupStatusMap[groupName] = pollResult;
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        throw;
-                    }
-                    catch (AggregateException aePollGroup)
-                    {
-                        string errorMessage = "";
-                        foreach (var e in aePollGroup.Flatten().InnerExceptions)
-                        {
-                            if (e is OperationCanceledException)
-                                throw e;
-                            else
-                            {
-                                errorMessage = errorMessage + e.Message + " ";
-                            }
-                        }
-                        UserInputObj.LoggerObj.LogWarning($"Group {groupName} polling failed: {errorMessage}");
-                    }
-                    catch (Exception ex)
-                    {
-                        UserInputObj.LoggerObj.LogWarning($"Group {groupName} polling failed: {ex.Message}");
-                    }
-                }
-
-                if (isNonRetryableResponse)
-                    numberOfPollTries += 1;
-
-                completedGroups = 0;
-                invalidGroups = 0;
-                foreach (var kvp in GroupStatusMap)
-                {
-                    if (kvp.Value == GroupPollResponse.Completed)
-                        completedGroups += 1;
-                    else if (kvp.Value == GroupPollResponse.Invalid)
-                        invalidGroups += 1;
-                }
-
-                if (completedGroups + invalidGroups >= CreatedGroups.Count)
-                    break;
-
-                Thread.Sleep(10000);
+                if (kvp.Value == GroupPollResponse.Completed)
+                    completedGroups += 1;
+                else if (kvp.Value == GroupPollResponse.Invalid)
+                    invalidGroups += 1;
             }
 
             if (completedGroups <= 0)
@@ -946,7 +883,7 @@ namespace Azure.Migrate.Export.Assessment
                 return true;
 
             return false;
-        }
+        }        
         #endregion
     }
 }

@@ -190,7 +190,7 @@ namespace Azure.Migrate.Export.HttpRequestHelper
         #endregion
 
         #region Group creation and updation
-        public async Task<bool> CreateGroup(UserInput userInputObj, KeyValuePair<string, List<string>> groupInformation)
+        public async Task<bool> CreateGroup(UserInput userInputObj, KeyValuePair<string, List<string>> groupInformation, Dictionary<string, GroupPollResponse> GroupStatusMap)
         {
             userInputObj.LoggerObj.LogInformation($"Creating container for group {groupInformation.Key}");
             HttpResponseMessage createResponse = await SendGroupCreationRequest(userInputObj, groupInformation);
@@ -211,23 +211,46 @@ namespace Azure.Migrate.Export.HttpRequestHelper
 
             userInputObj.LoggerObj.LogInformation($"Updating group {groupInformation.Key} with {groupInformation.Value.Count} machines");
 
-            // Reset global variable
-            NumberOfTries = 0;
-
-            HttpResponseMessage updateResponse = await SendMachineUpdationInGroupRequest(userInputObj, groupInformation);
-
-            if (updateResponse == null)
-                throw new Exception($"Could not obtain a HTTP response for machine updation in group {groupInformation.Key}");
-
-            else if (!updateResponse.IsSuccessStatusCode)
+            GroupPollResponse pollResponse = GroupPollResponse.Invalid;
+            List<List<string>> updatedGroupMachines = UpdateTo5kMachinesPerRequest(userInputObj, groupInformation);
+            if (updatedGroupMachines.Count > 1)
             {
-                string updateResponseContent = await updateResponse.Content.ReadAsStringAsync();
-                throw new Exception($"HTTP update machines in group {groupInformation.Key} response was not successful: {updateResponse.StatusCode}: {updateResponseContent}");
+                userInputObj.LoggerObj.LogInformation($"Group {groupInformation.Key} has more than 5000 machines, will be updated in {updatedGroupMachines.Count} batches");
             }
 
-            else if (updateResponse.StatusCode != HttpStatusCode.OK)
-                throw new Exception($"Received response: {updateResponse.StatusCode} for update machines in group {groupInformation.Key} is not as expected: {HttpStatusCode.OK}");
+            int index = 0;
+            foreach (var updatedMachine in updatedGroupMachines)
+            {
+                // Reset global variable
+                NumberOfTries = 0;
+                KeyValuePair<string, List<string>> groupInformationPerRequest = new KeyValuePair<string, List<string>>(groupInformation.Key, updatedMachine);
 
+                if (updatedGroupMachines.Count > 1)
+                {
+                    userInputObj.LoggerObj.LogInformation($"Updating group {groupInformationPerRequest.Key} Batch {++index} with {updatedMachine.Count} machines");
+                }
+
+                HttpResponseMessage updateResponse = await SendMachineUpdationInGroupRequest(userInputObj, groupInformationPerRequest);
+
+                if (updateResponse == null)
+                    throw new Exception($"Could not obtain a HTTP response for machine updation in group {groupInformationPerRequest.Key}");
+                else if (!updateResponse.IsSuccessStatusCode)
+                {
+                    string updateResponseContent = await updateResponse.Content.ReadAsStringAsync();
+                    throw new Exception($"HTTP update machines in group {groupInformationPerRequest.Key} response was not successful: {updateResponse.StatusCode}: {updateResponseContent}");
+                }
+                else if (updateResponse.StatusCode != HttpStatusCode.OK)
+                    throw new Exception($"Received response: {updateResponse.StatusCode} for update machines in group {groupInformationPerRequest.Key} is not as expected: {HttpStatusCode.OK}");
+
+                pollResponse = WaitForGroupUpdateCompletion(userInputObj, groupInformation.Key);
+                if (pollResponse != GroupPollResponse.Completed)
+                {
+                    GroupStatusMap[groupInformation.Key] = pollResponse;
+                    return true;
+                }
+            }
+
+            GroupStatusMap[groupInformation.Key] = pollResponse;
             userInputObj.LoggerObj.LogInformation($"Updated group {groupInformation.Key} with machines");
             
             return true;
@@ -845,6 +868,77 @@ namespace Azure.Migrate.Export.HttpRequestHelper
             }
 
             return AssessmentPollResponse.NotCompleted;
+        }
+        #endregion
+
+        #region Utilities
+        private List<List<string>> UpdateTo5kMachinesPerRequest(UserInput userInputObj, KeyValuePair<string, List<string>> groupInformation)
+        {
+            List<List<string>> updatedGroupMachines = new List<List<string>>();
+
+            if (groupInformation.Value.Count > 5000)
+            {
+                int startIndex = 0;
+                for (int i = 0; i < Math.Ceiling((double)((double)groupInformation.Value.Count / 5000)); i++)
+                {
+                    int endIndex = Math.Min(startIndex + 4999, groupInformation.Value.Count - 1);
+                    List<string> newList = groupInformation.Value.GetRange(startIndex, endIndex - startIndex + 1);
+                    startIndex = endIndex + 1;
+                    updatedGroupMachines.Add(newList);
+                }
+            }
+            else
+            {
+                updatedGroupMachines.Add(groupInformation.Value);
+            }
+            return updatedGroupMachines;
+        }
+
+        private GroupPollResponse WaitForGroupUpdateCompletion(UserInput userInputObj, string groupName, int numberOfPollTries = 0)
+        {
+            GroupPollResponse pollResult = GroupPollResponse.Invalid;
+            while (numberOfPollTries < 50) // limit to prevent infinite loop on non-retryable failures
+            {
+                try
+                {
+                    pollResult = new HttpClientHelper().PollGroup(userInputObj, groupName).Result;
+
+                    if (pollResult == GroupPollResponse.Completed)
+                    {
+                        return pollResult;
+                    }
+                    else if (pollResult == GroupPollResponse.Error)
+                    {
+                        userInputObj.LoggerObj.LogWarning($"Polling for group {groupName} resulted in a non-retryable error");
+                    }                    
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (AggregateException aePollGroup)
+                {
+                    string errorMessage = "";
+                    foreach (var e in aePollGroup.Flatten().InnerExceptions)
+                    {
+                        if (e is OperationCanceledException)
+                            throw e;
+                        else
+                        {
+                            errorMessage = errorMessage + e.Message + " ";
+                        }
+                    }
+                    userInputObj.LoggerObj.LogWarning($"Group {groupName} polling failed: {errorMessage}");
+                }
+                catch (Exception ex)
+                {
+                    userInputObj.LoggerObj.LogWarning($"Group {groupName} polling failed: {ex.Message}");
+                }
+                
+                numberOfPollTries += 1;
+                Thread.Sleep(10000);
+            }
+            return pollResult;
         }
         #endregion
     }
