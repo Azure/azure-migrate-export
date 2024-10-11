@@ -4,7 +4,7 @@
 This repository contains the Azure Migrate Export utility package that uses Azure Migrate's discovery and assessment information from and already deployed Azure Migrate project to generate a cohesive presentation for executives.
 
 ## Release
-The following table consists of the link to latest release of the Azure Migrate Export utility
+The following table consists of the link to latest release of the Azure Migrate Export utility.
 
 Description          | Release Link | Download Link
 ---------------------|--------------|--------------
