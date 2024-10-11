@@ -2304,7 +2304,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                  0.05 * (Business_Case_Data.AzureIaaSCost.ComputeLicenseCost + Business_Case_Data.AzureIaaSCost.StorageCost);
             Business_Case_Data.AzureIaaSCost.SecurityCost = AzureIaaSCalculator.GetTotalSecurityCost() * 12.0;
             Business_Case_Data.AzureIaaSCost.ITStaffCost = BusinessCaseData.AzureIaaSCostDetails.ITStaffCost;
-            Business_Case_Data.AzureIaaSCost.FacilitiesCost = 0;
+            Business_Case_Data.AzureIaaSCost.FacilitiesCost = BusinessCaseData.AzureIaaSCostDetails.FacilitiesCost ?? 0;
 
             if (!AzurePaaSCalculator.IsCalculationComplete())
             {
@@ -2319,7 +2319,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 0.05 * (Business_Case_Data.AzurePaaSCost.ComputeLicenseCost + Business_Case_Data.AzurePaaSCost.StorageCost);
             Business_Case_Data.AzurePaaSCost.SecurityCost = AzurePaaSCalculator.GetTotalSecurityCost() * 12.0;
             Business_Case_Data.AzurePaaSCost.ITStaffCost = BusinessCaseData.AzurePaaSCostDetails.ITStaffCost;
-            Business_Case_Data.AzurePaaSCost.FacilitiesCost = 0;
+            Business_Case_Data.AzurePaaSCost.FacilitiesCost = BusinessCaseData.AzurePaaSCostDetails.FacilitiesCost ?? 0;
 
             if (UserInputObj.BusinessProposal == BusinessProposal.AVS.ToString() && !AzureAvsCalculator.IsCalculationComplete())
             {
@@ -2335,7 +2335,7 @@ namespace Azure.Migrate.Export.Assessment.Processor
                 0.05 * (Business_Case_Data.AzureAvsCost.ComputeLicenseCost - BusinessCaseData.AzureAvsCostDetails.ComputeLicenseCost);
             Business_Case_Data.AzureAvsCost.ITStaffCost = BusinessCaseData.AzureAvsCostDetails.ITStaffCost;
             Business_Case_Data.AzureAvsCost.SecurityCost = BusinessCaseData.AzureAvsCostDetails.SecurityCost;
-            Business_Case_Data.AzureAvsCost.FacilitiesCost = 0;
+            Business_Case_Data.AzureAvsCost.FacilitiesCost = BusinessCaseData.AzureAvsCostDetails.FacilitiesCost ?? 0;
 
             if (UserInputObj.BusinessProposal == BusinessProposal.AVS.ToString() && UserInputObj.WorkflowObj.IsExpressWorkflow)
             {

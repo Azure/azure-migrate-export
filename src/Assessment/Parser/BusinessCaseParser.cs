@@ -86,7 +86,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             BusinessCaseData.OnPremIaaSCostDetails.NetworkCost = bizCaseCompareSummaryJsonObj.OnPremisesIaaSCostDetails?.NetworkCost ?? 0.00;
             BusinessCaseData.OnPremIaaSCostDetails.SecurityCost = bizCaseCompareSummaryJsonObj.OnPremisesIaaSCostDetails?.SecurityCost ?? 0.00;
             BusinessCaseData.OnPremIaaSCostDetails.ITStaffCost = bizCaseCompareSummaryJsonObj.OnPremisesIaaSCostDetails?.ITLaborCost ?? 0.00;
-            BusinessCaseData.OnPremIaaSCostDetails.FacilitiesCost = 0.00;
+            BusinessCaseData.OnPremIaaSCostDetails.FacilitiesCost = bizCaseCompareSummaryJsonObj.OnPremisesIaaSCostDetails?.FacilitiesCost ?? 0.00;
 
             BusinessCaseData.OnPremPaaSCostDetails.ComputeLicenseCost = bizCaseCompareSummaryJsonObj.OnPremisesPaaSCostDetails?.ComputeCost ?? 0.00;
             BusinessCaseData.OnPremPaaSCostDetails.EsuLicenseCost = bizCaseCompareSummaryJsonObj.OnPremisesPaaSCostDetails?.ESUSavings ?? 0.00;
@@ -94,7 +94,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             BusinessCaseData.OnPremPaaSCostDetails.NetworkCost = bizCaseCompareSummaryJsonObj.OnPremisesPaaSCostDetails?.NetworkCost ?? 0.00;
             BusinessCaseData.OnPremPaaSCostDetails.SecurityCost = bizCaseCompareSummaryJsonObj.OnPremisesPaaSCostDetails?.SecurityCost ?? 0.00;
             BusinessCaseData.OnPremPaaSCostDetails.ITStaffCost = bizCaseCompareSummaryJsonObj.OnPremisesPaaSCostDetails?.ITLaborCost ?? 0.00;
-            BusinessCaseData.OnPremPaaSCostDetails.FacilitiesCost = 0.00;
+            BusinessCaseData.OnPremPaaSCostDetails.FacilitiesCost = bizCaseCompareSummaryJsonObj.OnPremisesPaaSCostDetails?.FacilitiesCost ?? 0.00;
 
             BusinessCaseData.OnPremAvsCostDetails.ComputeLicenseCost = bizCaseCompareSummaryJsonObj.OnPremisesAvsCostDetails?.ComputeCost ?? 0.00;
             BusinessCaseData.OnPremAvsCostDetails.EsuLicenseCost = bizCaseCompareSummaryJsonObj.OnPremisesAvsCostDetails?.ESUSavings ?? 0.00;
@@ -102,7 +102,7 @@ namespace Azure.Migrate.Export.Assessment.Parser
             BusinessCaseData.OnPremAvsCostDetails.NetworkCost = bizCaseCompareSummaryJsonObj.OnPremisesAvsCostDetails?.NetworkCost ?? 0.00;
             BusinessCaseData.OnPremAvsCostDetails.SecurityCost = bizCaseCompareSummaryJsonObj.OnPremisesAvsCostDetails?.SecurityCost ?? 0.00;
             BusinessCaseData.OnPremAvsCostDetails.ITStaffCost = bizCaseCompareSummaryJsonObj.OnPremisesAvsCostDetails?.ITLaborCost ?? 0.00;
-            BusinessCaseData.OnPremAvsCostDetails.FacilitiesCost = 0.00;
+            BusinessCaseData.OnPremAvsCostDetails.FacilitiesCost = bizCaseCompareSummaryJsonObj.OnPremisesAvsCostDetails?.FacilitiesCost ?? 0.00;
 
             BusinessCaseData.AzureIaaSCostDetails.ITStaffCost = bizCaseCompareSummaryJsonObj.AzureIaaSCostDetails?.ITLaborCost ?? 0.00;
             BusinessCaseData.AzurePaaSCostDetails.ITStaffCost = bizCaseCompareSummaryJsonObj.AzurePaaSCostDetails?.ITLaborCost ?? 0.00;
