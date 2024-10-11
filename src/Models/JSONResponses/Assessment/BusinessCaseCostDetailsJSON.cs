@@ -24,5 +24,8 @@ namespace Azure.Migrate.Export.Models
 
         [JsonProperty("securityCost")]
         public double? SecurityCost { get; set; }
+
+        [JsonProperty("facilitiesCost")]
+        public double? FacilitiesCost { get; set; }
     }
 }
