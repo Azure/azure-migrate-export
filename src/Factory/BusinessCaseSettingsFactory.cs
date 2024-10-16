@@ -36,7 +36,11 @@ namespace Azure.Migrate.Export.Factory
 
             obj.Properties.Settings.AzureSettings.SavingsOption = "SavingsPlan3Year";
             if (userInputObj.BusinessProposal == BusinessProposal.AVS.ToString())
+            {
                 obj.Properties.Settings.AzureSettings.SavingsOption = "RI3Year";
+                obj.Properties.Settings.AzureSettings.PerYearMigrationCompletionPercentage =
+                    AvsAssessmentConstants.perYearMigrationCompletionPercentage;
+            }
 
             return new BusinessCaseInformation(obj.Name, JsonConvert.SerializeObject(obj));
         } 

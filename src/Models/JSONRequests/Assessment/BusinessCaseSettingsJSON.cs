@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Azure.Migrate.Export.Models
 {
@@ -42,6 +43,16 @@ namespace Azure.Migrate.Export.Models
         public string BusinessCaseType { get; set; }
 
         [JsonProperty("savingsOption")]
-        public string SavingsOption { get; set; } 
+        public string SavingsOption { get; set; }
+
+        [JsonProperty("perYearMigrationCompletionPercentage")]
+        public Dictionary<string, double> PerYearMigrationCompletionPercentage { get; set; } =
+            new Dictionary<string, double>()
+            {
+                { "Year0", 0 },
+                { "Year1", 20 },
+                { "Year2", 50 },
+                { "Year3", 100 },
+            };
     }
 }
