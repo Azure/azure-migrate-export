@@ -136,5 +136,13 @@ namespace Azure.Migrate.Export.Common
         public static string VCpuOversubscription = "4:1";
         public static readonly string MemoryOvercommit = "100%";
         public static double DedupeCompression = 1.5;
+
+        public static Dictionary<string, double> perYearMigrationCompletionPercentage = new Dictionary<string, double>()
+        {
+            { "Year0", 0 },
+            { "Year1", 100 },
+            { "Year2", 100 },
+            { "Year3", 100 },
+        };
     }
 }
