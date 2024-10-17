@@ -245,8 +245,8 @@ namespace Azure.Migrate.Export.HttpRequestHelper
                 pollResponse = WaitForGroupUpdateCompletion(userInputObj, groupInformation.Key);
                 if (pollResponse != GroupPollResponse.Completed)
                 {
-                    GroupStatusMap[groupInformation.Key] = pollResponse;
-                    return true;
+                    userInputObj.LoggerObj.LogError($"Failed to update the group {groupInformation.Key} with machine batch {index - 1}, process will be terminated.");
+                    return false;   
                 }
             }
 
@@ -899,6 +899,7 @@ namespace Azure.Migrate.Export.HttpRequestHelper
             GroupPollResponse pollResult = GroupPollResponse.Invalid;
             while (numberOfPollTries < 50) // limit to prevent infinite loop on non-retryable failures
             {
+                bool isNonRetriableResponse = false;
                 try
                 {
                     pollResult = new HttpClientHelper().PollGroup(userInputObj, groupName).Result;
@@ -910,6 +911,7 @@ namespace Azure.Migrate.Export.HttpRequestHelper
                     else if (pollResult == GroupPollResponse.Error)
                     {
                         userInputObj.LoggerObj.LogWarning($"Polling for group {groupName} resulted in a non-retryable error");
+                        isNonRetriableResponse = true;
                     }                    
                 }
                 catch (OperationCanceledException)
@@ -929,13 +931,17 @@ namespace Azure.Migrate.Export.HttpRequestHelper
                         }
                     }
                     userInputObj.LoggerObj.LogWarning($"Group {groupName} polling failed: {errorMessage}");
+                    isNonRetriableResponse = !HttpUtilities.IsRetryableException(aePollGroup);
                 }
                 catch (Exception ex)
                 {
                     userInputObj.LoggerObj.LogWarning($"Group {groupName} polling failed: {ex.Message}");
+                    isNonRetriableResponse = !HttpUtilities.IsRetryableException(ex);
                 }
                 
-                numberOfPollTries += 1;
+                if (isNonRetriableResponse)
+                    numberOfPollTries += 1;
+
                 Thread.Sleep(10000);
             }
             return pollResult;
