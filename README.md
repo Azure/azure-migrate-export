@@ -8,12 +8,12 @@ The following table consists of the link to latest release of the Azure Migrate 
 
 Description          | Release Link | Download Link
 ---------------------|--------------|--------------
-Azure Migrate Export |  [AzMigExp][LatestReleaseLink] | [Download][DownloadLink]
+Azure Migrate Explore |  [AzMigExp][LatestReleaseLink] | [Download][DownloadLink]
 
 ## Download
 
 ### Express Download
-The users can download the zip file for the latest version of the Azure Migrate Export utility from [Download][DownloadLink]
+The users can download the zip file for the latest version of the Azure Migrate Explore utility from [Download][DownloadLink]
 
 ### Customize Download
 1. To download older versions or entire releases, please click this link [AzMigExport Releases][AllReleasesLink].
@@ -21,7 +21,7 @@ The users can download the zip file for the latest version of the Azure Migrate 
 3. Click on the AzMigExport.zip Release asset to inititate the download.
 
 ## Usage
-Refer to the detailed "Azure Migrate Export" knowledge material from the links below:
+Refer to the detailed "Azure Migrate Explore" knowledge material from the links below:
 1. AME detailed documentation - https://aka.ms/azuremigrateexportdocumentation
 2. AME sample presentation: https://aka.ms/amepresentation
 3. AME sample reports: https://aka.ms/amesamplereports
@@ -33,7 +33,7 @@ Refer to the detailed "Azure Migrate Export" knowledge material from the links b
 ## Reporting Issues and Feedback
 
 ### Issues
-If you find any bugs when using Azure Migrate Export utility, file an issue in our [GitHub repository][GithubRepositoryIssues]. Please fill out the issue template with the appropriate information.
+If you find any bugs when using Azure Migrate Explore utility, file an issue in our [GitHub repository][GithubRepositoryIssues]. Please fill out the issue template with the appropriate information.
 
 Alternatively, see [Azure Community Suppport][AzureCommunitySupportLink], if you have any issues with Azure Migrate Export or Azure Migrate Services.
 
