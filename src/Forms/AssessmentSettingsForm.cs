@@ -408,7 +408,9 @@ namespace Azure.Migrate.Export.Forms
         private void InitializeOptimizationPreference(BusinessProposal businessProposal)
         {
             List<KeyValuePair<string, string>> optimizationPreferences = new List<KeyValuePair<string, string>>();
-            optimizationPreferences.Add(new KeyValuePair<string, string>("ModernizeToPaaS", "Modernize to PaaS (PaaS preferred)"));
+            if(!mainFormObj.IsImportAndComprehensiveProposalSelected()){
+                optimizationPreferences.Add(new KeyValuePair<string, string>("ModernizeToPaaS", "Modernize to PaaS (PaaS preferred)"));
+            }
             optimizationPreferences.Add(new KeyValuePair<string, string>("MigrateToAllIaaS", "Migrate to all IaaS"));
 
             OptimizationPreferenceComboBox.ValueMember = "Key";

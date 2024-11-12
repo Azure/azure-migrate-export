@@ -890,6 +890,11 @@ namespace Azure.Migrate.Export.Forms
             return (ConfigurationFormObj.GetBusinessProposal() == BusinessProposal.AVS.ToString());
         }
 
+        public bool IsImportAndComprehensiveProposalSelected()
+        {
+            return ((ConfigurationFormObj.GetBusinessProposal() == BusinessProposal.Comprehensive.ToString()) && (ConfigurationFormObj.IsImportRadioButtonChecked()));
+        }
+
         public void DisableOptimizationPreferenceComboBox()
         {
             if (AssessmentSettingsFormObj == null)
