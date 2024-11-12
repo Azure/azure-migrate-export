@@ -189,6 +189,9 @@ namespace Azure.Migrate.Export.Forms
                 nextButtonTab.BackColor = Color.FromArgb(120, 190, 255);
                 CurrentButtonTab = nextButtonTab;
             }
+            if(nextButtonTab == AssessmentSettingsTabButton){
+                AssessmentSettingsFormObj.Initialize();
+            }
 
             OpenChildForm(formObjToActivate);
         }
