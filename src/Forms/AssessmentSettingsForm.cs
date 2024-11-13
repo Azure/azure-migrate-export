@@ -427,7 +427,11 @@ namespace Azure.Migrate.Export.Forms
             else
             {
                 OptimizationPreferenceComboBox.DataSource = optimizationPreferences;
-                OptimizationPreferenceComboBox.SelectedItem = new KeyValuePair<string, string>("ModernizeToPaaS", "Modernize to PaaS (PaaS preferred)");
+                if(!mainFormObj.IsImportAndComprehensiveProposalSelected()){
+                    OptimizationPreferenceComboBox.SelectedItem = new KeyValuePair<string, string>("ModernizeToPaaS", "Modernize to PaaS (PaaS preferred)");
+                }else{
+                    OptimizationPreferenceComboBox.SelectedItem = new KeyValuePair<string, string>("MigrateToAllIaaS", "Migrate to all IaaS");
+                }
             }            
 
             AssessSqlServicesSeparatelyGroupBox.Visible = false;
