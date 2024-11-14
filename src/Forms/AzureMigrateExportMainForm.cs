@@ -189,7 +189,8 @@ namespace Azure.Migrate.Export.Forms
                 nextButtonTab.BackColor = Color.FromArgb(120, 190, 255);
                 CurrentButtonTab = nextButtonTab;
             }
-            if(nextButtonTab == AssessmentSettingsTabButton){
+            if(nextButtonTab == AssessmentSettingsTabButton)
+            {
                 AssessmentSettingsFormObj.Initialize();
             }
 
@@ -895,7 +896,8 @@ namespace Azure.Migrate.Export.Forms
 
         public bool IsImportAndComprehensiveProposalSelected()
         {
-            return ((ConfigurationFormObj.GetBusinessProposal() == BusinessProposal.Comprehensive.ToString()) && (ConfigurationFormObj.IsImportRadioButtonChecked()));
+            return ((ConfigurationFormObj.GetBusinessProposal() == BusinessProposal.Comprehensive.ToString()) &&
+             (ConfigurationFormObj.IsImportRadioButtonChecked()));
         }
 
         public void DisableOptimizationPreferenceComboBox()

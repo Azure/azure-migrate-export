@@ -408,7 +408,8 @@ namespace Azure.Migrate.Export.Forms
         private void InitializeOptimizationPreference(BusinessProposal businessProposal)
         {
             List<KeyValuePair<string, string>> optimizationPreferences = new List<KeyValuePair<string, string>>();
-            if(!mainFormObj.IsImportAndComprehensiveProposalSelected()){
+            if(!mainFormObj.IsImportAndComprehensiveProposalSelected())
+            {
                 optimizationPreferences.Add(new KeyValuePair<string, string>("ModernizeToPaaS", "Modernize to PaaS (PaaS preferred)"));
             }
             optimizationPreferences.Add(new KeyValuePair<string, string>("MigrateToAllIaaS", "Migrate to all IaaS"));
@@ -427,9 +428,12 @@ namespace Azure.Migrate.Export.Forms
             else
             {
                 OptimizationPreferenceComboBox.DataSource = optimizationPreferences;
-                if(!mainFormObj.IsImportAndComprehensiveProposalSelected()){
+                if(!mainFormObj.IsImportAndComprehensiveProposalSelected())
+                {
                     OptimizationPreferenceComboBox.SelectedItem = new KeyValuePair<string, string>("ModernizeToPaaS", "Modernize to PaaS (PaaS preferred)");
-                }else{
+                }
+                else
+                {
                     OptimizationPreferenceComboBox.SelectedItem = new KeyValuePair<string, string>("MigrateToAllIaaS", "Migrate to all IaaS");
                 }
             }            
