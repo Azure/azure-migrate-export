@@ -44,6 +44,10 @@ namespace Azure.Migrate.Export.Forms
                 if (selectedModule != null && selectedModule.Equals("Assessment"))
                 {
                     EnableBusinessProposal();
+                    if (ImportRadioButton.Checked)
+                    {
+                        CheckOnlyQuickAvsProposal();
+                    }
                 }
                 else
                 {
@@ -62,6 +66,10 @@ namespace Azure.Migrate.Export.Forms
                 ModuleComboBox.Visible = false;
                 ModuleComboBox.SelectedItem = null;
                 EnableBusinessProposal();
+                if (ImportRadioButton.Checked)
+                {
+                    CheckOnlyQuickAvsProposal();
+                }
             }            
 
             mainFormObj.MakeConfigurationTabButtonEnableDecisions();
@@ -123,7 +131,7 @@ namespace Azure.Migrate.Export.Forms
                 if (ExpressWorkflowRadioButton.Checked ||
                    (selectedModule != null && selectedModule.Equals("Assessment")))
                 {
-                    EnableBusinessProposal();
+                    CheckOnlyQuickAvsProposal();
                 }
                 else
                 {
@@ -195,6 +203,10 @@ namespace Azure.Migrate.Export.Forms
                 else
                 {
                     EnableBusinessProposal();
+                    if (ImportRadioButton.Checked)
+                    {
+                        CheckOnlyQuickAvsProposal();
+                    }
                 }                   
             }
             else if (selectedModule.Equals("Discovery"))
@@ -404,11 +416,6 @@ namespace Azure.Migrate.Export.Forms
         public bool IsExpressWorkflowSelected()
         {
             return ExpressWorkflowRadioButton.Checked;
-        }
-
-        public bool IsImportRadioButtonChecked()
-        {
-            return ImportRadioButton.Checked;
         }
 
         public string GetBusinessProposal()
