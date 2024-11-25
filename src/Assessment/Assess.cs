@@ -168,8 +168,7 @@ namespace Azure.Migrate.Export.Assessment
                     if (!AssessmentIdToDiscoveryIdLookup.ContainsKey(assessmentSiteMachine.AssessmentId))
                         AssessmentIdToDiscoveryIdLookup.Add(assessmentSiteMachine.AssessmentId, discoverySiteMachine.MachineId);
 
-                    if (UserInputObj.BusinessProposal == BusinessProposal.Comprehensive.ToString() &&
-                        !UserInputObj.AzureMigrateSourceAppliances.Contains("import"))
+                    if (UserInputObj.BusinessProposal == BusinessProposal.Comprehensive.ToString())
                     {
                         if (!AzureVM.ContainsKey(discoverySiteMachine.EnvironmentType))
                             AzureVM.Add(discoverySiteMachine.EnvironmentType, new List<AssessmentSiteMachine>());
@@ -221,9 +220,7 @@ namespace Azure.Migrate.Export.Assessment
                         AzureVMWareSolution.Add(assessmentSiteMachine);
                     }
 
-                    // TO DO: Handle IaaS based assessments for import based discovery in future
-                    if (!UserInputObj.AzureMigrateSourceAppliances.Contains("import") &&
-                        UserInputObj.BusinessProposal == BusinessProposal.Comprehensive.ToString() &&
+                    if (UserInputObj.BusinessProposal == BusinessProposal.Comprehensive.ToString() &&
                         addMachineToGeneralVM)
                     {
                         if (!GeneralVM.Contains(discoverySiteMachine.MachineId))
