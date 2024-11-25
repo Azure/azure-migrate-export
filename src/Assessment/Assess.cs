@@ -220,7 +220,6 @@ namespace Azure.Migrate.Export.Assessment
                         AzureVMWareSolution.Add(assessmentSiteMachine);
                     }
 
-                    // TO DO: Handle IaaS based assessments for import based discovery in future
                     if (UserInputObj.BusinessProposal == BusinessProposal.Comprehensive.ToString() &&
                         addMachineToGeneralVM)
                     {
