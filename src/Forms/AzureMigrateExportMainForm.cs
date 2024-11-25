@@ -189,6 +189,10 @@ namespace Azure.Migrate.Export.Forms
                 nextButtonTab.BackColor = Color.FromArgb(120, 190, 255);
                 CurrentButtonTab = nextButtonTab;
             }
+            if (nextButtonTab == AssessmentSettingsTabButton)
+            {
+                AssessmentSettingsFormObj.Initialize();
+            }
 
             OpenChildForm(formObjToActivate);
         }
@@ -888,6 +892,12 @@ namespace Azure.Migrate.Export.Forms
         public bool IsAvsBusinessProposalSelected()
         {
             return (ConfigurationFormObj.GetBusinessProposal() == BusinessProposal.AVS.ToString());
+        }
+
+        public bool IsImportAndComprehensiveProposalSelected()
+        {
+            return ((ConfigurationFormObj.GetBusinessProposal() == BusinessProposal.Comprehensive.ToString()) &&
+             (ConfigurationFormObj.IsImportRadioButtonChecked()));
         }
 
         public void DisableOptimizationPreferenceComboBox()
