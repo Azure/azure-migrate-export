@@ -32,8 +32,7 @@
             this.AzureMigrateProjectDetailsGroupBox = new System.Windows.Forms.GroupBox();
             this.TenantIdInfoLabel = new System.Windows.Forms.Label();
             this.AzureMigrateProjectNameInfoLabel = new System.Windows.Forms.Label();
-            this.AssessmentProjectNameInfoLabel = new System.Windows.Forms.Label();
-            this.DiscoverySiteNameInfoLabel = new System.Windows.Forms.Label();
+            this.SiteDiscoveryStatusInfoLabel = new System.Windows.Forms.Label();
             this.ResourceGroupNameInfoLabel = new System.Windows.Forms.Label();
             this.SubscriptionInfoLabel = new System.Windows.Forms.Label();
             this.AzureMigrateProjectNameComboBox = new System.Windows.Forms.ComboBox();
@@ -55,8 +54,7 @@
             // 
             this.AzureMigrateProjectDetailsGroupBox.Controls.Add(this.TenantIdInfoLabel);
             this.AzureMigrateProjectDetailsGroupBox.Controls.Add(this.AzureMigrateProjectNameInfoLabel);
-            this.AzureMigrateProjectDetailsGroupBox.Controls.Add(this.AssessmentProjectNameInfoLabel);
-            this.AzureMigrateProjectDetailsGroupBox.Controls.Add(this.DiscoverySiteNameInfoLabel);
+            this.AzureMigrateProjectDetailsGroupBox.Controls.Add(this.SiteDiscoveryStatusInfoLabel);
             this.AzureMigrateProjectDetailsGroupBox.Controls.Add(this.ResourceGroupNameInfoLabel);
             this.AzureMigrateProjectDetailsGroupBox.Controls.Add(this.SubscriptionInfoLabel);
             this.AzureMigrateProjectDetailsGroupBox.Controls.Add(this.AzureMigrateProjectNameComboBox);
@@ -83,15 +81,10 @@
             resources.ApplyResources(this.AzureMigrateProjectNameInfoLabel, "AzureMigrateProjectNameInfoLabel");
             this.AzureMigrateProjectNameInfoLabel.Name = "AzureMigrateProjectNameInfoLabel";
             // 
-            // AssessmentProjectNameInfoLabel
+            // SiteDiscoveryStatusInfoLabel
             // 
-            resources.ApplyResources(this.AssessmentProjectNameInfoLabel, "AssessmentProjectNameInfoLabel");
-            this.AssessmentProjectNameInfoLabel.Name = "AssessmentProjectNameInfoLabel";
-            // 
-            // DiscoverySiteNameInfoLabel
-            // 
-            resources.ApplyResources(this.DiscoverySiteNameInfoLabel, "DiscoverySiteNameInfoLabel");
-            this.DiscoverySiteNameInfoLabel.Name = "DiscoverySiteNameInfoLabel";
+            resources.ApplyResources(this.SiteDiscoveryStatusInfoLabel, "SiteDiscoveryStatusInfoLabel");
+            this.SiteDiscoveryStatusInfoLabel.Name = "SiteDiscoveryStatusInfoLabel";
             // 
             // ResourceGroupNameInfoLabel
             // 
@@ -221,8 +214,7 @@
         private System.Windows.Forms.RichTextBox ProjectDetailsDescriptionRichTextBox;
         private System.Windows.Forms.Label SubscriptionInfoLabel;
         private System.Windows.Forms.Label ResourceGroupNameInfoLabel;
-        private System.Windows.Forms.Label DiscoverySiteNameInfoLabel;
-        private System.Windows.Forms.Label AssessmentProjectNameInfoLabel;
+        private System.Windows.Forms.Label SiteDiscoveryStatusInfoLabel;
         private System.Windows.Forms.Label AzureMigrateProjectNameInfoLabel;
         private System.Windows.Forms.Label TenantIdInfoLabel;
     }

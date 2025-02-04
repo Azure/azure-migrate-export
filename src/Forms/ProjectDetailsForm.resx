@@ -173,58 +173,31 @@
   <data name="&gt;&gt;AzureMigrateProjectNameInfoLabel.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="AssessmentProjectNameInfoLabel.AutoSize" type="System.Boolean, mscorlib">
+  <data name="SiteDiscoveryStatusInfoLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="AssessmentProjectNameInfoLabel.Font" type="System.Drawing.Font, System.Drawing">
+  <data name="SiteDiscoveryStatusInfoLabel.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 8.25pt</value>
   </data>
-  <data name="AssessmentProjectNameInfoLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>648, 311</value>
+  <data name="SiteDiscoveryStatusInfoLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>620, 312</value>
   </data>
-  <data name="AssessmentProjectNameInfoLabel.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="SiteDiscoveryStatusInfoLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>0, 13</value>
   </data>
-  <data name="AssessmentProjectNameInfoLabel.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
-  </data>
-  <data name="&gt;&gt;AssessmentProjectNameInfoLabel.Name" xml:space="preserve">
-    <value>AssessmentProjectNameInfoLabel</value>
-  </data>
-  <data name="&gt;&gt;AssessmentProjectNameInfoLabel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;AssessmentProjectNameInfoLabel.Parent" xml:space="preserve">
-    <value>AzureMigrateProjectDetailsGroupBox</value>
-  </data>
-  <data name="&gt;&gt;AssessmentProjectNameInfoLabel.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="DiscoverySiteNameInfoLabel.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="DiscoverySiteNameInfoLabel.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt</value>
-  </data>
-  <data name="DiscoverySiteNameInfoLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>512, 312</value>
-  </data>
-  <data name="DiscoverySiteNameInfoLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 13</value>
-  </data>
-  <data name="DiscoverySiteNameInfoLabel.TabIndex" type="System.Int32, mscorlib">
+  <data name="SiteDiscoveryStatusInfoLabel.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
   </data>
-  <data name="&gt;&gt;DiscoverySiteNameInfoLabel.Name" xml:space="preserve">
-    <value>DiscoverySiteNameInfoLabel</value>
+  <data name="&gt;&gt;SiteDiscoveryStatusInfoLabel.Name" xml:space="preserve">
+    <value>SiteDiscoveryStatusInfoLabel</value>
   </data>
-  <data name="&gt;&gt;DiscoverySiteNameInfoLabel.Type" xml:space="preserve">
+  <data name="&gt;&gt;SiteDiscoveryStatusInfoLabel.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;DiscoverySiteNameInfoLabel.Parent" xml:space="preserve">
+  <data name="&gt;&gt;SiteDiscoveryStatusInfoLabel.Parent" xml:space="preserve">
     <value>AzureMigrateProjectDetailsGroupBox</value>
   </data>
-  <data name="&gt;&gt;DiscoverySiteNameInfoLabel.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;SiteDiscoveryStatusInfoLabel.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
   <data name="ResourceGroupNameInfoLabel.AutoSize" type="System.Boolean, mscorlib">
