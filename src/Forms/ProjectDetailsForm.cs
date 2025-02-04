@@ -374,7 +374,7 @@ namespace Azure.Migrate.Export.Forms
                     var projectIdContents = projectId.Split('/').ToList();
                     if (projectIdContents.Count > 0)
                     {
-                        AssessmentProjectName = projectIdContents[projectIdContents.Count - 1];                        
+                        AssessmentProjectName = projectIdContents[projectIdContents.Count - 1];
                         SiteDiscoveryStatusInfoLabel.Text = "Inventory data fetched successfully";
                     }
                     else

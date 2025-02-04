@@ -26,7 +26,7 @@ namespace Azure.Migrate.Export.Forms
         public AzureMigrateExportMainForm()
         {
             InitializeComponent();
-            ProjectDetailsFormObj = new ProjectDetailsForm(this);  
+            ProjectDetailsFormObj = new ProjectDetailsForm(this);
 
             ConfigurationFormObj = new ConfigurationForm(this);
             ConfigurationFormObj.SetDefaultConfigurationValues();
