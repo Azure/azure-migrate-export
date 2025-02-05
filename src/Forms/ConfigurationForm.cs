@@ -39,11 +39,11 @@ namespace Azure.Migrate.Export.Forms
                 ApplianceRadioButton.Enabled = true;
                 ApplianceRadioButton.Checked = false;
                 VMwareCheckBox.Enabled = true;
-                VMwareCheckBox.Checked = true;
+                VMwareCheckBox.Checked = false;
                 HyperVCheckBox.Enabled = true;
-                HyperVCheckBox.Checked = true;
+                HyperVCheckBox.Checked = false;
                 PhysicalCheckBox.Enabled = true;
-                PhysicalCheckBox.Checked = true;
+                PhysicalCheckBox.Checked = false;
             }
             else
             {
