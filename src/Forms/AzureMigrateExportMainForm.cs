@@ -20,6 +20,8 @@ namespace Azure.Migrate.Export.Forms
 
         private Button CurrentButtonTab = null;
         private Form CurrentlyActiveForm = null;
+        private bool HasImportInventory = false;
+        private bool HasApplianceInventory = false;
 
         public AzureMigrateExportMainForm()
         {
@@ -60,7 +62,10 @@ namespace Azure.Migrate.Export.Forms
         private void NextButton_Click(object sender, EventArgs e)
         {
             if (CurrentButtonTab == ProjectDetailsTabButton)
+            {
+                ConfigurationFormObj.SetDefaultConfigurationValues();
                 HandleTabChange(ConfigurationFormObj, ConfigurationTabButton);
+            }
             else if (CurrentButtonTab == ConfigurationTabButton)
                 HandleTabChange(AssessmentSettingsFormObj, AssessmentSettingsTabButton);
         }
@@ -934,6 +939,25 @@ namespace Azure.Migrate.Export.Forms
             AssessmentSettingsFormObj.InitializeCurrencyComboBox();
             AssessmentSettingsFormObj.InitializeTargetRegionComboBox();
             AssessmentSettingsFormObj.EnableAssessmentDurationComboBox();
+        }
+
+        public void SetHasImportInventory(bool hasImportInventory)
+        {
+            HasImportInventory = hasImportInventory;
+        }
+
+        public void SetHasApplianceInventory(bool hasApplianceInventory)
+        {
+            HasApplianceInventory = hasApplianceInventory;
+        }
+         public bool GetHasImportInventory()
+        {
+            return HasImportInventory;
+        }
+
+        public bool GetHasApplianceInventory() 
+        {
+            return HasApplianceInventory;
         }
         #endregion
     }

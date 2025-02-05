@@ -24,10 +24,38 @@ namespace Azure.Migrate.Export.Forms
         #region Set Default Values
         public void SetDefaultConfigurationValues()
         {
-            ApplianceRadioButton.Checked = true;
-            VMwareCheckBox.Checked = true;
-            HyperVCheckBox.Checked = true;
-            PhysicalCheckBox.Checked = true;
+            if (mainFormObj.GetHasImportInventory())
+            {
+                ImportRadioButton.Enabled = true;
+                ImportRadioButton.Checked = false;
+            }
+            else
+            {
+                ImportRadioButton.Enabled = false;
+                ImportRadioButton.Checked = false;
+            }
+            if (mainFormObj.GetHasApplianceInventory())
+            {
+                ApplianceRadioButton.Enabled = true;
+                ApplianceRadioButton.Checked = true;
+                VMwareCheckBox.Enabled = true;
+                VMwareCheckBox.Checked = true;
+                HyperVCheckBox.Enabled = true;
+                HyperVCheckBox.Checked = true;
+                PhysicalCheckBox.Enabled = true;
+                PhysicalCheckBox.Checked = true;
+            }
+            else
+            {
+                ApplianceRadioButton.Enabled = false;
+                ApplianceRadioButton.Checked = false;
+                VMwareCheckBox.Enabled = false;
+                VMwareCheckBox.Checked = false;
+                HyperVCheckBox.Enabled = false;
+                HyperVCheckBox.Checked = false;
+                PhysicalCheckBox.Enabled = false;
+                PhysicalCheckBox.Checked = false;
+            }
 
             ExpressWorkflowRadioButton.Checked = true;
             ComprehensiveProposalRadioButton.Checked = true;

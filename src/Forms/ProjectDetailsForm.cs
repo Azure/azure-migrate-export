@@ -283,7 +283,7 @@ namespace Azure.Migrate.Export.Forms
                 return;
             }
 
-            DiscoverySiteNameInfoLabel.Text = "";
+            SiteDiscoveryStatusInfoLabel.Text = "Fetching inventory data";
             HttpClientHelper httpClientHelperObj = new HttpClientHelper();
 
             string url = Routes.ProtocolScheme + Routes.AzureManagementApiHostname + Routes.ForwardSlash +
@@ -304,7 +304,21 @@ namespace Azure.Migrate.Export.Forms
                     if (masterSiteIdContents.Count > 0)
                     {
                         DiscoverySiteName = masterSiteIdContents[masterSiteIdContents.Count - 1];
-                        DiscoverySiteNameInfoLabel.Text = DiscoverySiteName;
+                        var sitesUrl = Routes.ProtocolScheme + Routes.AzureManagementApiHostname + masterSiteId +
+                                       Routes.QueryStringQuestionMark + Routes.QueryParameterApiVersion + Routes.QueryStringEquals +
+                                       Routes.MasterSiteApiVersion;
+                        var responseSites = (await httpClientHelperObj.GetProjectDetailsHttpJsonResponse(sitesUrl))["properties"]["sites"];
+                        bool hasVmware = responseSites.Any(site => site.ToString().ToLower().Contains("vmwaresites"));
+                        bool hasHyperV = responseSites.Any(site => site.ToString().ToLower().Contains("hypervsites"));
+                        bool hasPhysical = responseSites.Any(site => site.ToString().ToLower().Contains("serversites"));
+                        bool hasImport = responseSites.Any(site => site.ToString().ToLower().Contains("importsites"));
+                        mainFormObj.SetHasApplianceInventory(hasVmware || hasHyperV || hasPhysical);
+                        mainFormObj.SetHasImportInventory(hasImport);
+                        if (!hasVmware && !hasHyperV && !hasPhysical && !hasImport)
+                        {
+                            MessageBox.Show("No discovery data was found. Discover your on-premises inventory to proceed ahead");
+                            mainFormObj.CloseForm();
+                        }
                     }
                     else
                         throw new Exception("masterSiteId response in json does not contain enough elements");
@@ -341,7 +355,6 @@ namespace Azure.Migrate.Export.Forms
                 return;
             }
 
-            AssessmentProjectNameInfoLabel.Text = "";
             HttpClientHelper httpClientHelperObj = new HttpClientHelper();
 
             string url = Routes.ProtocolScheme + Routes.AzureManagementApiHostname + Routes.ForwardSlash +
@@ -362,7 +375,7 @@ namespace Azure.Migrate.Export.Forms
                     if (projectIdContents.Count > 0)
                     {
                         AssessmentProjectName = projectIdContents[projectIdContents.Count - 1];
-                        AssessmentProjectNameInfoLabel.Text = AssessmentProjectName;
+                        SiteDiscoveryStatusInfoLabel.Text = "Inventory data fetched successfully";
                     }
                     else
                         throw new Exception("projectId response in json does not contain enough elements");
@@ -491,10 +504,9 @@ namespace Azure.Migrate.Export.Forms
             AzureMigrateProjectNameInfoLabel.Text = "";
 
             DiscoverySiteName = null;
-            DiscoverySiteNameInfoLabel.Text = "";
+            SiteDiscoveryStatusInfoLabel.Text = "";
 
             AssessmentProjectName = null;
-            AssessmentProjectNameInfoLabel.Text = "";
 
             mainFormObj.MakeProjectDetailsActionButtonEnableDecision();
             mainFormObj.MakeProjectDetailsTabButtonEnableDecision();
@@ -557,10 +569,9 @@ namespace Azure.Migrate.Export.Forms
             AzureMigrateProjectNameInfoLabel.Text = "";
 
             DiscoverySiteName = null;
-            DiscoverySiteNameInfoLabel.Text = "";
+            SiteDiscoveryStatusInfoLabel.Text = "";
 
             AssessmentProjectName = null;
-            AssessmentProjectNameInfoLabel.Text = "";
 
             this.ActiveControl = null;
 
@@ -577,10 +588,9 @@ namespace Azure.Migrate.Export.Forms
             AzureMigrateProjectNameInfoLabel.Text = "";
 
             DiscoverySiteName = null;
-            DiscoverySiteNameInfoLabel.Text = "";
+            SiteDiscoveryStatusInfoLabel.Text = "";
 
             AssessmentProjectName = null;
-            AssessmentProjectNameInfoLabel.Text = "";
 
             this.ActiveControl = null;
 
@@ -593,10 +603,9 @@ namespace Azure.Migrate.Export.Forms
         private async void AzureMigrateProjectNameComboBox_SelectionChangeCommitted(object sender, EventArgs e)
         {
             DiscoverySiteName = null;
-            DiscoverySiteNameInfoLabel.Text = "";
+            SiteDiscoveryStatusInfoLabel.Text = "";
 
             AssessmentProjectName = null;
-            AssessmentProjectNameInfoLabel.Text = "";
 
             this.ActiveControl = null;
 
