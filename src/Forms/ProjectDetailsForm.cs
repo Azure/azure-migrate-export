@@ -308,10 +308,10 @@ namespace Azure.Migrate.Export.Forms
                                        Routes.QueryStringQuestionMark + Routes.QueryParameterApiVersion + Routes.QueryStringEquals +
                                        Routes.MasterSiteApiVersion;
                         var responseSites = (await httpClientHelperObj.GetProjectDetailsHttpJsonResponse(sitesUrl))["properties"]["sites"];
-                        bool hasVmware = responseSites.Any(site => site.ToString().Contains("vmwaresites"));
-                        bool hasHyperV = responseSites.Any(site => site.ToString().Contains("hypervsites"));
-                        bool hasPhysical = responseSites.Any(site => site.ToString().Contains("serversites"));
-                        bool hasImport = responseSites.Any(site => site.ToString().Contains("importsites"));
+                        bool hasVmware = responseSites.Any(site => site.ToString().ToLower().Contains("vmwaresites"));
+                        bool hasHyperV = responseSites.Any(site => site.ToString().ToLower().Contains("hypervsites"));
+                        bool hasPhysical = responseSites.Any(site => site.ToString().ToLower().Contains("serversites"));
+                        bool hasImport = responseSites.Any(site => site.ToString().ToLower().Contains("importsites"));
                         mainFormObj.SetHasApplianceInventory(hasVmware || hasHyperV || hasPhysical);
                         mainFormObj.SetHasImportInventory(hasImport);
                         if (!hasVmware && !hasHyperV && !hasPhysical && !hasImport)

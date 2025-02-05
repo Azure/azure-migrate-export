@@ -37,13 +37,13 @@ namespace Azure.Migrate.Export.Forms
             if (mainFormObj.GetHasApplianceInventory())
             {
                 ApplianceRadioButton.Enabled = true;
-                ApplianceRadioButton.Checked = false;
+                ApplianceRadioButton.Checked = true;
                 VMwareCheckBox.Enabled = true;
-                VMwareCheckBox.Checked = false;
+                VMwareCheckBox.Checked = true;
                 HyperVCheckBox.Enabled = true;
-                HyperVCheckBox.Checked = false;
+                HyperVCheckBox.Checked = true;
                 PhysicalCheckBox.Enabled = true;
-                PhysicalCheckBox.Checked = false;
+                PhysicalCheckBox.Checked = true;
             }
             else
             {
