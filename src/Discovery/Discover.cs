@@ -290,7 +290,7 @@ namespace Azure.Migrate.Export.Discovery
                 UserInputObj.LoggerObj.LogWarning($"Failed data consolidation from Import sites: {exConsolidateImport.Message}");
             }
 
-                return excelCreationPercentProgress;
+            return excelCreationPercentProgress;
         }
 
         private void CalculateVCenterHostDiscoveryData(UserInput userInputObj, List<string> vmwareSiteUrls)
