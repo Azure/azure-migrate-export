@@ -20,7 +20,8 @@ namespace Azure.Migrate.Export.Common
             "Azure Migrate Project Name",
             "Discovery Site Name",
             "Workflow",
-            "Source Appliances"
+            "Source Appliances",
+            "Total Storage In Use (in GB)"
         };
 
         public static readonly List<string> DiscoveryReportColumns = new List<string>

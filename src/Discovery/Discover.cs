@@ -16,12 +16,14 @@ namespace Azure.Migrate.Export.Discovery
         private UserInput UserInputObj;
         public List<DiscoveryData> DiscoveredData;
         public vCenterHostDiscovery VCenterHostData;
+        public int totalStorageInUseGB;
 
         public Discover(UserInput userInputObj)
         {
             UserInputObj = userInputObj;
             DiscoveredData = new List<DiscoveryData>();
             VCenterHostData = new vCenterHostDiscovery();
+            totalStorageInUseGB = 0;
         }
 
         public bool BeginDiscovery()
@@ -94,7 +96,7 @@ namespace Azure.Migrate.Export.Discovery
             CreateDiscoveryPropertiesModel(discoveryProperties);
 
             ExportDiscoveryReport exporter = new ExportDiscoveryReport(DiscoveredData, VCenterHostData, discoveryProperties);
-            exporter.GenerateDiscoveryReportExcel();
+            exporter.GenerateDiscoveryReportExcel(this);
 
             UserInputObj.LoggerObj.LogInformation(excelCreationPercentProgress, "Discovery report excel created successfully"); // IsExpressWorkflow ? 20 : 100 % Complete
 
@@ -255,7 +257,9 @@ namespace Azure.Migrate.Export.Discovery
             try
             {
                 UserInputObj.LoggerObj.LogInformation("Retrieving discovery data from Import sites");
-                importMachinesDiscovery = new RetrieveDiscoveryData().BeginRetrieval(UserInputObj, importSites, DiscoverySites.Import);
+                RetrieveDiscoveryData retrievalObj = new RetrieveDiscoveryData();
+                importMachinesDiscovery = retrievalObj.BeginRetrieval(UserInputObj, importSites, DiscoverySites.Import);
+                totalStorageInUseGB += (int)Math.Round(retrievalObj.GetTotalStorageInUseGB());
                 UserInputObj.LoggerObj.LogInformation(discoveryDataPerSitePercentProgress, $"Retrieved discovery data for {importMachinesDiscovery.Count.ToString()} machines from Import sites");
             }
             catch (AggregateException ae)
@@ -286,7 +290,7 @@ namespace Azure.Migrate.Export.Discovery
                 UserInputObj.LoggerObj.LogWarning($"Failed data consolidation from Import sites: {exConsolidateImport.Message}");
             }
 
-            return excelCreationPercentProgress;
+                return excelCreationPercentProgress;
         }
 
         private void CalculateVCenterHostDiscoveryData(UserInput userInputObj, List<string> vmwareSiteUrls)

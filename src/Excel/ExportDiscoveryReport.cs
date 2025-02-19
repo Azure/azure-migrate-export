@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Azure.Migrate.Export.Common;
 using Azure.Migrate.Export.Models;
+using Azure.Migrate.Export.Discovery;
 
 namespace  Azure.Migrate.Export.Excel
 {
@@ -21,16 +22,16 @@ namespace  Azure.Migrate.Export.Excel
             DiscoveryWb = new XLWorkbook();
         }
 
-        public void GenerateDiscoveryReportExcel()
+        public void GenerateDiscoveryReportExcel(Discover discover)
         {
-            GeneratePropertyWorksheet();
+            GeneratePropertyWorksheet(discover);
             GenerateDiscoveryReportWorksheet();
             GeneratevCenterHostReportWorksheet();
 
             DiscoveryWb.SaveAs(DiscoveryReportConstants.DiscoveryReportPath);
         }
 
-        private void GeneratePropertyWorksheet()
+        private void GeneratePropertyWorksheet(Discover discover)
         {
             var propertiesWs = DiscoveryWb.Worksheets.Add(DiscoveryReportConstants.PropertiesTabName, 1);
 
@@ -48,6 +49,7 @@ namespace  Azure.Migrate.Export.Excel
             propertiesWs.Cell(2, 5).Value = DiscoveryPropertiesData.DiscoverySiteName;
             propertiesWs.Cell(2, 6).Value = DiscoveryPropertiesData.Workflow;
             propertiesWs.Cell(2, 7).Value = DiscoveryPropertiesData.SourceAppliances;
+            propertiesWs.Cell(2, 8).Value = discover.totalStorageInUseGB;
         }
 
         private void GenerateDiscoveryReportWorksheet()
