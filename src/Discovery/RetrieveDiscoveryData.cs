@@ -294,7 +294,7 @@ namespace Azure.Migrate.Export.Discovery
                 discoveryDataObj.SupportStatus = value.Properties.ProductSupportStatus?.SupportStatus ?? SupportabilityStatus.Unknown.ToString();
                 discoveryDataObj.FirstDiscoveryTime = value.Properties.CreatedTimestamp;
                 discoveryDataObj.LastUpdatedTime = value.Properties.UpdatedTimestamp;
-                discoveryDataObj.StorageInUseGB = (int)Math.Round(value.Properties.StorageInUseGB ?? 0.0);
+                discoveryDataObj.StorageInUseGB = value.Properties.StorageInUseGB ?? 0.0;
                 discoveryDataObj.MachineId = value.Id?.ToLower();
 
                 data.Add(discoveryDataObj);
