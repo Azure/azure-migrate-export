@@ -20,8 +20,7 @@ namespace Azure.Migrate.Export.Common
             "Azure Migrate Project Name",
             "Discovery Site Name",
             "Workflow",
-            "Source Appliances",
-            "Total Storage In Use (in GB)"
+            "Source Appliances"
         };
 
         public static readonly List<string> DiscoveryReportColumns = new List<string>
@@ -44,7 +43,8 @@ namespace Azure.Migrate.Export.Common
             "Support Status",
             "First Discovery Time",
             "Last Updated Time",
-            "Machine ID"
+            "Machine ID",
+            "Total Storage In Use (in GB)"
         };
 
         public static readonly List<string> VCenterHostReportColumns = new List<string>

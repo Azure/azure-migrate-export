@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 using Azure.Migrate.Export.Common;
 using Azure.Migrate.Export.HttpRequestHelper;
 using Azure.Migrate.Export.Models;
+using DocumentFormat.OpenXml.Drawing;
 
 namespace Azure.Migrate.Export.Discovery
 {
     public class RetrieveDiscoveryData
     {
-        private double totalStorageInUseGB = 0.0;
         public List<DiscoveryData> BeginRetrieval(UserInput userInputObj ,List<string> siteUrls, DiscoverySites site)
         {
             List<DiscoveryData> discoveredData = new List<DiscoveryData>();
@@ -294,11 +294,10 @@ namespace Azure.Migrate.Export.Discovery
                 discoveryDataObj.SupportStatus = value.Properties.ProductSupportStatus?.SupportStatus ?? SupportabilityStatus.Unknown.ToString();
                 discoveryDataObj.FirstDiscoveryTime = value.Properties.CreatedTimestamp;
                 discoveryDataObj.LastUpdatedTime = value.Properties.UpdatedTimestamp;
-
+                discoveryDataObj.StorageInUseGB = (int)Math.Round(value.Properties.StorageInUseGB ?? 0.0);
                 discoveryDataObj.MachineId = value.Id?.ToLower();
 
                 data.Add(discoveryDataObj);
-                totalStorageInUseGB += value.Properties.StorageInUseGB ?? 0.0;
             }
 
             return data;
@@ -318,11 +317,6 @@ namespace Azure.Migrate.Export.Discovery
             }
 
             return new KeyValuePair<string, string>(macAddresses, ipAddresses);
-        }
-
-        public double GetTotalStorageInUseGB()
-        {
-            return totalStorageInUseGB;
         }
 
         public static List<KeyValuePair<string, int>> RetrieveHostvCenterData(UserInput userInputObj, string siteUrl)
