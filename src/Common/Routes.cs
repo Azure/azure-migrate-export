@@ -11,7 +11,6 @@ namespace Azure.Migrate.Export.Common
         public const string MigrateProvidersPath = @"Microsoft.Migrate";
         public const string OffAzureProvidersPath = @"Microsoft.OffAzure";
         public const string MasterSitesPath = @"masterSites";
-        public const string ImportSitesPath = @"importSites";
         public const string MigrateProjectsPath = @"MigrateProjects";
         public const string AssessedMachinesPath = @"assessedMachines";
         public const string BusinessCasesPath = @"businessCases";
