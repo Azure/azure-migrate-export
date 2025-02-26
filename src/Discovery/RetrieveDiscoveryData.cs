@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Azure.Migrate.Export.Common;
 using Azure.Migrate.Export.HttpRequestHelper;
 using Azure.Migrate.Export.Models;
+using DocumentFormat.OpenXml.Drawing;
 
 namespace Azure.Migrate.Export.Discovery
 {
@@ -293,7 +294,7 @@ namespace Azure.Migrate.Export.Discovery
                 discoveryDataObj.SupportStatus = value.Properties.ProductSupportStatus?.SupportStatus ?? SupportabilityStatus.Unknown.ToString();
                 discoveryDataObj.FirstDiscoveryTime = value.Properties.CreatedTimestamp;
                 discoveryDataObj.LastUpdatedTime = value.Properties.UpdatedTimestamp;
-
+                discoveryDataObj.StorageInUseGB = value.Properties.StorageInUseGB ?? 0.0;
                 discoveryDataObj.MachineId = value.Id?.ToLower();
 
                 data.Add(discoveryDataObj);

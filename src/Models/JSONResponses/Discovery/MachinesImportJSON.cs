@@ -24,7 +24,10 @@ namespace Azure.Migrate.Export.Models
     public class ImportMachinesProperty
     {
         [JsonProperty("firmware")]
-        public string Firmware { get; set; }        
+        public string Firmware { get; set; }
+
+        [JsonProperty("storageInUseGB")]
+        public double? StorageInUseGB { get; set; }
 
         [JsonProperty("macAddress")]
         public string MacAddress { get; set; }

@@ -21,5 +21,6 @@ namespace Azure.Migrate.Export.Models
         public string FirstDiscoveryTime { get; set; }
         public string LastUpdatedTime { get; set; }
         public string MachineId { get; set; }
+        public double? StorageInUseGB { get; set; } = 0.0;
     }
 }

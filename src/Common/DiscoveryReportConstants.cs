@@ -43,7 +43,8 @@ namespace Azure.Migrate.Export.Common
             "Support Status",
             "First Discovery Time",
             "Last Updated Time",
-            "Machine ID"
+            "Machine ID",
+            "Total Storage In Use (in GB)"
         };
 
         public static readonly List<string> VCenterHostReportColumns = new List<string>
