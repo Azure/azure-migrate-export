@@ -32,7 +32,7 @@ namespace Azure.Migrate.Export.Forms
             ConfigurationFormObj.SetDefaultConfigurationValues();
 
             AssessmentSettingsFormObj = new AssessmentSettingsForm(this);
-            AssessmentSettingsFormObj.Initialize();
+            AssessmentSettingsFormObj.Initialize(ConfigurationFormObj.GetBusinessProposal());
 
             TrackProgressFormObj = new TrackProgressForm(this);
 
@@ -196,7 +196,7 @@ namespace Azure.Migrate.Export.Forms
             }
             if (nextButtonTab == AssessmentSettingsTabButton)
             {
-                AssessmentSettingsFormObj.Initialize();
+                AssessmentSettingsFormObj.Initialize(ConfigurationFormObj.GetBusinessProposal());
             }
 
             OpenChildForm(formObjToActivate);
