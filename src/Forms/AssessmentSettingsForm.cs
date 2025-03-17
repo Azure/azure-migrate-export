@@ -21,12 +21,12 @@ namespace Azure.Migrate.Export.Forms
         }
 
         #region Initialization
-        public void Initialize()
+        public void Initialize(string businessProposal)
         {
             InitializeTargetRegionComboBox();
             InitializeCurrencyComboBox();
             InitializeAssessmentDurationComboBox();
-            InitializeOptimizationPreference(BusinessProposal.Comprehensive);
+            InitializeOptimizationPreference(businessProposal);
         }
         
         public void InitializeTargetRegionComboBox()
@@ -395,29 +395,21 @@ namespace Azure.Migrate.Export.Forms
         #region Utilities
         public void DisableOptimizationPreferenceComboBox()
         {
-            InitializeOptimizationPreference(BusinessProposal.AVS);
+            InitializeOptimizationPreference(BusinessProposal.AVS.ToString());
             OptimizationPreferenceComboBox.Enabled = false;
         }
 
         public void EnableOptimizationPreferenceComboBox()
         {
-            InitializeOptimizationPreference(BusinessProposal.Comprehensive);
+            InitializeOptimizationPreference(BusinessProposal.Comprehensive.ToString());
             OptimizationPreferenceComboBox.Enabled = true;
         }
 
-        private void InitializeOptimizationPreference(BusinessProposal businessProposal)
+        private void InitializeOptimizationPreference(string businessProposal)
         {
             List<KeyValuePair<string, string>> optimizationPreferences = new List<KeyValuePair<string, string>>();
-            if (!mainFormObj.IsImportAndComprehensiveProposalSelected())
-            {
-                optimizationPreferences.Add(new KeyValuePair<string, string>("ModernizeToPaaS", "Modernize to PaaS (PaaS preferred)"));
-            }
-            optimizationPreferences.Add(new KeyValuePair<string, string>("MigrateToAllIaaS", "Migrate to all IaaS"));
 
-            OptimizationPreferenceComboBox.ValueMember = "Key";
-            OptimizationPreferenceComboBox.DisplayMember = "Value";
-
-            if (businessProposal == BusinessProposal.AVS)
+            if (businessProposal == BusinessProposal.AVS.ToString())
             {
                 var kvp = new KeyValuePair<string, string>("MigrateToAvs", "Migrate to AVS");
                 optimizationPreferences.Add(kvp);
@@ -427,6 +419,14 @@ namespace Azure.Migrate.Export.Forms
             }
             else
             {
+                if (!mainFormObj.IsImportAndComprehensiveProposalSelected())
+                {
+                    optimizationPreferences.Add(new KeyValuePair<string, string>("ModernizeToPaaS", "Modernize to PaaS (PaaS preferred)"));
+                }
+                optimizationPreferences.Add(new KeyValuePair<string, string>("MigrateToAllIaaS", "Migrate to all IaaS"));
+
+                OptimizationPreferenceComboBox.ValueMember = "Key";
+                OptimizationPreferenceComboBox.DisplayMember = "Value";
                 OptimizationPreferenceComboBox.DataSource = optimizationPreferences;
                 if (!mainFormObj.IsImportAndComprehensiveProposalSelected())
                 {
