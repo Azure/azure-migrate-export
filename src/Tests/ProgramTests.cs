@@ -19,8 +19,6 @@ namespace Azure.Migrate.Export.Tests
         public void InitializeCommonAuthentication_ShouldCreateClientAppWithCorrectSettings()
         {
             // Arrange
-            Program.SetBrokerOptions();
-            Program.SetMainFormHandle(this._mockHandle);
             Program.InitializeCommonAuthentication();
 
             // Act
@@ -29,7 +27,6 @@ namespace Azure.Migrate.Export.Tests
             // Assert
             Assert.IsNotNull(clientApp);
             Assert.AreEqual(this._powershellClientId, clientApp.AppConfig.ClientId);
-            Assert.IsTrue(clientApp.AppConfig.IsBrokerEnabled);
         }
 
         [TestMethod]
@@ -37,8 +34,6 @@ namespace Azure.Migrate.Export.Tests
         {
             // Arrange
             var tenantId = new Guid().ToString();
-            Program.SetBrokerOptions();
-            Program.SetMainFormHandle(this._mockHandle);
             Program.InitializeTenantAuthentication(tenantId);
 
             // Act
@@ -47,7 +42,6 @@ namespace Azure.Migrate.Export.Tests
             // Assert
             Assert.IsNotNull(clientApp);
             Assert.AreEqual(this._powershellClientId, clientApp.AppConfig.ClientId);
-            Assert.IsTrue(clientApp.AppConfig.IsBrokerEnabled);
         }
     }
 }

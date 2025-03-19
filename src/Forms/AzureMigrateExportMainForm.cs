@@ -41,6 +41,8 @@ namespace Azure.Migrate.Export.Forms
 
             // Show verison on UI
             VersionLabel.Text = "v " + FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
+
+            BeginAzureAuthentication();
         }
 
         #region Azure Authentication

@@ -293,9 +293,6 @@
     <PackageReference Include="Microsoft.Identity.Client">
       <Version>4.69.1</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Identity.Client.Broker">
-      <Version>4.69.1</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.IdentityModel.Abstractions">
       <Version>7.6.0</Version>
     </PackageReference>
