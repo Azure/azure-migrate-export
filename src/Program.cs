@@ -8,7 +8,7 @@ using Azure.Migrate.Export.Forms;
 
 namespace Azure.Migrate.Export
 {
-    static class Program
+    public static class Program
     {
         public static string PowerShellClientId = "1950a258-227b-4e31-a9cf-717495945fc2";
         public static string CommonAuthorityEndpoint = "https://login.microsoftonline.com/common/oauth2/authorize";
@@ -31,7 +31,6 @@ namespace Azure.Migrate.Export
                     return;
                 }
 
-            InitializeCommonAuthentication();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new AzureMigrateExportMainForm());

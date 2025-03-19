@@ -12,8 +12,10 @@ namespace Azure.Migrate.Export.Authentication
         {
             "https://management.azure.com/.default"
         };
+
         public static async Task<AuthenticationResult> CommonLogin()
         {
+            Program.InitializeCommonAuthentication();
             return await Login();
         }
 
