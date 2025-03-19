@@ -165,7 +165,6 @@
     <Compile Include="Models\Assessment\Excel\CoreReport\SQL_All_Instances.cs" />
     <Compile Include="Models\Assessment\Excel\CoreReport\WebApp_PaaS.cs" />
     <Compile Include="Models\Assessment\Excel\CoreReport\Decommissioned_Machines.cs" />
-    <Compile Include="Models\Assessment\Excel\CoreReport\AVS_IaaS_Rehost_Perf.cs" />
     <Compile Include="Models\Assessment\Excel\OpportunityReport\VM_Opportunity_Perf.cs" />
     <Compile Include="Models\Assessment\Excel\OpportunityReport\VM_Opportunity_AsOnPrem.cs" />
     <Compile Include="Models\Assessment\Excel\OpportunityReport\SQL_MI_Opportunity.cs" />
@@ -292,7 +291,7 @@
       <Version>0.100.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Identity.Client">
-      <Version>4.61.3</Version>
+      <Version>4.69.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.IdentityModel.Abstractions">
       <Version>7.6.0</Version>
