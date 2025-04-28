@@ -1,42 +1,49 @@
 ---
-title: About Azure Migrate Export
-description: Get an overview of Azure Migrate Export.
+title: About Azure Migrate Explore
+description: Get an overview of Azure Migrate Explore.
 author: kalrashradha
 ms.author: v-ksreedevan
 ms.topic: conceptual
 ms.date: 12/27/2022
 ---
 
-# Azure Migrate Export Utility
+# Azure Migrate Explore (now with an AI Assistant)
 
-## What is Azure Migrate Export?
-Azure Migrate Export is a utility package that uses Azure Migrate discovery and assessment information from an already deployed Azure Migrate project to generate a cohesive presentation for executives.
+## What is Azure Migrate Explore?
+Azure Migrate Explore is a utility package that uses Azure Migrate discovery and assessment information from an existing Azure Migrate project to generate a comprehensive presentation for executives. The utility allows users to customize discovered data, assessment output, and the visualization layer of the presentation by using Microsoft tools such as Excel, Power BI, and PowerPoint/PDF on Edge to accommodate desired customizations.
 
-The utility offers users the ability to customize discovered data, assessment output as well as the visualization layer of the presentation by leveraging Microsoft’s own tools such as Excel, Power BI, and PowerPoint/PDF on Edge that would help accommodate desired customizations.
+Additionally, Azure Migrate Explore now includes an AI assistant to help create seller summaries and interact with users for more insights about Azure Migrate, migration strategies, understanding TCO, and right-sized target calculations. The AI can update the seller summaries with new data.
+Azure Migrate Explore (AME) is a centralized and scalable solution that provides a consistent estimate of costs to support the customer’s decision-making process for migrating to Azure.
+## What’s New in Version 4.0?
+- Azure Migrate explore now has an AI assistant that can help you create a seller-oriented summary that can be used as talk track with the presentation, and you can converse with the AI to find answers to your questions regarding migration of your/your customer’s workloads to Azure.
+- Azure Migrate Explore now supports inventory discovered by both appliance as well as CMDB/RvTools based import.
+- Azure Migrate Explore can help you create a quick dedicated AVS report  
 
-Azure Migrate Export (AME) is a centralized and scalable solution that provides a uniform estimate of cost to drive the customer’s commitment for migration to Azure. 
-
-## How to get Azure Migrate Export Utility Package?
-Users can download the Azure Migrate Export utility from https://aka.ms/azuremigrateexport.
+## How to get Azure Migrate Explore Utility Package?
+Users can download the Azure Migrate Explore utility from https://aka.ms/azuremigrateexport.
 
 The link downloads a .zip file. Extract the contents of the package.
 
 The Package consists of three files:
-- Azure-Migrate-Export.exe is a light-weight console app that facilitates running of discovery and assessment and helps fetch data from Azure Migrate discovery and assessment APIs.
+- Azure-Migrate-Explore.exe is a light-weight console app that facilitates running of discovery and assessment and helps fetch data from Azure Migrate discovery and assessment APIs.
 - The PSScripts folder consists of underlying PowerShell modules.
-- The PowerBI template helps build a cohesive presentation on top of discovery and assessment reports generated after running Azure-Migrate-Export.exe.
-The Azure Migrate Export Utility is hosted on an open source github repository. Users can access all versions of this utility package from https://aka.ms/azuremigrateexportutility. Users can use the script to build on top of current solutions.
+- The PowerBI template helps build a cohesive presentation on top of discovery and assessment reports generated after running Azure-Migrate-Explore.exe.
+The Azure Migrate Explore Utility is hosted on an open source github repository. Users can access all versions of this utility package from https://aka.ms/azuremigrateexportutility. Users can use the script to build on top of current solutions.
 
-## How does Azure Migrate Export Work?
+## How does Azure Migrate Explore Work?
 The discovery module of the utility package runs to pull discovered data from an already deployed Azure Migrate Project using Azure Migrate APIs. Users can then customize the discovery output for assessment. [Learn More](#how-to-customize-discovery-report) about customization on discovery file.
 
 The assessment module of utility package uses Azure Migrate assessment APIs to run PaaS preferred assessments for in scope machines. Machines that cannot be migrated to PaaS target are assessed for IaaS targets. [Learn More](#azure-migrate-export-assessment-report-generation-logic) about AME assessment logic. The assessment module generates Assessment Core Report, Assessment Opportunity report and Clash Report. 
 
 Users can customize the generated Assessment Core report by referring to the details in the Clash report to get rid of duplicates. This helps the user to generate presentation and cost estimates of only the required target assessments. [Learn More](#how-to-customize-assessment-core-report) about how to customize Assessment report.
 
-The PowerBI template uses the generated discovery and assessment reports to generate the required business presentation which can be downloaded as PPT.
+The PowerBI template uses the generated discovery and assessment reports to generate the required business presentation which can be downloaded as PowerPoint.
 
-## Prerequisites for running Azure Migrate Export
+Azure Migrate Explore also has capabilities to generate AI based summaries that can help users understand the migration recommendations, customer’s company profile and AI opportunities for the customers based on their profile, on-premises environment and assessment. The AI summary section also enables users to converse with AI to understand the details of the migration summary and get more information. Users can share more details and context to improve the summary generated. The summary generated can be exported as a .pdf file and used as a companion to the PowerPoint presentation. 
+
+
+
+## Prerequisites for running Azure Migrate Explore
 ### User Permissions 
 The user logged into the machine should have the permissions and access to run EXE files. 
 ### Operating System 
@@ -44,7 +51,7 @@ The machine should be a 64-bit Windows machine running Windows OS 10 or later.
 ### Install Location 
 We recommend to download the utility in C: drive. Information is exchanged with APIs in the form of packets, and hence the install location should not have packet inspection / modification rights.
 ### .NET Framework Version 
-The machine running Azure Migrate Export must run on .NET framework 4.7.2 or later. [Learn More](https://learn.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed) on how to check the .NET version running on the machine.
+The machine running Azure Migrate Explore must run on .NET framework 4.7.2 or later. [Learn More](https://learn.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed) on how to check the .NET version running on the machine.
 ### Transport Layer Security (TLS) 
 The operating system must support TLS 1.2. [Learn More](https://learn.microsoft.com/en-us/windows-server/security/tls/tls-registry-settings?tabs=diffie-hellman) on how to check supported TLS version on the machine.
 ### Memory 
@@ -60,7 +67,7 @@ The machine running AME should have to have PowerShell version 5.1 or higher ins
 ### Execution Policy 
 
 > [!Note]
-> The Azure Migrate Export utility configures required execution policy automatically, but we strongly recommend that users set the required execution policy before running the utility.
+> The Azure Migrate Explore utility configures required execution policy automatically, but we strongly recommend that users set the required execution policy before running the utility.
 
 The execution policy in PowerShell should be set to RemoteSigned, for the CurrentUser and LocalMachine. This can be achieved by following the steps below: 
 1. Open PowerShell as an administrator. 
@@ -73,17 +80,17 @@ The execution policy in PowerShell should be set to RemoteSigned, for the Curren
   
 ### PowerShell Modules 
 > [!Note] 
-> The Azure Migrate Export utility installs modules if they are not present, but we strongly recommend having the modules pre-installed. 
+> The Azure Migrate Explore utility installs modules if they are not present, but we strongly recommend having the modules pre-installed. 
 > If you are installing these modules for the first time, respond [Y] for yes and [A] for ‘Yes to All” to install the required modules. 
 
-The following modules are needed to run Azure Migrate Export.
+The following modules are needed to run Azure Migrate Explore.
 - Nuget Provider
 - PSGallery
 - PowerShellGet - Command: Install-Module -Name PowerShellGet -Scope CurrentUser -Force -AllowClobber 
 - Azure PowerShell - Command: Install-Module -Name Az -Scope CurrentUser -Force -AllowClobber 
 - Import Excel -  Command: Install-Module -Name ImportExcel -Scope CurrentUser -Force -AllowClobber 
 
-## Azure Migrate Export Assessment Report Generation Logic
+## Azure Migrate Explore Assessment Report Generation Logic
 The assessment logic for each type of workload is as below:
 ### SQL Assessment
 SQL assessment is a three-step process:
@@ -106,21 +113,21 @@ Azure Site Recovery and backup cost is only computed for the following workloads
   - Machines and Instances running in Prod environment. 
   - Machines and Instances recommended for Migration to Azure VM.
 
-## Run Azure Migrate Export 
-This article describes the procedure to run Azure Migrate Export without customizations.
+## Run Azure Migrate Explore 
+This article describes the procedure to run Azure Migrate Explore without customizations.
 
 ### Prerequisites 
-- Review the prerequisites for running Azure Migrate Export.
-- Before running Azure Migrate Export, users must have successfully set up an Azure Migrate Project, deployed an Azure Migrate appliance, and should have successfully performed discovery using the Azure Migrate: Discovery and Assessment tool.
-- There are two workflows in which users can run Azure Migrate Export Utility.
+- Review the prerequisites for running Azure Migrate Explore.
+- Before running Azure Migrate Explore, users must have successfully set up an Azure Migrate Project, deployed an Azure Migrate appliance, and should have successfully performed discovery using the Azure Migrate: Discovery and Assessment tool.
+- There are two workflows in which users can run Azure Migrate Explore Utility.
    - Run without Customization or Single Click Experience - Aims to quickly generate required output with certain assumptions such as all machines discovered are in-scope and belong to Production environment.
    - Run with Customization - Aims to allow for customization such as classification of environment such as dev/prod to take advantage of Dev/Test pricing, moving machines out of scope for an assessment or moving machines out of scope of migration and even the visualization. [Learn More](#how-to-customize-discovery-report) on how to customize Discovery file.
 
-### Run Azure Migrate Export without customization
-Azure Migrate Export without customization quickly generates required output with certain assumptions such as all Machines discovered are in-scope and belong to Production environment. 
+### Run Azure Migrate Explore without customization
+Azure Migrate Explore without customization quickly generates required output with certain assumptions such as all Machines discovered are in-scope and belong to Production environment. 
 Follow the below steps:
-1. Download the Azure Migrate Export utility package and extract the contents on the package. [Learn More](#how-to-get-azure-migrate-export-utility-package) about how to get Azure Migrate Export Utility Package.
-2. Run Azure Migrate Export application.
+1. Download the Azure Migrate Explore utility package and extract the contents on the package. [Learn More](#how-to-get-azure-migrate-export-utility-package) about how to get Azure Migrate Explore Utility Package.
+2. Run Azure Migrate Explore application.
 3. To generate the Discovery and assessment reports with customization, select **Workflow Option** as Both.
 4. In **Source Appliance**, select the source of servers. By default, all three sources, namely VMware, Hyper-V, and Physical are selected.
 5. Enter the project identifier details such as Tenant ID, Subscription ID, Resource Group name, Discovery Site name and assessment project name. [Learn More](#how-to-find-project-discovery-and-assessment-parameters) on where to find the Project Identifier.
@@ -130,17 +137,17 @@ Follow the below steps:
    > [!Note] 
    > Assessment typically runs in 1-2 hours but may take more time to run depending on the size of environment.
 9. Users can choose to customize assessment report for removing required duplicates in assessment. [Learn More](#how-to-customize-assessment-core-report) about how to customize assessment reports.
-10. Run the “Azure_Migrate_Export.pbit” PowerBI template provided in the Utility package.
+10. Run the “Azure_Migrate_Explore.pbit” PowerBI template provided in the Utility package.
 11. Provide the path of utility package where all the reports are generated and click Load. [Learn More](#how-to--find-basepath) about base Path.
 12. Once the data is loaded, Users can now choose to change static data in PowerBI report to customize as per requirement. [Learn More](#how-to-customize-powerbi-report) about how to customize PowerBI Report.
 13. After finalizing the slides, publish the PowerBI report on your workspace.
    ![Screenshot of PowerBI workspace.](./.media/workspace-report.png)
-14. You can download the Azure Migrate Export Executive Presentation as PPT from your workspace.
+14. You can download the Azure Migrate Explore Executive Presentation as PPT from your workspace.
    ![Screenshot of embed image option.](./.media/embed-image.png)
 
 ### To run AME with customization, users need to first generate the discovery report, apply customization, and then run assessment. Follow these steps:
-1. Download the Azure Migrate Export utility package and extract the contents on the package. [Learn More](#how-to-get-azure-migrate-export-utility-package) about how to get Azure Migrate Export Utility Package.
-2. Run Azure Migrate Export application.
+1. Download the Azure Migrate Explore utility package and extract the contents on the package. [Learn More](#how-to-get-azure-migrate-export-utility-package) about how to get Azure Migrate Explore Utility Package.
+2. Run Azure Migrate Explore application.
 3. On the console, Select Workflow Option as Discovery.
 4. In **Source Appliance**, select the source of servers. By default, all three sources, namely VMware, Hyper-V, and Physical are selected.
 5. Enter the project identifier details such as Tenant ID, Subscription ID, Resource Group name, and Discovery Site name. [Learn More](#how-to-find-project-discovery-and-assessment-parameters) on where to find the Project Identifier.
@@ -156,16 +163,16 @@ Follow the below steps:
    > [!Note]
    > An assessment typically runs in 1-2 hours but may take more time depending on the size of environment.
 15. Users can choose to customize assessment reports for removing required duplicates in assessment. [Learn More](#how-to-customize-assessment-core-report) about how to customize assessment reports.
-16. Run the “Azure_Migrate_Export.pbit” PowerBI template provided in the Utility package.
+16. Run the “Azure_Migrate_Explore.pbit” PowerBI template provided in the Utility package.
 17. Provide the path of utility package where all the reports are generated and click Load. [Learn More](#how-to--find-basepath) about the base Path.
 18. Once the data is loaded, Users can now choose to change static data in PowerBI report to customize as per requirement. [Learn More](#how-to-customize-powerbi-report) about how to customize PowerBI Report.
 19. After finalizing the slides, publish the PowerBI report on your workspace.
    ![Screenshot of PowerBI workspace.](./.media/workspace-report.png)
-20. You can download the Azure Migrate Export Executive Presentation as PPT from your workspace.
+20. You can download the Azure Migrate Explore Executive Presentation as PPT from your workspace.
    ![Screenshot of embed image option.](./.media/embed-image.png)
 
 ## How to find Project, discovery, and assessment parameters
-The below project identifier and discovery and assessment parameters need to input into Azure Migrate Export Console. You can find these values from the Azure portal as below:
+The below project identifier and discovery and assessment parameters need to input into Azure Migrate Explore Console. You can find these values from the Azure portal as below:
 
 ### Tenant ID
 1. Sign in to Azure.
@@ -196,6 +203,23 @@ To find other parameters required for running discovery and assessment, follow t
 5. The **Azure Migrate: Discovery and assessment | Properties** screen displayes the required Project identifier and discovery and assessment project parameters such as Subscription ID, resource group name, discovery Site name, and Assessment project name as below:
 
     ![Screenshot of properties screen.](./.media/properties-values.png)
+
+## Generating migration summaries using AI
+
+-	To generate migration summaries with AI, it is necessary to create all the previously mentioned reports based on your desired customization. 
+- This includes gathering data from various sources, such as current system configurations, user feedback, and performance metrics, to ensure comprehensive coverage of the migration process.
+- Once these reports are available, the "Generate summary with AI" tab will be enabled in the utility.
+- Select that tab and answer a few basic questions to initiate the summary.
+- The AI will use the context provided through the questionnaire and the reports generated from assessments to produce a three-section summary:
+- Company profile: outlines the organization's background and objectives.
+- Migration details: covers the specifics of the migration plan including timelines, resources, and expected challenges.
+-	AI opportunities: identifies potential areas where AI can enhance the migration process or future operations.
+-	To review the summary:
+-	Go to the "Review Summary" tab where you will find three sections: Company profile, Migration details, and AI opportunities.
+
+
+
+
 
 ## Customize reports
 This article describes how to customize the generated reports to improve the usability and for easy access to the necessary information.
@@ -244,7 +268,7 @@ The PowerBI report consists of situational verbatims that need to be customized 
 > You are requested not to change any number boxes as it may make your report prone to errors.
 
 ## Discovery and Assessment Report Analysis 
-Azure Migrate Export (AME) generates the following excel reports to provide discovery and assessment details of a customer’s environment:
+Azure Migrate Explore (AME) generates the following excel reports to provide discovery and assessment details of a customer’s environment:
 - Discovered VMs
 - Assessment Core Report
 - Assessment Opportunity Report
@@ -352,8 +376,8 @@ The details of each slide in data populated PowerBI report is as follows:
 
 ### How do we find the BasePath?
 
-Open the location where you installed the Azure Migrate Export Utility Package and copy the path of folder where all the discovery and assessment reports are present.
-Basepath for the example below is E:\AzMigExport.
+Open the location where you installed the Azure Migrate Explore Utility Package and copy the path of folder where all the discovery and assessment reports are present.
+Basepath for the example below is E:\AzMigExplore.
 
 ![Screenshot of sample base path.](./.media/file-path.png)
  
@@ -361,13 +385,13 @@ Basepath for the example below is E:\AzMigExport.
 The **Publish** button is available on the top-right of the home tab in PowerBI export. Publish facility is not available for users having Free PowerBI license. Such users can do customizations and export PowerBI as PDF.
 
 ### Is my data secured?
-Azure Migrate Export only uses Azure Migrate APIs to request for data insights. No data is stored.
+Azure Migrate Explore only uses Azure Migrate APIs to request for data insights. No data is stored.
 
-### Are passwords stored in Azure Migrate Export?
-No, passwords are not stored in Azure Migrate Export.
+### Are passwords stored in Azure Migrate Explore?
+No, passwords are not stored in Azure Migrate Explore.
 
 ### As a Partner or Seller, I want to generate the presentation but want my customer to run the Module. Is that possible?
-Yes. You can ask your customers to download the Azure Migrate Export Utility Package and run Azure Migrate Export. Once discovery and assessment is complete, your customer can send you the AzMigExport folder with all the 4 discovery and assessment reports and PowerBI template. You may then run the PowerBI template by providing the required basepath. [Learn More](#how-do-we-find-the-basepath) on how to find basepath.
+Yes. You can ask your customers to download the Azure Migrate Explore Utility Package and run Azure Migrate Explore. Once discovery and assessment is complete, your customer can send you the AzMigExplore folder with all the 4 discovery and assessment reports and PowerBI template. You may then run the PowerBI template by providing the required basepath. [Learn More](#how-do-we-find-the-basepath) on how to find basepath.
 
 ### If my VM is powered off, will I still get its assessment consideration?
 Yes, it will be assessed for VM assessment only since its performance data will be unavailable.
